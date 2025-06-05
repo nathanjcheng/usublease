@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import './App.css';
 import Messages from './pages/Messages';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Map from './pages/Map';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 // Example listings data
 const exampleListings = [
@@ -268,23 +271,54 @@ function SearchSection() {
   );
 }
 
+function ProtectedRoute({ children }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const auth = getAuth();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      setLoading(false);
+    });
+    return unsubscribe;
+  }, [auth]);
+
+  if (loading) return <div>Loading...</div>;
+  if (!user) return <Navigate to="/login" replace />;
+  return children;
+}
+
 function Footer() {
   return (
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
           <h3>About USublease</h3>
-          <p>Connecting students with the perfect sublease opportunities across Florida universities.</p>
+          <p>
+            Connecting students with the perfect sublease opportunities across
+            Florida universities.
+          </p>
         </div>
+
         <div className="footer-section">
           <h3>Quick Links</h3>
           <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/map">Find Listings</Link></li>
-            <li><Link to="/profile">My Profile</Link></li>
-            <li><Link to="/messages">Messages</Link></li>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/map">Find Listings</Link>
+            </li>
+            <li>
+              <Link to="/profile">My Profile</Link>
+            </li>
+            <li>
+              <Link to="/messages">Messages</Link>
+            </li>
           </ul>
         </div>
+
         <div className="footer-section">
           <h3>Contact Us</h3>
           <ul>
@@ -294,68 +328,105 @@ function Footer() {
           </ul>
         </div>
       </div>
+
       <div className="footer-bottom">
-        <p>&copy; 2024 USublease. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} USublease. All rights reserved.</p>
       </div>
     </footer>
   );
 }
 
+// ---------------------------------------------------------------------------
+//  Main App Component
+// ---------------------------------------------------------------------------
+
 function App() {
-  // Group listings by university
+  // Group listings by university for the “featured” section
   const listingsByUniversity = exampleListings.reduce((acc, listing) => {
-    const university = listing.university;
-    if (!acc[university]) {
-      acc[university] = [];
-    }
-    acc[university].push(listing);
+    if (!acc[listing.university]) acc[listing.university] = [];
+    acc[listing.university].push(listing);
     return acc;
   }, {});
 
   return (
     <Router>
       <div className="app">
+        {/* ---------------------------------------------------------------- */}
+        {/*  Header                                                        */}
+        {/* ---------------------------------------------------------------- */}
         <header className="header">
-          <Link to="/" className="logo">🏠 USublease</Link>
+          <Link to="/" className="logo">
+            🏠 USublease
+          </Link>
+
           <div className="nav-buttons">
-            <Link to="/messages" className="nav-button" title="Messages">💬</Link>
-            <Link to="/profile" className="nav-button" title="Profile">👤</Link>
-            <Link to="/settings" className="nav-button" title="Settings">⚙️</Link>
+            <Link to="/messages" className="nav-button" title="Messages">
+              💬
+            </Link>
+            <Link to="/profile" className="nav-button" title="Profile">
+              👤
+            </Link>
+            <Link to="/settings" className="nav-button" title="Settings">
+              ⚙️
+            </Link>
           </div>
         </header>
 
+        {/* ---------------------------------------------------------------- */}
+        {/*  Routes                                                        */}
+        {/* ---------------------------------------------------------------- */}
         <Routes>
           <Route path="/messages" element={<Messages />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/map" element={<Map />} />
-          <Route path="/" element={
-            <>
-              <SearchSection />
-              <section className="featured-section">
-                {Object.entries(listingsByUniversity).map(([university, listings]) => (
-                  <div key={university} className="university-section">
-                    <h2 className="university-title">{university}</h2>
-                    <div className="featured-tiles">
-                      {listings.map((listing, index) => (
-                        <div key={index} className="featured-tile">
-                          <div className="tile-image">
-                            <img src={listing.image} alt={listing.title} />
-                          </div>
-                          <div className="tile-content">
-                            <h3>{listing.title}</h3>
-                            <p className="tile-price">${listing.price}</p>
-                            <p className="tile-semester">{listing.semester}</p>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+
+          {/* Home – protected */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <>
+                  <SearchSection />
+
+                  {/* ------------------------------------------------------ */}
+                  {/*  Featured Listings                                    */}
+                  {/* ------------------------------------------------------ */}
+                  <section className="featured-section">
+                    {Object.entries(listingsByUniversity).map(
+                      ([university, listings]) => (
+                        <div key={university} className="university-section">
+                          <h2 className="university-title">{university}</h2>
+
+                          <div className="featured-tiles">
+                            {listings.map((listing) => (
+                              <div key={listing.id} className="featured-tile">
+                                <div className="tile-image">
+                                  <img
+                                    src={listing.image}
+                                    alt={listing.title}
+                                  />
+                                </div>
+                                <div className="tile-content">
+                                  <h3>{listing.title}</h3>
+                                  <p className="tile-price">{listing.price}</p>
+                                  <p className="tile-semester">{listing.semester}</p>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </section>
-              <Footer />
-            </>
-          } />
+                      )
+                    )}
+                  </section>
+
+                  <Footer />
+                </>
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </Router>
