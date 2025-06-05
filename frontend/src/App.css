@@ -83,9 +83,9 @@ body {
 /* Search Section Styles */
 .search-section {
   margin-top: 60px;
-  background-color: var(--accent-color);
+  background-color: white;
   padding: 40px 0;
-  color: white;
+  color: #1a202c;
 }
 
 .search-container {
@@ -99,6 +99,10 @@ body {
   gap: 10px;
   max-width: 800px;
   margin: 0 auto;
+  border: 1px solid #1a202c;
+  border-radius: 20px;
+  padding: 10px;
+  background-color: white;
 }
 
 .search-select {
@@ -113,7 +117,7 @@ body {
 
 .search-button {
   padding: 12px 24px;
-  background-color: #1a202c;
+  background-color: var(--accent-color);
   color: white;
   border: none;
   border-radius: 8px;
@@ -123,7 +127,7 @@ body {
 }
 
 .search-button:hover {
-  background-color: #2d3748;
+  background-color: var(--accent-hover);
 }
 
 /* Featured Section Styles */
@@ -207,14 +211,14 @@ body {
 }
 
 .tile-price {
-  color: var(--accent-color);
+  color: #1a202c;
   font-weight: bold;
   font-size: 1.1rem;
   margin: 0 0 5px 0;
 }
 
 .tile-semester {
-  color: #a0aec0;
+  color: #1a202c;
   margin: 0;
 }
 
