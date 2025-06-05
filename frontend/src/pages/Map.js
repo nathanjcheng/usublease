@@ -12,7 +12,7 @@ const exampleListings = [
     description: "Modern studio apartment just 5 minutes from USF campus. Fully furnished with all utilities included.",
     amenities: ["Furnished", "Utilities Included", "Parking", "Wifi"],
     coordinates: { lat: 28.0587, lng: -82.4139 },
-    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=Studio"
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const exampleListings = [
     description: "Spacious 2 bedroom apartment with modern appliances and great amenities.",
     amenities: ["Washer/Dryer", "Pool", "Gym", "Pet Friendly"],
     coordinates: { lat: 28.0627, lng: -82.4159 },
-    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=2BR"
   },
   {
     id: 3,
@@ -34,7 +34,40 @@ const exampleListings = [
     description: "Luxury 1 bedroom apartment in the heart of USF Village. Walking distance to campus.",
     amenities: ["Furnished", "Pool", "Gym", "24/7 Security"],
     coordinates: { lat: 28.0607, lng: -82.4119 },
-    image: "https://images.unsplash.com/photo-1560185007-5f0bb1866cab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"
+    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=1BR"
+  },
+  {
+    id: 4,
+    title: "3BR House - USF North",
+    price: 1500,
+    semester: "Fall 2025",
+    address: "3456 42nd St, Tampa, FL 33613",
+    description: "Spacious 3 bedroom house with backyard, perfect for students. Close to USF campus.",
+    amenities: ["Backyard", "Garage", "Washer/Dryer", "Pet Friendly"],
+    coordinates: { lat: 28.0647, lng: -82.4179 },
+    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=3BR"
+  },
+  {
+    id: 5,
+    title: "Studio Loft - USF East",
+    price: 800,
+    semester: "Spring 2026",
+    address: "7890 56th St, Tampa, FL 33617",
+    description: "Modern studio loft with high ceilings and great natural light. Walking distance to campus.",
+    amenities: ["Furnished", "High Ceilings", "Parking", "Wifi"],
+    coordinates: { lat: 28.0567, lng: -82.4099 },
+    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=Loft"
+  },
+  {
+    id: 6,
+    title: "4BR House - USF South",
+    price: 1800,
+    semester: "Fall 2025",
+    address: "2345 30th St, Tampa, FL 33612",
+    description: "Large 4 bedroom house perfect for a group of students. Close to USF and shopping.",
+    amenities: ["Backyard", "Garage", "Washer/Dryer", "Pet Friendly"],
+    coordinates: { lat: 28.0547, lng: -82.4159 },
+    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=4BR"
   }
 ];
 
@@ -45,7 +78,7 @@ function Map() {
     <div className="map-page">
       <div className="map-container">
         <iframe
-          title="USF Map"
+          title="USF Area Map"
           width="100%"
           height="100%"
           frameBorder="0"
