@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import './App.css';
 import Messages from './pages/Messages';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Map from './pages/Map';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 // Example listings data
 const exampleListings = [
@@ -111,6 +114,32 @@ function SearchSection() {
   );
 }
 
+// Protected Route component
+const ProtectedRoute = ({ children }) => {
+  const [user, setUser] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
+  const auth = getAuth();
+
+  React.useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  return children;
+};
+
 function App() {
   return (
     <Router>
@@ -129,27 +158,31 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/map" element={<Map />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/" element={
-            <>
-              <SearchSection />
-              <section className="featured-section">
-                <h2 className="featured-title">Featured Listings</h2>
-                <div className="featured-tiles">
-                  {exampleListings.map((listing) => (
-                    <div key={listing.id} className="featured-tile">
-                      <div className="tile-image">
-                        <img src={listing.image} alt={listing.title} />
+            <ProtectedRoute>
+              <>
+                <SearchSection />
+                <section className="featured-section">
+                  <h2 className="featured-title">Featured Listings</h2>
+                  <div className="featured-tiles">
+                    {exampleListings.map((listing) => (
+                      <div key={listing.id} className="featured-tile">
+                        <div className="tile-image">
+                          <img src={listing.image} alt={listing.title} />
+                        </div>
+                        <div className="tile-content">
+                          <h3>{listing.title}</h3>
+                          <p className="tile-price">${listing.price}/month</p>
+                          <p className="tile-semester">{listing.semester}</p>
+                        </div>
                       </div>
-                      <div className="tile-content">
-                        <h3>{listing.title}</h3>
-                        <p className="tile-price">${listing.price}/month</p>
-                        <p className="tile-semester">{listing.semester}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            </>
+                    ))}
+                  </div>
+                </section>
+              </>
+            </ProtectedRoute>
           } />
         </Routes>
       </div>
