@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import './App.css';
 import Messages from './pages/Messages';
@@ -49,19 +49,19 @@ const universities = [
   "Florida State University",
   "University of Central Florida",
   "Florida International University",
+  "University of Miami",
   "Florida Atlantic University",
-  "University of North Florida",
-  "Florida Gulf Coast University",
   "Florida A&M University",
-  "University of West Florida",
-  "Florida Polytechnic University",
-  "New College of Florida"
+  "University of North Florida",
+  "Florida Gulf Coast University"
 ];
 
 const semesters = [
+  "Fall 2024",
+  "Spring 2025",
+  "Summer 2025",
   "Fall 2025",
-  "Spring 2026",
-  "Summer 2026",
+  "Spring 2026"
 ];
 
 function SearchSection() {
@@ -70,7 +70,6 @@ function SearchSection() {
   const [selectedSemester, setSelectedSemester] = useState("");
 
   const handleSearch = () => {
-    // Navigate to map page with search parameters
     navigate('/map', { state: { university: selectedUniversity, semester: selectedSemester } });
   };
 
@@ -116,7 +115,6 @@ function App() {
   return (
     <Router>
       <div className="app">
-        {/* Navbar */}
         <header className="header">
           <Link to="/" className="logo">🏠 USublease</Link>
           <div className="nav-buttons">
@@ -134,7 +132,6 @@ function App() {
           <Route path="/" element={
             <>
               <SearchSection />
-              {/* Featured Properties Section */}
               <section className="featured-section">
                 <h2 className="featured-title">Featured Listings</h2>
                 <div className="featured-tiles">
