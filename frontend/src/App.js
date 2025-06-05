@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import './App.css';
@@ -341,7 +341,7 @@ function Footer() {
 // ---------------------------------------------------------------------------
 
 function App() {
-  // Group listings by university for the “featured” section
+  // Group listings by university for the "featured" section
   const listingsByUniversity = exampleListings.reduce((acc, listing) => {
     if (!acc[listing.university]) acc[listing.university] = [];
     acc[listing.university].push(listing);
