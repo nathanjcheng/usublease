@@ -1,3 +1,0 @@
-"""
-USublease Backend Application
-""" 

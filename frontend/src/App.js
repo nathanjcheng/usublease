@@ -8,6 +8,7 @@ import Settings from './pages/Settings';
 import Map from './pages/Map';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Upload from './pages/Upload';
 
 // Example listings data
 const exampleListings = [
@@ -376,6 +377,9 @@ function App() {
           </Link>
 
           <div className="nav-buttons">
+            <Link to="/upload" className="nav-button-bordered" title="Add Sublease">
+              Add Sublease
+            </Link>
             <Link to="/messages" className="nav-button" title="Messages">
               💬
             </Link>
@@ -402,6 +406,7 @@ function App() {
           <Route path="/map" element={<Map />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/upload" element={<Upload />} />
 
           {/* Home – protected */}
           <Route

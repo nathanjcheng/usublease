@@ -80,6 +80,25 @@ body {
   background-color: #edf2f7;
 }
 
+/* Nav button with border on hover */
+.nav-button-bordered {
+  text-decoration: none;
+  color: #1a202c;
+  font-weight: 300;
+  transition: color 0.2s, border 0.2s;
+  font-size: 0.9rem;
+  padding: 14px 16px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-button-bordered:hover {
+  color: #1a202c;
+  border: 1px solid #d5d9d9;
+}
+
 /* Search Section Styles */
 .search-section {
   margin-top: 60px;
@@ -119,15 +138,23 @@ body {
   padding: 12px 24px;
   background-color: var(--accent-color);
   color: white;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, border 0.2s;
+  outline: none;
 }
 
 .search-button:hover {
   background-color: var(--accent-hover);
+  border: 1px solid #d5d9d9;
+}
+
+.search-button:active,
+.search-button:focus {
+  border: 1px solid #d5d9d9;
+  outline: none;
 }
 
 /* Featured Section Styles */
@@ -626,4 +653,77 @@ body {
 
 .button-17:disabled {
   box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+}
+
+/* Button 13 Styles */
+.button-13 {
+  background-color: #fff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  box-sizing: border-box;
+  color: #0f1111;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Amazon Ember", sans-serif;
+  font-size: 13px;
+  line-height: 29px;
+  padding: 0 10px 0 11px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: 100px;
+}
+
+.button-13:hover {
+  background-color: #f7fafa;
+}
+
+.button-13:focus {
+  border-color: #008296;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  outline: 0;
+}
+
+.button-13.save:hover {
+  background-color: #d4edda;
+  border-color: #28a745;
+}
+
+.button-13.selected {
+  background-color: var(--accent-color);
+  color: #fff;
+  border-color: var(--accent-color);
+}
+
+/* Input styled like button-13 */
+.input-13 {
+  background-color: #fff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  font-family: "Amazon Ember", sans-serif;
+  font-size: 13px;
+  line-height: 29px;
+  padding: 0 10px;
+  width: auto;
+}
+
+.button-13.semester {
+  width: 100px;
+  text-align: center;
+}
+
+.input-13.select {
+  height: 33px;
+}
+
+.button-13.unit {
+  flex: 1 1 0;
+  width: auto;
+  text-align: center;
 }

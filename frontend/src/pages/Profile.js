@@ -44,6 +44,37 @@ function Profile() {
     'Stetson University'
   ];
 
+  // Helper to format budget range with dollar signs
+  const formatBudget = (range) => {
+    if (!range) return 'Not set';
+    let min = '', max = '';
+    if (typeof range === 'string') {
+      [min, max] = range.split('-');
+    } else if (typeof range === 'object') {
+      min = range.min || '';
+      max = range.max || '';
+    }
+    if (!min && !max) return 'Not set';
+    return `$${min} - $${max}`;
+  };
+
+  // Helper to format phone number
+  const formatPhoneNumber = (value) => {
+    // Remove all non-digits
+    const cleaned = value.replace(/\D/g, '');
+    
+    // Format based on length
+    if (cleaned.length === 0) return '';
+    if (cleaned.length <= 3) return cleaned;
+    if (cleaned.length <= 6) return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
+    return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+  };
+
+  // Helper to get raw phone number (digits only)
+  const getRawPhoneNumber = (formatted) => {
+    return formatted.replace(/\D/g, '');
+  };
+
   useEffect(() => {
     // Check online status
     const handleOnlineStatus = () => {
@@ -149,7 +180,7 @@ function Profile() {
       setDisplayNameInput(user.displayName || '');
       setSelectedUniversity(user.university || '');
       setEmailInput(user.email || '');
-      setPhoneInput(user.phone || '');
+      setPhoneInput(formatPhoneNumber(user.phone || ''));
       setLocationInput(user.preferredLocation || '');
 
       if (user.budgetRange) {
@@ -277,13 +308,13 @@ function Profile() {
                     await saveUserData({ displayName: displayNameInput, university: selectedUniversity });
                     setEditingHeader(false);
                   }}
-                  style={{ backgroundColor: '#28a745', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '5px' }}
+                  className="button-13 save"
                 >
                   Save
                 </button>
                 <button
                   onClick={() => setEditingHeader(false)}
-                  style={{ backgroundColor: '#6c757d', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '5px' }}
+                  className="button-13"
                 >
                   Cancel
                 </button>
@@ -330,24 +361,26 @@ function Profile() {
                   <span style={{ minWidth:'100px' }}>Phone:</span>
                   <input
                     type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     value={phoneInput}
-                    onChange={(e) => setPhoneInput(e.target.value)}
+                    onChange={(e) => setPhoneInput(formatPhoneNumber(e.target.value))}
                     style={{ padding: '5px', borderRadius: '5px', flex:'1' }}
                   />
                 </div>
                 <div style={{ marginTop: '10px', display:'flex', gap:'10px' }}>
                   <button
                     onClick={async () => {
-                      await saveUserData({ email: emailInput, phone: phoneInput });
+                      await saveUserData({ email: emailInput, phone: getRawPhoneNumber(phoneInput) });
                       setEditingContact(false);
                     }}
-                    style={{ backgroundColor: '#28a745', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '5px' }}
+                    className="button-13 save"
                   >
                     Save
                   </button>
                   <button
                     onClick={() => setEditingContact(false)}
-                    style={{ backgroundColor: '#6c757d', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '5px' }}
+                    className="button-13"
                   >
                     Cancel
                   </button>
@@ -361,7 +394,7 @@ function Profile() {
                 </div>
                 <div style={{ display:'flex', alignItems:'center', gap:'6px', marginTop:'4px' }}>
                   <span style={{ minWidth:'100px' }}>Phone:</span>
-                  <span>{user?.phone || 'Not set'}</span>
+                  <span>{user?.phone ? formatPhoneNumber(user.phone) : 'Not set'}</span>
                 </div>
                 <EditIcon fontSize="small"
                   onClick={() => setEditingContact(true)}
@@ -388,6 +421,7 @@ function Profile() {
                 </div>
                 <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
                   <span style={{ minWidth:'150px' }}>Budget Range:</span>
+                  <span>$</span>
                   <input
                     type="number"
                     value={budgetMin}
@@ -395,6 +429,7 @@ function Profile() {
                     style={{ padding: '5px', borderRadius: '5px', width:'80px' }}
                   />
                   <span>-</span>
+                  <span>$</span>
                   <input
                     type="number"
                     value={budgetMax}
@@ -412,13 +447,13 @@ function Profile() {
                       await saveUserData(updates);
                       setEditingPreferences(false);
                     }}
-                    style={{ backgroundColor: '#28a745', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '5px' }}
+                    className="button-13 save"
                   >
                     Save
                   </button>
                   <button
                     onClick={() => setEditingPreferences(false)}
-                    style={{ backgroundColor: '#6c757d', color: 'white', border: 'none', padding: '5px 12px', borderRadius: '5px' }}
+                    className="button-13"
                   >
                     Cancel
                   </button>
@@ -432,7 +467,7 @@ function Profile() {
                 </div>
                 <div style={{ display:'flex', alignItems:'center', gap:'6px', marginTop:'4px' }}>
                   <span style={{ minWidth:'150px' }}>Budget Range:</span>
-                  <span>{user?.budgetRange ? (typeof user.budgetRange === 'string' ? user.budgetRange : `${user.budgetRange.min}-${user.budgetRange.max}`) : 'Not set'}</span>
+                  <span>{formatBudget(user?.budgetRange)}</span>
                 </div>
                 <EditIcon fontSize="small"
                   onClick={() => setEditingPreferences(true)}
