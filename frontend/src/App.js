@@ -341,12 +341,28 @@ function Footer() {
 // ---------------------------------------------------------------------------
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const auth = getAuth();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      setLoading(false);
+    });
+    return unsubscribe;
+  }, [auth]);
+
   // Group listings by university for the "featured" section
   const listingsByUniversity = exampleListings.reduce((acc, listing) => {
     if (!acc[listing.university]) acc[listing.university] = [];
     acc[listing.university].push(listing);
     return acc;
   }, {});
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Router>
@@ -363,7 +379,11 @@ function App() {
             <Link to="/messages" className="nav-button" title="Messages">
               💬
             </Link>
-            <Link to="/profile" className="nav-button" title="Profile">
+            <Link 
+              to={user ? "/profile" : "/login"} 
+              className="nav-button" 
+              title={user ? "Profile" : "Login"}
+            >
               👤
             </Link>
             <Link to="/settings" className="nav-button" title="Settings">
