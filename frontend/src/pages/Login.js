@@ -24,7 +24,22 @@ const Login = () => {
       // Navigate to home page
       navigate('/');
     } catch (error) {
-      setError(error.message);
+      let message = 'Login failed. Please try again.';
+      switch (error.code) {
+        case 'auth/user-not-found':
+          message = 'No account found with that email.';
+          break;
+        case 'auth/wrong-password':
+        case 'auth/invalid-credential':
+          message = 'Incorrect password. Please try again.';
+          break;
+        case 'auth/too-many-requests':
+          message = 'Too many failed attempts. Please wait and try again later.';
+          break;
+        default:
+          message = error.message;
+      }
+      setError(message);
     }
   };
 
