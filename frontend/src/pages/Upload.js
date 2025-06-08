@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -58,6 +58,11 @@ function Upload() {
     thumbnailIndex: 0
   });
 
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
+
+  // Debounce timer
+  const addressTimer = useRef(null);
+
   const storage = getStorage();
   const fileInputRef = useRef(null);
 
@@ -90,6 +95,27 @@ function Upload() {
       urls.push(url);
     }
     setFormData((prev) => ({ ...prev, photos: [...prev.photos, ...urls] }));
+  };
+
+  const handleAddressInput = (e) => {
+    const value = e.target.value;
+    setFormData((prev)=>({...prev,address:value}));
+    if(addressTimer.current) clearTimeout(addressTimer.current);
+    if(value.length<3){ setAddressSuggestions([]); return; }
+    const token = process.env.REACT_APP_MAPBOX_API_KEY || process.env.MAPBOX_API_KEY;
+    addressTimer.current = setTimeout(async()=>{
+      try{
+        // Florida center coordinates for bias (-81.5158 lon, 27.6648 lat)
+        const res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(value)}.json?access_token=${token}&autocomplete=true&limit=5&country=us&proximity=-81.5158,27.6648`);
+        const data = await res.json();
+        setAddressSuggestions(data.features||[]);
+      }catch(err){ console.error(err);}  
+    },300);
+  };
+
+  const selectSuggestion = (feat)=>{
+    setFormData(prev=>({...prev,address:feat.place_name, lat:feat.center[1], lon:feat.center[0]}));
+    setAddressSuggestions([]);
   };
 
   const handleSubmit = async () => {
@@ -153,7 +179,18 @@ function Upload() {
             </div>
             <div className="form-group">
               <label>Street Address:</label>
-              <input type="text" value={formData.address} onChange={handleChange('address')} placeholder="123 Main St" style={{marginLeft:'10px',flex:1}} />
+              <div style={{position:'relative',flex:1}}>
+                <input type="text" className="input-13" value={formData.address} onChange={handleAddressInput} placeholder="123 Main St" style={{marginLeft:'10px',width:'100%'}} />
+                {addressSuggestions.length>0 && (
+                  <ul style={{position:'absolute',zIndex:1000,background:'#fff',listStyle:'none',margin:0,padding:'5px',border:'1px solid #d5d9d9',borderRadius:'6px',width:'100%',maxHeight:'180px',overflowY:'auto'}}>
+                    {addressSuggestions.map((f)=>(
+                      <li key={f.id} style={{padding:'5px',cursor:'pointer'}} onClick={()=>selectSuggestion(f)}>
+                        {f.place_name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
           </div>
 
