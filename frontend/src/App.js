@@ -377,8 +377,8 @@ function App() {
           </Link>
 
           <div className="nav-buttons">
-            <Link to="/upload" className="nav-button-bordered" title="Add Sublease">
-              Add Sublease
+            <Link to="/upload" className="nav-button capsule" title="New Listing">
+              New Listing
             </Link>
             <Link to="/messages" className="nav-button" title="Messages">
               💬

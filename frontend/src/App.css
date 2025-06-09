@@ -70,14 +70,20 @@ body {
 }
 
 .nav-button.capsule {
-  padding: 8px 16px;
+  padding: 6px 16px;
   border-radius: 20px;
   background-color: #f7fafc;
-  border: 1px solid #e2e8f0;
+  border: 2px solid #e2e8f0;
+  font-size: 0.9rem;
+  color: #1a202c;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
 }
 
 .nav-button.capsule:hover {
   background-color: #edf2f7;
+  color: #1a202c;
 }
 
 /* Nav button with border on hover */
