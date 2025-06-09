@@ -23,7 +23,7 @@ const exampleListings = [
     description: "Modern studio apartment within walking distance to USF campus. Recently renovated with new appliances.",
     amenities: ["Furnished", "W/D in unit", "Parking included"],
     coordinates: { lat: 28.0587, lng: -82.4139 },
-    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&h=300&fit=crop"
   },
   {
     id: 2,
@@ -35,7 +35,7 @@ const exampleListings = [
     description: "Spacious 2-bedroom apartment in a quiet neighborhood. Close to USF and shopping centers.",
     amenities: ["Furnished", "Pool", "Gym access"],
     coordinates: { lat: 28.0627, lng: -82.4139 },
-    image: "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=300&fit=crop"
   },
   {
     id: 3,
@@ -47,7 +47,7 @@ const exampleListings = [
     description: "Luxury 1-bedroom apartment in USF Village. Modern amenities and great location.",
     amenities: ["Furnished", "W/D in unit", "24/7 Security"],
     coordinates: { lat: 28.0647, lng: -82.4139 },
-    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500&h=300&fit=crop"
   },
   {
     id: 4,
@@ -59,7 +59,7 @@ const exampleListings = [
     description: "Large 3-bedroom house perfect for roommates. Spacious backyard and garage.",
     amenities: ["Furnished", "Backyard", "Garage"],
     coordinates: { lat: 28.0667, lng: -82.4139 },
-    image: "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&h=300&fit=crop"
   },
   {
     id: 5,
@@ -71,7 +71,7 @@ const exampleListings = [
     description: "Modern studio loft with high ceilings. Close to USF and public transportation.",
     amenities: ["Furnished", "High ceilings", "Bike storage"],
     coordinates: { lat: 28.0687, lng: -82.4139 },
-    image: "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=500&h=300&fit=crop"
   },
   {
     id: 6,
@@ -83,7 +83,7 @@ const exampleListings = [
     description: "Large 4-bedroom house perfect for a group of students. Close to campus and amenities.",
     amenities: ["Furnished", "Large backyard", "2-car garage"],
     coordinates: { lat: 28.0707, lng: -82.4139 },
-    image: "https://images.unsplash.com/photo-1560185007-5f0bb1866cab?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=300&fit=crop"
   },
 
   // UCF Listings
@@ -97,7 +97,7 @@ const exampleListings = [
     description: "Modern 1-bedroom apartment near UCF campus. Recently renovated with new appliances.",
     amenities: ["Furnished", "W/D in unit", "Pool access"],
     coordinates: { lat: 28.6024, lng: -81.2001 },
-    image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&h=300&fit=crop"
   },
   {
     id: 8,
@@ -109,7 +109,7 @@ const exampleListings = [
     description: "Spacious 2-bedroom apartment in a quiet neighborhood. Close to UCF and shopping.",
     amenities: ["Furnished", "Gym access", "Parking included"],
     coordinates: { lat: 28.6044, lng: -81.2001 },
-    image: "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=300&fit=crop"
   },
   {
     id: 9,
@@ -121,7 +121,7 @@ const exampleListings = [
     description: "Large 3-bedroom house perfect for roommates. Spacious backyard and modern amenities.",
     amenities: ["Furnished", "Backyard", "Garage"],
     coordinates: { lat: 28.6064, lng: -81.2001 },
-    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500&h=300&fit=crop"
   },
   {
     id: 10,
@@ -133,7 +133,7 @@ const exampleListings = [
     description: "Cozy studio apartment within walking distance to UCF campus. Recently renovated.",
     amenities: ["Furnished", "W/D in unit", "Bike storage"],
     coordinates: { lat: 28.6084, lng: -81.2001 },
-    image: "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&h=300&fit=crop"
   },
   {
     id: 11,
@@ -145,12 +145,24 @@ const exampleListings = [
     description: "Large 4-bedroom house perfect for a group of students. Close to campus and amenities.",
     amenities: ["Furnished", "Large backyard", "2-car garage"],
     coordinates: { lat: 28.6104, lng: -81.2001 },
-    image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=500&h=300&fit=crop"
+  },
+  {
+    id: 12,
+    title: "Luxury 2BR - UCF Central",
+    price: "$1300/month",
+    semester: "Fall 2024",
+    university: "University of Central Florida",
+    address: "1234 University Blvd, Orlando, FL 32816",
+    description: "Luxury 2-bedroom apartment with modern amenities. Perfect for students.",
+    amenities: ["Furnished", "Pool", "Gym access"],
+    coordinates: { lat: 28.6124, lng: -81.2001 },
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=300&fit=crop"
   },
 
   // UF Listings
   {
-    id: 12,
+    id: 13,
     title: "1BR Apartment - UF Area",
     price: "$800/month",
     semester: "Fall 2024",
@@ -159,10 +171,10 @@ const exampleListings = [
     description: "Modern 1-bedroom apartment near UF campus. Recently renovated with new appliances.",
     amenities: ["Furnished", "W/D in unit", "Pool access"],
     coordinates: { lat: 29.6516, lng: -82.3248 },
-    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&h=300&fit=crop"
   },
   {
-    id: 13,
+    id: 14,
     title: "2BR House - UF East",
     price: "$1000/month",
     semester: "Fall 2024",
@@ -171,10 +183,10 @@ const exampleListings = [
     description: "Spacious 2-bedroom house in a quiet neighborhood. Close to UF and shopping centers.",
     amenities: ["Furnished", "Backyard", "Parking included"],
     coordinates: { lat: 29.6536, lng: -82.3248 },
-    image: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=300&fit=crop"
   },
   {
-    id: 14,
+    id: 15,
     title: "3BR Apartment - UF North",
     price: "$1500/month",
     semester: "Fall 2024",
@@ -183,10 +195,10 @@ const exampleListings = [
     description: "Large 3-bedroom apartment perfect for roommates. Modern amenities and great location.",
     amenities: ["Furnished", "Gym access", "W/D in unit"],
     coordinates: { lat: 29.6556, lng: -82.3248 },
-    image: "https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500&h=300&fit=crop"
   },
   {
-    id: 15,
+    id: 16,
     title: "4BR House - UF South",
     price: "$1800/month",
     semester: "Fall 2024",
@@ -195,7 +207,31 @@ const exampleListings = [
     description: "Large 4-bedroom house perfect for a group of students. Close to campus and amenities.",
     amenities: ["Furnished", "Large backyard", "2-car garage"],
     coordinates: { lat: 29.6576, lng: -82.3248 },
-    image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&h=400&fit=crop"
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&h=300&fit=crop"
+  },
+  {
+    id: 17,
+    title: "Studio Loft - UF Central",
+    price: "$700/month",
+    semester: "Fall 2024",
+    university: "University of Florida",
+    address: "7890 University Ave, Gainesville, FL 32603",
+    description: "Modern studio loft with high ceilings. Perfect for single students.",
+    amenities: ["Furnished", "High ceilings", "Bike storage"],
+    coordinates: { lat: 29.6596, lng: -82.3248 },
+    image: "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=500&h=300&fit=crop"
+  },
+  {
+    id: 18,
+    title: "Luxury 2BR - UF West",
+    price: "$1200/month",
+    semester: "Fall 2024",
+    university: "University of Florida",
+    address: "1234 NW 16th Ave, Gainesville, FL 32603",
+    description: "Luxury 2-bedroom apartment with modern amenities. Close to campus.",
+    amenities: ["Furnished", "Pool", "Gym access"],
+    coordinates: { lat: 29.6616, lng: -82.3248 },
+    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=300&fit=crop"
   }
 ];
 
@@ -235,12 +271,30 @@ function SearchSection() {
   };
 
   return (
-    <section className="search-section">
-      <div className="search-container">
-        <div className="search-bar">
+    <section className="search-section" style={{ marginTop: '100px' }}>
+      <div className="search-container" style={{ textAlign: 'center' }}>
+        <h1 style={{ 
+          fontSize: '2.5rem', 
+          marginBottom: '40px',
+          color: '#333'
+        }}>
+          University Sublease
+        </h1>
+        <div className="search-bar" style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          gap: '10px',
+          marginBottom: '50px'
+        }}>
           <select
             onChange={(e) => setSelectedUniversity(e.target.value)}
             className="search-select"
+            style={{
+              padding: '10px 20px',
+              fontSize: '1rem',
+              borderRadius: '8px',
+              border: '1px solid #ddd'
+            }}
           >
             <option value="">Select University</option>
             {universities.map((uni) => (
@@ -252,6 +306,12 @@ function SearchSection() {
           <select
             onChange={(e) => setSelectedSemester(e.target.value)}
             className="search-select"
+            style={{
+              padding: '10px 20px',
+              fontSize: '1rem',
+              borderRadius: '8px',
+              border: '1px solid #ddd'
+            }}
           >
             <option value="">Select Semester</option>
             {semesters.map((sem) => (
@@ -263,6 +323,14 @@ function SearchSection() {
           <button
             onClick={handleSearch}
             className="search-button"
+            style={{
+              padding: '10px 20px',
+              fontSize: '1rem',
+              borderRadius: '8px',
+              border: '1px solid #ddd',
+              backgroundColor: '#f8f9fa',
+              cursor: 'pointer'
+            }}
           >
             🔍
           </button>
@@ -367,7 +435,7 @@ function App() {
 
   return (
     <Router>
-      <div className="app">
+      <div className="app" style={{ backgroundColor: 'white' }}>
         {/* ---------------------------------------------------------------- */}
         {/*  Header                                                        */}
         {/* ---------------------------------------------------------------- */}
@@ -425,19 +493,69 @@ function App() {
                         <div key={university} className="university-section">
                           <h2 className="university-title">{university}</h2>
 
-                          <div className="featured-tiles">
-                            {listings.map((listing) => (
-                              <div key={listing.id} className="featured-tile">
-                                <div className="tile-image">
-                                  <img
-                                    src={listing.image}
+                          <div className="featured-tiles" style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(6, 1fr)',
+                            gap: '15px',
+                            padding: '0 20px'
+                          }}>
+                            {listings.slice(0, 6).map((listing) => (
+                              <div key={listing.id} style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '10px'
+                              }}>
+                                <div style={{ 
+                                  height: '150px',
+                                  borderRadius: '12px',
+                                  overflow: 'hidden',
+                                  transition: 'box-shadow 0.3s ease',
+                                  cursor: 'pointer'
+                                }}>
+                                  <img 
+                                    src={listing.image} 
                                     alt={listing.title}
+                                    style={{
+                                      width: '100%',
+                                      height: '100%',
+                                      objectFit: 'cover'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.parentElement.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.parentElement.style.boxShadow = 'none';
+                                    }}
                                   />
                                 </div>
-                                <div className="tile-content">
-                                  <h3>{listing.title}</h3>
-                                  <p className="tile-price">{listing.price}</p>
-                                  <p className="tile-semester">{listing.semester}</p>
+                                <div style={{ 
+                                  padding: '12px',
+                                  background: 'white',
+                                  borderRadius: '12px',
+                                  transition: 'box-shadow 0.3s ease',
+                                  cursor: 'pointer'
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.boxShadow = 'none';
+                                }}>
+                                  <h3 style={{ 
+                                    margin: '0 0 5px 0',
+                                    fontSize: '0.9rem',
+                                    fontWeight: '600'
+                                  }}>{listing.title}</h3>
+                                  <p style={{ 
+                                    margin: '0 0 3px 0',
+                                    fontSize: '0.8rem',
+                                    color: '#666'
+                                  }}>{listing.price}</p>
+                                  <p style={{ 
+                                    margin: '0',
+                                    fontSize: '0.8rem',
+                                    color: '#666'
+                                  }}>{listing.semester}</p>
                                 </div>
                               </div>
                             ))}

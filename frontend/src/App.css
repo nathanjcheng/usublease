@@ -183,35 +183,22 @@ body {
 }
 
 .featured-tiles {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  overflow-x: auto;
-  padding-bottom: 20px;
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 #f7fafc;
-}
-
-.featured-tiles::-webkit-scrollbar {
-  height: 8px;
-}
-
-.featured-tiles::-webkit-scrollbar-track {
-  background: #f7fafc;
-  border-radius: 4px;
-}
-
-.featured-tiles::-webkit-scrollbar-thumb {
-  background-color: #cbd5e0;
-  border-radius: 4px;
+  padding: 20px 0;
 }
 
 .featured-tile {
-  flex: 0 0 280px;
-  background: white;
+  flex: 0 0 auto;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid #e2e8f0;
 }
 
 .featured-tile:hover {
@@ -224,6 +211,8 @@ body {
   height: 200px;
   overflow: hidden;
   background-color: #f7fafc;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 15px;
 }
 
 .tile-image img {
@@ -233,26 +222,28 @@ body {
 }
 
 .tile-content {
-  padding: 15px;
+  padding: 0 20px 20px 20px;
+  color: #1a202c;
   background: white;
 }
 
 .tile-content h3 {
   margin: 0 0 10px 0;
-  color: #1a202c;
   font-size: 1.2rem;
+  color: #2d3748;
 }
 
 .tile-price {
-  color: #1a202c;
   font-weight: bold;
   font-size: 1.1rem;
-  margin: 0 0 5px 0;
+  margin: 0 0 8px 0;
+  color: #2d3748;
 }
 
 .tile-semester {
-  color: #1a202c;
   margin: 0;
+  font-size: 0.9rem;
+  color: #718096;
 }
 
 /* Footer Styles */
@@ -587,6 +578,24 @@ body {
   }
 
   .profile-details {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1200px) {
+  .featured-tiles {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .featured-tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .featured-tiles {
     grid-template-columns: 1fr;
   }
 }
