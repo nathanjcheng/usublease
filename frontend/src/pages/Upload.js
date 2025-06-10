@@ -27,18 +27,20 @@ const semesters = ['Fall', 'Spring', 'Summer'];
 
 function Upload() {
   const [step, setStep] = useState(0);
+  // Total number of steps (index of the final step). Update this if you add/remove steps.
+  const totalSteps = 6; // 0-6 inclusive
   const [formData, setFormData] = useState({
     semester: '',
-    year: new Date().getFullYear(),
+    year: 2025,
     startDate: '',
     endDate: '',
     university: '',
     address: '',
     unitType: '',
-    beds: 1,
-    baths: 1,
-    bedsOffered: 1,
-    bathsOffered: 1,
+    beds: '',
+    baths: '',
+    bedsOffered: '',
+    bathsOffered: '',
     sharedBath: false,
     monthlyRent: '',
     securityDeposit: '',
@@ -60,7 +62,7 @@ function Upload() {
 
   const [addressSuggestions, setAddressSuggestions] = useState([]);
 
-  // Debounce timer
+  // Mapbox requests are proxied through the backend to avoid exposing the API key
   const addressTimer = useRef(null);
 
   const storage = getStorage();
@@ -102,15 +104,15 @@ function Upload() {
     setFormData((prev)=>({...prev,address:value}));
     if(addressTimer.current) clearTimeout(addressTimer.current);
     if(value.length<3){ setAddressSuggestions([]); return; }
-    const token = process.env.REACT_APP_MAPBOX_API_KEY || process.env.MAPBOX_API_KEY;
-    addressTimer.current = setTimeout(async()=>{
-      try{
-        // Florida center coordinates for bias (-81.5158 lon, 27.6648 lat)
-        const res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(value)}.json?access_token=${token}&autocomplete=true&limit=5&country=us&proximity=-81.5158,27.6648`);
+    addressTimer.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`http://localhost:8000/api/geocode?q=${encodeURIComponent(value)}`);
         const data = await res.json();
-        setAddressSuggestions(data.features||[]);
-      }catch(err){ console.error(err);}  
-    },300);
+        setAddressSuggestions(data.features || []);
+      } catch (err) {
+        console.error(err);
+      }
+    }, 300);
   };
 
   const selectSuggestion = (feat)=>{
@@ -137,6 +139,18 @@ function Upload() {
   return (
     <div className="page-container" style={{ maxWidth: '700px', margin: '0 auto' }}>
       <h1>Tell us about your Sublease</h1>
+      {/* Progress Bar */}
+      <div style={{width:'100%',background:'#e0e0e0',height:'4px',borderRadius:'4px',margin:'10px 0'}}>
+        <div
+          style={{
+            width: `${(step/totalSteps)*100}%`,
+            background: '#793094',
+            height: '100%',
+            borderRadius: '4px',
+            transition: 'width 0.3s ease'
+          }}
+        ></div>
+      </div>
       {step === 0 && (
         <div style={{display:'flex',flexDirection:'column',gap:'2rem',alignItems:'flex-start',width:'100%'}}>
           {/* Availability Section */}
@@ -163,9 +177,17 @@ function Upload() {
               <label style={{marginLeft:'20px'}}>End:</label>
               <input type="date" className="input-13" style={{width:'160px'}} value={formData.endDate} onChange={handleChange('endDate')} />
             </div>
+            {/* Navigation Buttons */}
+            <div style={{display:'flex',justifyContent:'center',marginTop:'1.5rem'}}>
+              <button className="button-13 save" onClick={handleNext}>Next</button>
+            </div>
           </div>
+        </div>
+      )}
 
-          {/* Campus & Address Section */}
+      {/* Campus & Address Step */}
+      {step === 1 && (
+        <div style={{display:'flex',flexDirection:'column',gap:'2rem',alignItems:'flex-start',width:'100%'}}>
           <div style={{background:'#fff',borderRadius:'8px',padding:'1.5rem',boxShadow:'0 1px 3px rgba(0,0,0,0.1)',width:'100%'}}>
             <h3 style={{margin:'0 0 0.5rem 0'}}>Campus & Address</h3>
             <div className="form-group" style={{marginBottom:'1rem',display:'flex',alignItems:'center',gap:'10px'}}>
@@ -192,9 +214,19 @@ function Upload() {
                 )}
               </div>
             </div>
-          </div>
 
-          {/* Unit Details Section */}
+            {/* Navigation Buttons */}
+            <div style={{display:'flex',justifyContent:'center',marginTop:'1.5rem',gap:'10px'}}>
+              <button className="button-13" onClick={handleBack}>Back</button>
+              <button className="button-13 save" onClick={handleNext}>Next</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Unit Details Step */}
+      {step === 2 && (
+        <div style={{display:'flex',flexDirection:'column',gap:'2rem',alignItems:'flex-start',width:'100%'}}>
           <div style={{background:'#fff',borderRadius:'8px',padding:'1.5rem',boxShadow:'0 1px 3px rgba(0,0,0,0.1)',width:'100%'}}>
             <h3 style={{margin:'0 0 0.5rem 0'}}>Unit Details</h3>
             <div style={{marginBottom:'1rem',display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
@@ -226,13 +258,17 @@ function Upload() {
                 <input type="checkbox" checked={formData.sharedBath} onChange={handleChange('sharedBath')} />
               </label>
             </div>
-          </div>
 
-          <button className="button-13 save" style={{alignSelf:'center',marginTop:'1rem'}} onClick={handleNext}>Next</button>
+            {/* Navigation Buttons */}
+            <div style={{display:'flex',justifyContent:'center',marginTop:'1.5rem',gap:'10px'}}>
+              <button className="button-13" onClick={handleBack}>Back</button>
+              <button className="button-13 save" onClick={handleNext}>Next</button>
+            </div>
+          </div>
         </div>
       )}
 
-      {step === 1 && (
+      {step === 3 && (
         <div style={{display:'flex',flexDirection:'column',gap:'2rem',alignItems:'flex-start',width:'100%'}}>
           {/* Price Container */}
           <div style={{background:'#fff',borderRadius:'8px',padding:'1.5rem',boxShadow:'0 1px 3px rgba(0,0,0,0.1)',width:'100%'}}>
@@ -268,7 +304,8 @@ function Upload() {
         </div>
       )}
 
-      {step === 2 && (
+      {/* Photos Step */}
+      {step === 4 && (
         <div style={{display:'flex',flexDirection:'column',gap:'2rem',alignItems:'flex-start',width:'100%'}}>
           {/* Photos Container */}
           <div style={{background:'#fff',borderRadius:'8px',padding:'1.5rem',boxShadow:'0 1px 3px rgba(0,0,0,0.1)',width:'100%'}}>
@@ -305,7 +342,8 @@ function Upload() {
         </div>
       )}
 
-      {step === 3 && (
+      {/* Description Step */}
+      {step === 5 && (
         <div>
           <h2>Description</h2>
           <div className="form-group">
@@ -317,7 +355,21 @@ function Upload() {
             <textarea value={formData.description} onChange={handleChange('description')} maxLength={300} rows={4} />
           </div>
           <button className="button-13" onClick={handleBack}>Back</button>{' '}
-          <button className="button-13 save" onClick={handleSubmit}>Submit</button>
+          <button className="button-13 save" onClick={handleNext}>Review</button>
+        </div>
+      )}
+
+      {/* Review Step */}
+      {step === 6 && (
+        <div>
+          <h2>Review Your Listing</h2>
+          <div style={{background:'#fff',padding:'1rem',borderRadius:'8px',boxShadow:'0 1px 3px rgba(0,0,0,0.1)',maxHeight:'400px',overflowY:'auto'}}>
+            <pre style={{whiteSpace:'pre-wrap'}}>{JSON.stringify(formData, null, 2)}</pre>
+          </div>
+          <div style={{marginTop:'1.5rem'}}>
+            <button className="button-13" onClick={handleBack}>Back</button>{' '}
+            <button className="button-13 save" onClick={handleSubmit}>Submit</button>
+          </div>
         </div>
       )}
     </div>

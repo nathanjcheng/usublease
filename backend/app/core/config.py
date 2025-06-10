@@ -14,8 +14,12 @@ class Settings(BaseSettings):
         str(BACKEND_DIR / "usublease-firebase-adminsdk-fbsvc-ab3630848f.json")
     )
 
+    # Mapbox API Key to be used by server-side proxy
+    MAPBOX_API_KEY: str | None = os.getenv("MAPBOX_API_KEY")
+
     class Config:
         env_file = ".env"
+        extra = "ignore"  # ignore any additional env vars without raising errors
 
 @lru_cache()
 def get_settings() -> Settings:
