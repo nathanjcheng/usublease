@@ -23,8 +23,9 @@ async def health_check():
     return {"status": "healthy", "firestore": "connected", "storage": "connected"}
 
 # Import and include routers
-from .routers import listings, messaging, auth
+from .routers import listings, messaging, auth, geocode
 
 app.include_router(listings.router, prefix="/api/listings", tags=["listings"])
 app.include_router(messaging.router, prefix="/api/messaging", tags=["messaging"])
-app.include_router(auth.router, prefix="/api/auth", tags=["auth"]) 
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(geocode.router, prefix="/api", tags=["geocode"]) 

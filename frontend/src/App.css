@@ -726,6 +726,14 @@ body {
   line-height: 29px;
   padding: 0 10px;
   width: auto;
+  -moz-appearance: textfield; /* Firefox */
+}
+
+/* WebKit browsers */
+.input-13::-webkit-outer-spin-button,
+.input-13::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .button-13.semester {

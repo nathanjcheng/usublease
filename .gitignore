@@ -12,3 +12,6 @@ backend/app/schemas/__pycache__/
 # Firebase service account
 backend/config/firebase-service-account.json
 frontend/.env
+backend/.env
+
+backend/.env
