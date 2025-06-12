@@ -268,8 +268,24 @@ function SearchSection() {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      minHeight: 'calc(100vh - 400px)', // This ensures vertical centering
-      width: '100%',
+      minHeight: 'calc(100vh - 400px)',
+      width: '100vw',
+      marginLeft: 'calc(-50vw + 50%)',
+      marginRight: 'calc(-50vw + 50%)',
+      background: 'linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%)',
+      position: 'relative',
+      overflow: 'hidden',
+      '&::before': {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '200px',
+        background: 'linear-gradient(135deg, rgba(51,51,51,0.05) 0%, rgba(85,85,85,0.05) 100%)',
+        transform: 'skewY(-3deg)',
+        transformOrigin: 'top left'
+      },
       '@media (max-width: 768px)': {
         marginTop: '60px',
         minHeight: 'calc(100vh - 300px)'
@@ -278,7 +294,10 @@ function SearchSection() {
       <div className="search-container" style={{ 
         textAlign: 'center',
         width: '100%',
+        maxWidth: '1200px',
         padding: '0 20px',
+        position: 'relative',
+        zIndex: 1,
         '@media (max-width: 768px)': {
           padding: '0 15px'
         }
@@ -287,6 +306,10 @@ function SearchSection() {
           fontSize: '2.5rem', 
           marginBottom: '40px',
           color: '#333',
+          textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          background: 'linear-gradient(135deg, #333333, #555555)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
           '@media (max-width: 768px)': {
             fontSize: '2rem',
             marginBottom: '30px'
@@ -304,11 +327,17 @@ function SearchSection() {
           maxWidth: '800px',
           marginLeft: 'auto',
           marginRight: 'auto',
-          transition: 'max-width 0.3s ease-in-out',
+          transition: 'all 0.3s ease-in-out',
+          padding: '20px',
+          background: 'rgba(255,255,255,0.9)',
+          borderRadius: '20px',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+          backdropFilter: 'blur(10px)',
           '@media (max-width: 768px)': {
             flexDirection: 'column',
             gap: '10px',
-            marginBottom: '30px'
+            marginBottom: '30px',
+            padding: '15px'
           }
         }}>
           {/* University Dropdown */}
@@ -528,52 +557,152 @@ function ProtectedRoute({ children }) {
 function Footer() {
   return (
     <footer className="footer" style={{
+      background: 'linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%)',
+      padding: '60px 0 30px',
+      borderTop: '1px solid rgba(0,0,0,0.05)',
       '@media (max-width: 768px)': {
-        padding: '30px 15px'
+        padding: '40px 15px 20px'
       }
     }}>
       <div className="footer-content" style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '30px',
+        gap: '40px',
         maxWidth: '1200px',
         margin: '0 auto',
         padding: '0 20px',
         '@media (max-width: 768px)': {
           gridTemplateColumns: '1fr',
-          gap: '20px',
+          gap: '30px',
           textAlign: 'center'
         }
       }}>
         <div className="footer-section">
-          <h3>About USublease</h3>
-          <p>
+          <h3 style={{
+            fontSize: '1.2rem',
+            marginBottom: '20px',
+            color: '#333',
+            position: 'relative',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: '-8px',
+              left: '0',
+              width: '40px',
+              height: '2px',
+              background: 'linear-gradient(90deg, #333333, #555555)',
+              '@media (max-width: 768px)': {
+                left: '50%',
+                transform: 'translateX(-50%)'
+              }
+            }
+          }}>About USublease</h3>
+          <p style={{
+            color: '#666',
+            lineHeight: '1.6',
+            fontSize: '0.95rem'
+          }}>
             Connecting students with the perfect sublease opportunities across
             Florida universities.
           </p>
         </div>
 
         <div className="footer-section">
-          <h3>Quick Links</h3>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
+          <h3 style={{
+            fontSize: '1.2rem',
+            marginBottom: '20px',
+            color: '#333',
+            position: 'relative',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: '-8px',
+              left: '0',
+              width: '40px',
+              height: '2px',
+              background: 'linear-gradient(90deg, #333333, #555555)',
+              '@media (max-width: 768px)': {
+                left: '50%',
+                transform: 'translateX(-50%)'
+              }
+            }
+          }}>Quick Links</h3>
+          <ul style={{
+            listStyle: 'none',
+            padding: 0,
+            margin: 0
+          }}>
+            <li style={{ marginBottom: '10px' }}>
+              <Link to="/" style={{
+                color: '#666',
+                textDecoration: 'none',
+                transition: 'color 0.3s ease',
+                '&:hover': {
+                  color: '#333'
+                }
+              }}>Home</Link>
             </li>
-            <li>
-              <Link to="/map">Find Listings</Link>
+            <li style={{ marginBottom: '10px' }}>
+              <Link to="/map" style={{
+                color: '#666',
+                textDecoration: 'none',
+                transition: 'color 0.3s ease',
+                '&:hover': {
+                  color: '#333'
+                }
+              }}>Find Listings</Link>
             </li>
-            <li>
-              <Link to="/profile">My Profile</Link>
+            <li style={{ marginBottom: '10px' }}>
+              <Link to="/profile" style={{
+                color: '#666',
+                textDecoration: 'none',
+                transition: 'color 0.3s ease',
+                '&:hover': {
+                  color: '#333'
+                }
+              }}>My Profile</Link>
             </li>
-            <li>
-              <Link to="/messages">Messages</Link>
+            <li style={{ marginBottom: '10px' }}>
+              <Link to="/messages" style={{
+                color: '#666',
+                textDecoration: 'none',
+                transition: 'color 0.3s ease',
+                '&:hover': {
+                  color: '#333'
+                }
+              }}>Messages</Link>
             </li>
           </ul>
         </div>
 
         <div className="footer-section">
-          <h3>Contact Us</h3>
-          <ul>
+          <h3 style={{
+            fontSize: '1.2rem',
+            marginBottom: '20px',
+            color: '#333',
+            position: 'relative',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: '-8px',
+              left: '0',
+              width: '40px',
+              height: '2px',
+              background: 'linear-gradient(90deg, #333333, #555555)',
+              '@media (max-width: 768px)': {
+                left: '50%',
+                transform: 'translateX(-50%)'
+              }
+            }
+          }}>Contact Us</h3>
+          <ul style={{
+            listStyle: 'none',
+            padding: 0,
+            margin: 0,
+            color: '#666',
+            fontSize: '0.95rem',
+            lineHeight: '1.6'
+          }}>
             <li>Email: support@usublease.com</li>
             <li>Phone: (555) 123-4567</li>
             <li>Address: Tampa, FL</li>
@@ -581,7 +710,14 @@ function Footer() {
         </div>
       </div>
 
-      <div className="footer-bottom">
+      <div className="footer-bottom" style={{
+        textAlign: 'center',
+        marginTop: '40px',
+        paddingTop: '20px',
+        borderTop: '1px solid rgba(0,0,0,0.05)',
+        color: '#666',
+        fontSize: '0.9rem'
+      }}>
         <p>&copy; {new Date().getFullYear()} USublease. All rights reserved.</p>
       </div>
     </footer>
@@ -627,11 +763,12 @@ function App() {
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '15px 20px',
-          backgroundColor: 'white',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          background: 'linear-gradient(to right, #ffffff, #f8f9fa)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
           position: 'sticky',
           top: 0,
           zIndex: 1000,
+          borderBottom: '1px solid rgba(0,0,0,0.05)',
           '@media (max-width: 768px)': {
             padding: '10px 15px'
           }
@@ -640,6 +777,7 @@ function App() {
             display: 'flex', 
             alignItems: 'center', 
             gap: '10px',
+            textDecoration: 'none',
             '@media (max-width: 768px)': {
               gap: '5px'
             }
@@ -649,6 +787,7 @@ function App() {
               height: '38px', 
               objectFit: 'contain', 
               marginRight: '10px',
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
               '@media (max-width: 768px)': {
                 width: '32px',
                 height: '32px',
@@ -664,13 +803,27 @@ function App() {
               gap: '5px'
             }
           }}>
-            <Link to="/upload" className="nav-button capsule" title="New Listing" style={{
+            <Link to="/upload" className="nav-button capsule new-listing-btn" title="New Listing" style={{
+              padding: '8px 16px',
+              borderRadius: '20px',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'transparent',
+              border: '1px solid #ddd',
+              cursor: 'pointer',
               '@media (max-width: 768px)': {
-                padding: '8px 12px',
+                padding: '6px 12px',
                 fontSize: '0.9rem'
               }
             }}>
-              <span style={{ fontWeight: 'bold' }}>New Listing</span>
+              <span style={{ 
+                fontWeight: 'bold',
+                color: '#333',
+                fontSize: '0.95rem'
+              }}>New Listing</span>
             </Link>
             <Link to="/messages" className="nav-button capsule" title="Messages" style={{
               '@media (max-width: 768px)': {
@@ -749,25 +902,47 @@ function App() {
                   {/*  Featured Listings                                    */}
                   {/* ------------------------------------------------------ */}
                   <section className="featured-section" style={{
+                    padding: '40px 0',
+                    background: 'linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%)',
                     '@media (max-width: 768px)': {
-                      padding: '0 15px'
+                      padding: '20px 15px'
                     }
                   }}>
                     {Object.entries(listingsByUniversity).map(
                       ([university, listings]) => (
                         <div key={university} className="university-section">
                           <h2 className="university-title" style={{
+                            fontSize: '2rem',
+                            marginBottom: '30px',
+                            color: '#333',
+                            textAlign: 'left',
+                            position: 'relative',
+                            paddingLeft: '20px',
+                            '&::after': {
+                              content: '""',
+                              position: 'absolute',
+                              bottom: '-10px',
+                              left: '20px',
+                              transform: 'none',
+                              width: '60px',
+                              height: '3px',
+                              background: 'linear-gradient(90deg, #333333, #555555)',
+                              borderRadius: '3px'
+                            },
                             '@media (max-width: 768px)': {
                               fontSize: '1.5rem',
-                              marginBottom: '20px'
+                              marginBottom: '20px',
+                              paddingLeft: '15px'
                             }
                           }}>{university}</h2>
 
                           <div className="featured-tiles" style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(6, 1fr)',
-                            gap: '15px',
+                            gap: '20px',
                             padding: '0 20px',
+                            maxWidth: '1400px',
+                            margin: '0 auto',
                             '@media (max-width: 1200px)': {
                               gridTemplateColumns: 'repeat(4, 1fr)'
                             },
@@ -776,7 +951,7 @@ function App() {
                             },
                             '@media (max-width: 768px)': {
                               gridTemplateColumns: 'repeat(2, 1fr)',
-                              gap: '10px',
+                              gap: '15px',
                               padding: '0'
                             },
                             '@media (max-width: 480px)': {
@@ -787,16 +962,21 @@ function App() {
                               <div key={listing.id} style={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: '10px'
+                                gap: '15px',
+                                transition: 'transform 0.3s ease',
+                                '&:hover': {
+                                  transform: 'translateY(-5px)'
+                                }
                               }}>
                                 <div style={{ 
-                                  height: '150px',
-                                  borderRadius: '12px',
+                                  height: '200px',
+                                  borderRadius: '16px',
                                   overflow: 'hidden',
-                                  transition: 'box-shadow 0.3s ease',
+                                  transition: 'all 0.3s ease',
                                   cursor: 'pointer',
+                                  boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
                                   '@media (max-width: 768px)': {
-                                    height: '120px'
+                                    height: '160px'
                                   }
                                 }}>
                                   <img 
@@ -805,54 +985,52 @@ function App() {
                                     style={{
                                       width: '100%',
                                       height: '100%',
-                                      objectFit: 'cover'
+                                      objectFit: 'cover',
+                                      transition: 'transform 0.3s ease'
                                     }}
                                     onMouseEnter={(e) => {
-                                      e.currentTarget.parentElement.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+                                      e.currentTarget.style.transform = 'scale(1.05)';
                                     }}
                                     onMouseLeave={(e) => {
-                                      e.currentTarget.parentElement.style.boxShadow = 'none';
+                                      e.currentTarget.style.transform = 'scale(1)';
                                     }}
                                   />
                                 </div>
                                 <div style={{ 
-                                  padding: '12px',
+                                  padding: '20px',
                                   background: 'white',
-                                  borderRadius: '12px',
-                                  transition: 'box-shadow 0.3s ease',
+                                  borderRadius: '16px',
+                                  transition: 'all 0.3s ease',
                                   cursor: 'pointer',
+                                  boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
                                   '@media (max-width: 768px)': {
-                                    padding: '8px'
+                                    padding: '15px'
                                   }
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.boxShadow = 'none';
                                 }}>
                                   <h3 style={{ 
-                                    margin: '0 0 5px 0',
-                                    fontSize: '0.9rem',
+                                    margin: '0 0 10px 0',
+                                    fontSize: '1.1rem',
                                     fontWeight: '600',
+                                    color: '#333',
                                     '@media (max-width: 768px)': {
-                                      fontSize: '0.85rem'
+                                      fontSize: '1rem'
                                     }
                                   }}>{listing.title}</h3>
                                   <p style={{ 
-                                    margin: '0 0 3px 0',
-                                    fontSize: '0.8rem',
-                                    color: '#666',
+                                    margin: '0 0 5px 0',
+                                    fontSize: '0.95rem',
+                                    color: '#333',
+                                    fontWeight: '500',
                                     '@media (max-width: 768px)': {
-                                      fontSize: '0.75rem'
+                                      fontSize: '0.9rem'
                                     }
                                   }}>{listing.price}</p>
                                   <p style={{ 
                                     margin: '0',
-                                    fontSize: '0.8rem',
+                                    fontSize: '0.9rem',
                                     color: '#666',
                                     '@media (max-width: 768px)': {
-                                      fontSize: '0.75rem'
+                                      fontSize: '0.85rem'
                                     }
                                   }}>{listing.semester}</p>
                                 </div>
@@ -870,6 +1048,32 @@ function App() {
             }
           />
         </Routes>
+
+        {/* Add progress bar styles */}
+        <style>
+          {`
+            ::-webkit-scrollbar {
+              width: 8px;
+              height: 8px;
+            }
+            ::-webkit-scrollbar-track {
+              background: #f1f1f1;
+            }
+            ::-webkit-scrollbar-thumb {
+              background: #333;
+              border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+              background: #555;
+            }
+            .new-listing-btn:hover {
+              background: #f5f5f5 !important;
+              border-color: #333 !important;
+              box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+              opacity: 0.8 !important;
+            }
+          `}
+        </style>
       </div>
     </Router>
   );
