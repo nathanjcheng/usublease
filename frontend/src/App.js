@@ -263,12 +263,34 @@ function SearchSection() {
   };
 
   return (
-    <section className="search-section" style={{ marginTop: '100px' }}>
-      <div className="search-container" style={{ textAlign: 'center' }}>
+    <section className="search-section" style={{ 
+      marginTop: '100px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: 'calc(100vh - 400px)', // This ensures vertical centering
+      width: '100%',
+      '@media (max-width: 768px)': {
+        marginTop: '60px',
+        minHeight: 'calc(100vh - 300px)'
+      }
+    }}>
+      <div className="search-container" style={{ 
+        textAlign: 'center',
+        width: '100%',
+        padding: '0 20px',
+        '@media (max-width: 768px)': {
+          padding: '0 15px'
+        }
+      }}>
         <h1 style={{ 
           fontSize: '2.5rem', 
           marginBottom: '40px',
-          color: '#333'
+          color: '#333',
+          '@media (max-width: 768px)': {
+            fontSize: '2rem',
+            marginBottom: '30px'
+          }
         }}>
           University Sublease
         </h1>
@@ -279,24 +301,63 @@ function SearchSection() {
           gap: '15px',
           marginBottom: '50px',
           width: '100%',
-          maxWidth: '600px',
+          maxWidth: '800px',
           marginLeft: 'auto',
           marginRight: 'auto',
+          transition: 'max-width 0.3s ease-in-out',
+          '@media (max-width: 768px)': {
+            flexDirection: 'column',
+            gap: '10px',
+            marginBottom: '30px'
+          }
         }}>
           {/* University Dropdown */}
-          <div className="custom-dropdown" style={{ position: 'relative', flex: '0 0 auto' }}>
+          <div className="custom-dropdown" style={{ 
+            position: 'relative', 
+            flex: '1 1 auto', 
+            minWidth: '180px',
+            width: '100%',
+            '@media (max-width: 768px)': {
+              minWidth: '100%'
+            }
+          }}>
             <button
               type="button"
               className="search-select"
-              style={capsuleStyle(uniDropdownOpen)}
+              style={{
+                ...capsuleStyle(uniDropdownOpen),
+                width: '100%',
+                transition: 'all 0.3s ease-in-out',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                '@media (max-width: 768px)': {
+                  padding: '12px 15px',
+                  fontSize: '0.9rem'
+                }
+              }}
               onClick={() => {
                 setUniDropdownOpen((open) => !open);
                 setSemDropdownOpen(false);
               }}
               tabIndex={0}
             >
-              <span>{selectedUniversity || 'Select University'}</span>
-              <span style={{ fontSize: '1.1em', color: '#888', marginLeft: '8px' }}>
+              <span style={{ 
+                overflow: 'hidden', 
+                textOverflow: 'ellipsis',
+                '@media (max-width: 768px)': {
+                  fontSize: '0.9rem'
+                }
+              }}>{selectedUniversity || 'Select University'}</span>
+              <span style={{ 
+                fontSize: '1.1em', 
+                color: '#888', 
+                marginLeft: '8px', 
+                flexShrink: 0,
+                '@media (max-width: 768px)': {
+                  fontSize: '1em'
+                }
+              }}>
                 ▼
               </span>
             </button>
@@ -327,19 +388,52 @@ function SearchSection() {
           </div>
 
           {/* Semester Dropdown */}
-          <div className="custom-dropdown" style={{ position: 'relative', flex: '0 0 auto' }}>
+          <div className="custom-dropdown" style={{ 
+            position: 'relative', 
+            flex: '1 1 auto', 
+            minWidth: '180px',
+            width: '100%',
+            '@media (max-width: 768px)': {
+              minWidth: '100%'
+            }
+          }}>
             <button
               type="button"
               className="search-select"
-              style={capsuleStyle(semDropdownOpen)}
+              style={{
+                ...capsuleStyle(semDropdownOpen),
+                width: '100%',
+                transition: 'all 0.3s ease-in-out',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                '@media (max-width: 768px)': {
+                  padding: '12px 15px',
+                  fontSize: '0.9rem'
+                }
+              }}
               onClick={() => {
                 setSemDropdownOpen((open) => !open);
                 setUniDropdownOpen(false);
               }}
               tabIndex={0}
             >
-              <span>{selectedSemester ? stripMonths(selectedSemester) : 'Select Semester'}</span>
-              <span style={{ fontSize: '1.1em', color: '#888', marginLeft: '8px' }}>
+              <span style={{ 
+                overflow: 'hidden', 
+                textOverflow: 'ellipsis',
+                '@media (max-width: 768px)': {
+                  fontSize: '0.9rem'
+                }
+              }}>{selectedSemester ? stripMonths(selectedSemester) : 'Select Semester'}</span>
+              <span style={{ 
+                fontSize: '1.1em', 
+                color: '#888', 
+                marginLeft: '8px', 
+                flexShrink: 0,
+                '@media (max-width: 768px)': {
+                  fontSize: '1em'
+                }
+              }}>
                 ▼
               </span>
             </button>
@@ -387,12 +481,24 @@ function SearchSection() {
               justifyContent: 'center',
               flex: '0 0 auto',
               marginLeft: 'auto',
+              '@media (max-width: 768px)': {
+                width: '40px',
+                height: '40px',
+                marginLeft: '0'
+              }
             }}
           >
             <img 
               src={searchPng} 
               alt="Search" 
-              style={{ width: '20px', height: '20px' }}
+              style={{ 
+                width: '20px', 
+                height: '20px',
+                '@media (max-width: 768px)': {
+                  width: '18px',
+                  height: '18px'
+                }
+              }}
             />
           </button>
         </div>
@@ -421,8 +527,24 @@ function ProtectedRoute({ children }) {
 
 function Footer() {
   return (
-    <footer className="footer">
-      <div className="footer-content">
+    <footer className="footer" style={{
+      '@media (max-width: 768px)': {
+        padding: '30px 15px'
+      }
+    }}>
+      <div className="footer-content" style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '30px',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '0 20px',
+        '@media (max-width: 768px)': {
+          gridTemplateColumns: '1fr',
+          gap: '20px',
+          textAlign: 'center'
+        }
+      }}>
         <div className="footer-section">
           <h3>About USublease</h3>
           <p>
@@ -500,27 +622,105 @@ function App() {
         {/* ---------------------------------------------------------------- */}
         {/*  Header                                                        */}
         {/* ---------------------------------------------------------------- */}
-        <header className="header">
-          <Link to="/" className="logo" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img src={icon} alt="USublease Icon" style={{ width: '38px', height: '38px', objectFit: 'contain', marginRight: '10px' }} />
+        <header className="header" style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '15px 20px',
+          backgroundColor: 'white',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
+          '@media (max-width: 768px)': {
+            padding: '10px 15px'
+          }
+        }}>
+          <Link to="/" className="logo" style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '10px',
+            '@media (max-width: 768px)': {
+              gap: '5px'
+            }
+          }}>
+            <img src={icon} alt="USublease Icon" style={{ 
+              width: '38px', 
+              height: '38px', 
+              objectFit: 'contain', 
+              marginRight: '10px',
+              '@media (max-width: 768px)': {
+                width: '32px',
+                height: '32px',
+                marginRight: '5px'
+              }
+            }} />
           </Link>
 
-          <div className="nav-buttons">
-            <Link to="/upload" className="nav-button capsule" title="New Listing">
+          <div className="nav-buttons" style={{
+            display: 'flex',
+            gap: '10px',
+            '@media (max-width: 768px)': {
+              gap: '5px'
+            }
+          }}>
+            <Link to="/upload" className="nav-button capsule" title="New Listing" style={{
+              '@media (max-width: 768px)': {
+                padding: '8px 12px',
+                fontSize: '0.9rem'
+              }
+            }}>
               <span style={{ fontWeight: 'bold' }}>New Listing</span>
             </Link>
-            <Link to="/messages" className="nav-button capsule" title="Messages">
-              <img src={mailIcon} alt="Messages" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
+            <Link to="/messages" className="nav-button capsule" title="Messages" style={{
+              '@media (max-width: 768px)': {
+                padding: '8px'
+              }
+            }}>
+              <img src={mailIcon} alt="Messages" style={{ 
+                width: '24px', 
+                height: '24px', 
+                objectFit: 'contain',
+                '@media (max-width: 768px)': {
+                  width: '20px',
+                  height: '20px'
+                }
+              }} />
             </Link>
             <Link 
               to={user ? "/profile" : "/login"} 
               className="nav-button capsule" 
               title={user ? "Profile" : "Login"}
+              style={{
+                '@media (max-width: 768px)': {
+                  padding: '8px'
+                }
+              }}
             >
-              <img src={profileIcon} alt="Profile" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
+              <img src={profileIcon} alt="Profile" style={{ 
+                width: '24px', 
+                height: '24px', 
+                objectFit: 'contain',
+                '@media (max-width: 768px)': {
+                  width: '20px',
+                  height: '20px'
+                }
+              }} />
             </Link>
-            <Link to="/settings" className="nav-button capsule" title="Settings">
-              <img src={settingsIcon} alt="Settings" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
+            <Link to="/settings" className="nav-button capsule" title="Settings" style={{
+              '@media (max-width: 768px)': {
+                padding: '8px'
+              }
+            }}>
+              <img src={settingsIcon} alt="Settings" style={{ 
+                width: '24px', 
+                height: '24px', 
+                objectFit: 'contain',
+                '@media (max-width: 768px)': {
+                  width: '20px',
+                  height: '20px'
+                }
+              }} />
             </Link>
           </div>
         </header>
@@ -548,17 +748,40 @@ function App() {
                   {/* ------------------------------------------------------ */}
                   {/*  Featured Listings                                    */}
                   {/* ------------------------------------------------------ */}
-                  <section className="featured-section">
+                  <section className="featured-section" style={{
+                    '@media (max-width: 768px)': {
+                      padding: '0 15px'
+                    }
+                  }}>
                     {Object.entries(listingsByUniversity).map(
                       ([university, listings]) => (
                         <div key={university} className="university-section">
-                          <h2 className="university-title">{university}</h2>
+                          <h2 className="university-title" style={{
+                            '@media (max-width: 768px)': {
+                              fontSize: '1.5rem',
+                              marginBottom: '20px'
+                            }
+                          }}>{university}</h2>
 
                           <div className="featured-tiles" style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(6, 1fr)',
                             gap: '15px',
-                            padding: '0 20px'
+                            padding: '0 20px',
+                            '@media (max-width: 1200px)': {
+                              gridTemplateColumns: 'repeat(4, 1fr)'
+                            },
+                            '@media (max-width: 992px)': {
+                              gridTemplateColumns: 'repeat(3, 1fr)'
+                            },
+                            '@media (max-width: 768px)': {
+                              gridTemplateColumns: 'repeat(2, 1fr)',
+                              gap: '10px',
+                              padding: '0'
+                            },
+                            '@media (max-width: 480px)': {
+                              gridTemplateColumns: '1fr'
+                            }
                           }}>
                             {listings.slice(0, 6).map((listing) => (
                               <div key={listing.id} style={{
@@ -571,7 +794,10 @@ function App() {
                                   borderRadius: '12px',
                                   overflow: 'hidden',
                                   transition: 'box-shadow 0.3s ease',
-                                  cursor: 'pointer'
+                                  cursor: 'pointer',
+                                  '@media (max-width: 768px)': {
+                                    height: '120px'
+                                  }
                                 }}>
                                   <img 
                                     src={listing.image} 
@@ -594,7 +820,10 @@ function App() {
                                   background: 'white',
                                   borderRadius: '12px',
                                   transition: 'box-shadow 0.3s ease',
-                                  cursor: 'pointer'
+                                  cursor: 'pointer',
+                                  '@media (max-width: 768px)': {
+                                    padding: '8px'
+                                  }
                                 }}
                                 onMouseEnter={(e) => {
                                   e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
@@ -605,17 +834,26 @@ function App() {
                                   <h3 style={{ 
                                     margin: '0 0 5px 0',
                                     fontSize: '0.9rem',
-                                    fontWeight: '600'
+                                    fontWeight: '600',
+                                    '@media (max-width: 768px)': {
+                                      fontSize: '0.85rem'
+                                    }
                                   }}>{listing.title}</h3>
                                   <p style={{ 
                                     margin: '0 0 3px 0',
                                     fontSize: '0.8rem',
-                                    color: '#666'
+                                    color: '#666',
+                                    '@media (max-width: 768px)': {
+                                      fontSize: '0.75rem'
+                                    }
                                   }}>{listing.price}</p>
                                   <p style={{ 
                                     margin: '0',
                                     fontSize: '0.8rem',
-                                    color: '#666'
+                                    color: '#666',
+                                    '@media (max-width: 768px)': {
+                                      fontSize: '0.75rem'
+                                    }
                                   }}>{listing.semester}</p>
                                 </div>
                               </div>
