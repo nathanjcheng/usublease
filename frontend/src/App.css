@@ -125,8 +125,8 @@ body {
   max-width: 800px;
   margin: 0 auto;
   border: 1px solid #1a202c;
-  border-radius: 20px;
-  padding: 10px;
+  border-radius: 50px;
+  padding: 10px 20px;
   background-color: white;
 }
 
@@ -134,22 +134,27 @@ body {
   flex: 1;
   padding: 12px;
   border: none;
-  border-radius: 8px;
+  border-radius: 25px;
   font-size: 1rem;
   background-color: white;
   color: #1a202c;
 }
 
 .search-button {
-  padding: 12px 24px;
+  padding: 12px;
   background-color: var(--accent-color);
   color: white;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 50%;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s, border 0.2s;
   outline: none;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .search-button:hover {
@@ -179,7 +184,6 @@ body {
   color: #1a202c;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #e2e8f0;
 }
 
 .featured-tiles {

@@ -9,6 +9,11 @@ import Map from './pages/Map';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Upload from './pages/Upload';
+import mailIcon from './assets/images/mail.png';
+import profileIcon from './assets/images/profile.png';
+import searchPng from './assets/images/search.png';
+import icon from './icon.png';
+import settingsIcon from './assets/images/settings.png';
 
 // Example listings data
 const exampleListings = [
@@ -158,116 +163,103 @@ const exampleListings = [
     amenities: ["Furnished", "Pool", "Gym access"],
     coordinates: { lat: 28.6124, lng: -81.2001 },
     image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=300&fit=crop"
-  },
-
-  // UF Listings
-  {
-    id: 13,
-    title: "1BR Apartment - UF Area",
-    price: "$800/month",
-    semester: "Fall 2024",
-    university: "University of Florida",
-    address: "1234 University Ave, Gainesville, FL 32603",
-    description: "Modern 1-bedroom apartment near UF campus. Recently renovated with new appliances.",
-    amenities: ["Furnished", "W/D in unit", "Pool access"],
-    coordinates: { lat: 29.6516, lng: -82.3248 },
-    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&h=300&fit=crop"
-  },
-  {
-    id: 14,
-    title: "2BR House - UF East",
-    price: "$1000/month",
-    semester: "Fall 2024",
-    university: "University of Florida",
-    address: "5678 SW 13th St, Gainesville, FL 32608",
-    description: "Spacious 2-bedroom house in a quiet neighborhood. Close to UF and shopping centers.",
-    amenities: ["Furnished", "Backyard", "Parking included"],
-    coordinates: { lat: 29.6536, lng: -82.3248 },
-    image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=300&fit=crop"
-  },
-  {
-    id: 15,
-    title: "3BR Apartment - UF North",
-    price: "$1500/month",
-    semester: "Fall 2024",
-    university: "University of Florida",
-    address: "9012 NW 13th St, Gainesville, FL 32601",
-    description: "Large 3-bedroom apartment perfect for roommates. Modern amenities and great location.",
-    amenities: ["Furnished", "Gym access", "W/D in unit"],
-    coordinates: { lat: 29.6556, lng: -82.3248 },
-    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500&h=300&fit=crop"
-  },
-  {
-    id: 16,
-    title: "4BR House - UF South",
-    price: "$1800/month",
-    semester: "Fall 2024",
-    university: "University of Florida",
-    address: "3456 SW 34th St, Gainesville, FL 32608",
-    description: "Large 4-bedroom house perfect for a group of students. Close to campus and amenities.",
-    amenities: ["Furnished", "Large backyard", "2-car garage"],
-    coordinates: { lat: 29.6576, lng: -82.3248 },
-    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=500&h=300&fit=crop"
-  },
-  {
-    id: 17,
-    title: "Studio Loft - UF Central",
-    price: "$700/month",
-    semester: "Fall 2024",
-    university: "University of Florida",
-    address: "7890 University Ave, Gainesville, FL 32603",
-    description: "Modern studio loft with high ceilings. Perfect for single students.",
-    amenities: ["Furnished", "High ceilings", "Bike storage"],
-    coordinates: { lat: 29.6596, lng: -82.3248 },
-    image: "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?w=500&h=300&fit=crop"
-  },
-  {
-    id: 18,
-    title: "Luxury 2BR - UF West",
-    price: "$1200/month",
-    semester: "Fall 2024",
-    university: "University of Florida",
-    address: "1234 NW 16th Ave, Gainesville, FL 32603",
-    description: "Luxury 2-bedroom apartment with modern amenities. Close to campus.",
-    amenities: ["Furnished", "Pool", "Gym access"],
-    coordinates: { lat: 29.6616, lng: -82.3248 },
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=500&h=300&fit=crop"
   }
 ];
 
 const universities = [
   "University of South Florida",
-  "University of Florida",
-  "Florida State University",
-  "University of Central Florida",
-  "Florida International University",
-  "University of Miami",
-  "Florida Atlantic University",
-  "Florida A&M University",
-  "University of North Florida",
-  "Florida Gulf Coast University",
-  "University of West Florida",
-  "Florida Polytechnic University",
-  "New College of Florida",
-  "Florida Southern College",
-  "Stetson University"
+  "University of Central Florida"
 ];
 
 const semesters = [
-  "Fall 2024",
-  "Spring 2025",
-  "Summer 2025",
-  "Fall 2025",
-  "Spring 2026"
+  "Fall 2024 (August-December)",
+  "Spring 2025 (January-May)",
+  "Summer 2025 (May-August)",
+  "Fall 2025 (August-December)",
+  "Spring 2026 (January-May)"
 ];
 
 function SearchSection() {
   const navigate = useNavigate();
   const [selectedUniversity, setSelectedUniversity] = useState("");
   const [selectedSemester, setSelectedSemester] = useState("");
+  const [uniDropdownOpen, setUniDropdownOpen] = useState(false);
+  const [semDropdownOpen, setSemDropdownOpen] = useState(false);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (!e.target.closest('.custom-dropdown')) {
+        setUniDropdownOpen(false);
+        setSemDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
   const handleSearch = () => {
     navigate('/map', { state: { university: selectedUniversity, semester: selectedSemester } });
+  };
+
+  // Capsule style
+  const capsuleStyle = (isOpen) => ({
+    padding: '10px 20px',
+    fontSize: '1rem',
+    borderRadius: '999px',
+    border: '1px solid #ddd',
+    background: isOpen ? '#f0f4ff' : '#fff',
+    boxShadow: isOpen ? '0 4px 16px rgba(0, 80, 255, 0.08)' : 'none',
+    cursor: 'pointer',
+    minWidth: '180px',
+    transition: 'background 0.2s, box-shadow 0.2s',
+    position: 'relative',
+    outline: 'none',
+    color: selectedUniversity || selectedSemester ? '#222' : '#888',
+    fontWeight: 500,
+    textAlign: 'left',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '8px',
+  });
+
+  // Dropdown menu style
+  const dropdownMenuStyle = (isOpen) => ({
+    position: 'absolute',
+    top: '110%',
+    left: 0,
+    width: '100%',
+    background: '#fff',
+    borderRadius: '16px',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
+    zIndex: 10,
+    opacity: isOpen ? 1 : 0,
+    transform: isOpen ? 'translateY(0)' : 'translateY(-10px)',
+    pointerEvents: isOpen ? 'auto' : 'none',
+    transition: 'opacity 0.22s cubic-bezier(.4,0,.2,1), transform 0.22s cubic-bezier(.4,0,.2,1)',
+    marginTop: '6px',
+    padding: '6px 0',
+  });
+
+  const dropdownItemStyle = (isSelected) => ({
+    padding: '10px 24px',
+    cursor: 'pointer',
+    background: isSelected ? '#e6f0ff' : 'transparent',
+    color: isSelected ? '#0050ff' : '#222',
+    fontWeight: isSelected ? 600 : 500,
+    border: 'none',
+    outline: 'none',
+    fontSize: '1rem',
+    transition: 'background 0.18s',
+    borderRadius: '8px',
+    margin: '2px 8px',
+    textAlign: 'left',
+  });
+
+  // Helper function to strip months from semester string
+  const stripMonths = (semester) => {
+    return semester.split(' (')[0];
   };
 
   return (
@@ -283,56 +275,125 @@ function SearchSection() {
         <div className="search-bar" style={{ 
           display: 'flex', 
           justifyContent: 'center', 
-          gap: '10px',
-          marginBottom: '50px'
+          alignItems: 'center',
+          gap: '15px',
+          marginBottom: '50px',
+          width: '100%',
+          maxWidth: '600px',
+          marginLeft: 'auto',
+          marginRight: 'auto',
         }}>
-          <select
-            onChange={(e) => setSelectedUniversity(e.target.value)}
-            className="search-select"
-            style={{
-              padding: '10px 20px',
-              fontSize: '1rem',
-              borderRadius: '8px',
-              border: '1px solid #ddd'
-            }}
-          >
-            <option value="">Select University</option>
-            {universities.map((uni) => (
-              <option key={uni} value={uni}>
-                {uni}
-              </option>
-            ))}
-          </select>
-          <select
-            onChange={(e) => setSelectedSemester(e.target.value)}
-            className="search-select"
-            style={{
-              padding: '10px 20px',
-              fontSize: '1rem',
-              borderRadius: '8px',
-              border: '1px solid #ddd'
-            }}
-          >
-            <option value="">Select Semester</option>
-            {semesters.map((sem) => (
-              <option key={sem} value={sem}>
-                {sem}
-              </option>
-            ))}
-          </select>
+          {/* University Dropdown */}
+          <div className="custom-dropdown" style={{ position: 'relative', flex: '0 0 auto' }}>
+            <button
+              type="button"
+              className="search-select"
+              style={capsuleStyle(uniDropdownOpen)}
+              onClick={() => {
+                setUniDropdownOpen((open) => !open);
+                setSemDropdownOpen(false);
+              }}
+              tabIndex={0}
+            >
+              <span>{selectedUniversity || 'Select University'}</span>
+              <span style={{ fontSize: '1.1em', color: '#888', marginLeft: '8px' }}>
+                ▼
+              </span>
+            </button>
+            <div
+              className="dropdown-menu"
+              style={dropdownMenuStyle(uniDropdownOpen)}
+            >
+              {universities.map((uni) => (
+                <div
+                  key={uni}
+                  style={dropdownItemStyle(selectedUniversity === uni)}
+                  onClick={() => {
+                    setSelectedUniversity(uni);
+                    setUniDropdownOpen(false);
+                  }}
+                  tabIndex={0}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      setSelectedUniversity(uni);
+                      setUniDropdownOpen(false);
+                    }
+                  }}
+                >
+                  {uni}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Semester Dropdown */}
+          <div className="custom-dropdown" style={{ position: 'relative', flex: '0 0 auto' }}>
+            <button
+              type="button"
+              className="search-select"
+              style={capsuleStyle(semDropdownOpen)}
+              onClick={() => {
+                setSemDropdownOpen((open) => !open);
+                setUniDropdownOpen(false);
+              }}
+              tabIndex={0}
+            >
+              <span>{selectedSemester ? stripMonths(selectedSemester) : 'Select Semester'}</span>
+              <span style={{ fontSize: '1.1em', color: '#888', marginLeft: '8px' }}>
+                ▼
+              </span>
+            </button>
+            <div
+              className="dropdown-menu"
+              style={dropdownMenuStyle(semDropdownOpen)}
+            >
+              {semesters.map((sem) => (
+                <div
+                  key={sem}
+                  style={dropdownItemStyle(selectedSemester === sem)}
+                  onClick={() => {
+                    setSelectedSemester(sem);
+                    setSemDropdownOpen(false);
+                  }}
+                  tabIndex={0}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      setSelectedSemester(sem);
+                      setSemDropdownOpen(false);
+                    }
+                  }}
+                >
+                  {sem}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Search Button */}
           <button
             onClick={handleSearch}
             className="search-button"
             style={{
-              padding: '10px 20px',
-              fontSize: '1rem',
-              borderRadius: '8px',
+              padding: '0',
+              fontSize: '1.2rem',
+              borderRadius: '50%',
               border: '1px solid #ddd',
               backgroundColor: '#f8f9fa',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              width: '45px',
+              height: '45px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: '0 0 auto',
+              marginLeft: 'auto',
             }}
           >
-            🔍
+            <img 
+              src={searchPng} 
+              alt="Search" 
+              style={{ width: '20px', height: '20px' }}
+            />
           </button>
         </div>
       </div>
@@ -440,26 +501,26 @@ function App() {
         {/*  Header                                                        */}
         {/* ---------------------------------------------------------------- */}
         <header className="header">
-          <Link to="/" className="logo">
-            🏠 USublease
+          <Link to="/" className="logo" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <img src={icon} alt="USublease Icon" style={{ width: '38px', height: '38px', objectFit: 'contain', marginRight: '10px' }} />
           </Link>
 
           <div className="nav-buttons">
             <Link to="/upload" className="nav-button capsule" title="New Listing">
-              New Listing
+              <span style={{ fontWeight: 'bold' }}>New Listing</span>
             </Link>
-            <Link to="/messages" className="nav-button" title="Messages">
-              💬
+            <Link to="/messages" className="nav-button capsule" title="Messages">
+              <img src={mailIcon} alt="Messages" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
             </Link>
             <Link 
               to={user ? "/profile" : "/login"} 
-              className="nav-button" 
+              className="nav-button capsule" 
               title={user ? "Profile" : "Login"}
             >
-              👤
+              <img src={profileIcon} alt="Profile" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
             </Link>
-            <Link to="/settings" className="nav-button" title="Settings">
-              ⚙️
+            <Link to="/settings" className="nav-button capsule" title="Settings">
+              <img src={settingsIcon} alt="Settings" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
             </Link>
           </div>
         </header>
