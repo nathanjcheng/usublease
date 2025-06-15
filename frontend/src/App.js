@@ -233,17 +233,38 @@ function SearchSection() {
     background: '#fff',
     borderRadius: '16px',
     boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
-    zIndex: 10,
+    zIndex: 999999,
     opacity: isOpen ? 1 : 0,
     transform: isOpen ? 'translateY(0)' : 'translateY(-10px)',
     pointerEvents: isOpen ? 'auto' : 'none',
     transition: 'opacity 0.22s cubic-bezier(.4,0,.2,1), transform 0.22s cubic-bezier(.4,0,.2,1)',
     marginTop: '6px',
-    padding: '6px 0',
+    padding: '12px 0',
+    maxHeight: 'calc(2 * (40px + 24px))', // Height for 2 items with increased spacing
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    scrollbarWidth: 'thin',
+    scrollbarColor: '#888 #f1f1f1',
+    WebkitOverflowScrolling: 'touch',
+    isolation: 'isolate',
+    '&::-webkit-scrollbar': {
+      width: '6px'
+    },
+    '&::-webkit-scrollbar-track': {
+      background: '#f1f1f1',
+      borderRadius: '3px'
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: '#888',
+      borderRadius: '3px'
+    },
+    '&::-webkit-scrollbar-thumb:hover': {
+      background: '#555'
+    }
   });
 
   const dropdownItemStyle = (isSelected) => ({
-    padding: '10px 24px',
+    padding: '12px 24px',
     cursor: 'pointer',
     background: isSelected ? '#e6f0ff' : 'transparent',
     color: isSelected ? '#0050ff' : '#222',
@@ -253,8 +274,14 @@ function SearchSection() {
     fontSize: '1rem',
     transition: 'background 0.18s',
     borderRadius: '8px',
-    margin: '2px 8px',
+    margin: '4px 12px',
     textAlign: 'left',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    userSelect: 'none',
+    lineHeight: '40px',
+    height: '40px'
   });
 
   // Helper function to strip months from semester string
@@ -302,16 +329,19 @@ function SearchSection() {
           padding: '0 15px'
         }
       }}>
-        <h1 style={{ 
-          fontSize: '2.5rem', 
+        <h1 className="floating-title" style={{ 
+          fontSize: '4rem', 
           marginBottom: '40px',
           color: '#333',
-          textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          background: 'linear-gradient(135deg, #333333, #555555)',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.1)',
+          background: 'linear-gradient(135deg, #1a1a1a, #333333)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
+          fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+          fontWeight: '500',
+          letterSpacing: '-0.02em',
           '@media (max-width: 768px)': {
-            fontSize: '2rem',
+            fontSize: '2.5rem',
             marginBottom: '30px'
           }
         }}>
@@ -346,6 +376,7 @@ function SearchSection() {
             flex: '1 1 auto', 
             minWidth: '180px',
             width: '100%',
+            zIndex: 999999,
             '@media (max-width: 768px)': {
               minWidth: '100%'
             }
@@ -391,7 +422,7 @@ function SearchSection() {
               </span>
             </button>
             <div
-              className="dropdown-menu"
+              className="dropdown-menu scrollable-dropdown"
               style={dropdownMenuStyle(uniDropdownOpen)}
             >
               {universities.map((uni) => (
@@ -422,6 +453,7 @@ function SearchSection() {
             flex: '1 1 auto', 
             minWidth: '180px',
             width: '100%',
+            zIndex: 999999,
             '@media (max-width: 768px)': {
               minWidth: '100%'
             }
@@ -467,7 +499,7 @@ function SearchSection() {
               </span>
             </button>
             <div
-              className="dropdown-menu"
+              className="dropdown-menu scrollable-dropdown"
               style={dropdownMenuStyle(semDropdownOpen)}
             >
               {semesters.map((sem) => (
@@ -527,7 +559,7 @@ function SearchSection() {
                   width: '18px',
                   height: '18px'
                 }
-              }}
+              }} 
             />
           </button>
         </div>
@@ -1071,6 +1103,34 @@ function App() {
               border-color: #333 !important;
               box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
               opacity: 0.8 !important;
+            }
+            .scrollable-dropdown::-webkit-scrollbar {
+              width: 6px;
+            }
+            .scrollable-dropdown::-webkit-scrollbar-track {
+              background: #f1f1f1;
+              border-radius: 3px;
+            }
+            .scrollable-dropdown::-webkit-scrollbar-thumb {
+              background: #888;
+              border-radius: 3px;
+            }
+            .scrollable-dropdown::-webkit-scrollbar-thumb:hover {
+              background: #555;
+            }
+            @keyframes float {
+              0% {
+                transform: translateY(0px);
+              }
+              50% {
+                transform: translateY(-5px);
+              }
+              100% {
+                transform: translateY(0px);
+              }
+            }
+            .floating-title {
+              animation: float 8s ease-in-out infinite;
             }
           `}
         </style>
