@@ -183,106 +183,10 @@ function SearchSection() {
   const navigate = useNavigate();
   const [selectedUniversity, setSelectedUniversity] = useState("");
   const [selectedSemester, setSelectedSemester] = useState("");
-  const [uniDropdownOpen, setUniDropdownOpen] = useState(false);
-  const [semDropdownOpen, setSemDropdownOpen] = useState(false);
-
-  // Close dropdowns on outside click
-  useEffect(() => {
-    const handleClick = (e) => {
-      if (!e.target.closest('.custom-dropdown')) {
-        setUniDropdownOpen(false);
-        setSemDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
 
   const handleSearch = () => {
     navigate('/map', { state: { university: selectedUniversity, semester: selectedSemester } });
   };
-
-  // Capsule style
-  const capsuleStyle = (isOpen) => ({
-    padding: '10px 20px',
-    fontSize: '1rem',
-    borderRadius: '999px',
-    border: '1px solid #ddd',
-    background: isOpen ? '#f0f4ff' : '#fff',
-    boxShadow: isOpen ? '0 4px 16px rgba(0, 80, 255, 0.08)' : 'none',
-    cursor: 'pointer',
-    minWidth: '180px',
-    transition: 'background 0.2s, box-shadow 0.2s',
-    position: 'relative',
-    outline: 'none',
-    color: selectedUniversity || selectedSemester ? '#222' : '#888',
-    fontWeight: 500,
-    textAlign: 'left',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '8px',
-  });
-
-  // Dropdown menu style
-  const dropdownMenuStyle = (isOpen) => ({
-    position: 'absolute',
-    top: '110%',
-    left: 0,
-    width: '100%',
-    background: '#fff',
-    borderRadius: '16px',
-    boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
-    zIndex: 999999,
-    opacity: isOpen ? 1 : 0,
-    transform: isOpen ? 'translateY(0)' : 'translateY(-10px)',
-    pointerEvents: isOpen ? 'auto' : 'none',
-    transition: 'opacity 0.22s cubic-bezier(.4,0,.2,1), transform 0.22s cubic-bezier(.4,0,.2,1)',
-    marginTop: '6px',
-    padding: '12px 0',
-    maxHeight: 'calc(2 * (40px + 24px))', // Height for 2 items with increased spacing
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    scrollbarWidth: 'thin',
-    scrollbarColor: '#888 #f1f1f1',
-    WebkitOverflowScrolling: 'touch',
-    isolation: 'isolate',
-    '&::-webkit-scrollbar': {
-      width: '6px'
-    },
-    '&::-webkit-scrollbar-track': {
-      background: '#f1f1f1',
-      borderRadius: '3px'
-    },
-    '&::-webkit-scrollbar-thumb': {
-      background: '#888',
-      borderRadius: '3px'
-    },
-    '&::-webkit-scrollbar-thumb:hover': {
-      background: '#555'
-    }
-  });
-
-  const dropdownItemStyle = (isSelected) => ({
-    padding: '12px 24px',
-    cursor: 'pointer',
-    background: isSelected ? '#e6f0ff' : 'transparent',
-    color: isSelected ? '#0050ff' : '#222',
-    fontWeight: isSelected ? 600 : 500,
-    border: 'none',
-    outline: 'none',
-    fontSize: '1rem',
-    transition: 'background 0.18s',
-    borderRadius: '8px',
-    margin: '4px 12px',
-    textAlign: 'left',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    userSelect: 'none',
-    lineHeight: '40px',
-    height: '40px'
-  });
 
   // Helper function to strip months from semester string
   const stripMonths = (semester) => {
@@ -371,158 +275,60 @@ function SearchSection() {
           }
         }}>
           {/* University Dropdown */}
-          <div className="custom-dropdown" style={{ 
-            position: 'relative', 
-            flex: '1 1 auto', 
-            minWidth: '180px',
-            width: '100%',
-            zIndex: 999999,
-            '@media (max-width: 768px)': {
-              minWidth: '100%'
-            }
-          }}>
-            <button
-              type="button"
-              className="search-select"
-              style={{
-                ...capsuleStyle(uniDropdownOpen),
-                width: '100%',
-                transition: 'all 0.3s ease-in-out',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                '@media (max-width: 768px)': {
-                  padding: '12px 15px',
-                  fontSize: '0.9rem'
-                }
-              }}
-              onClick={() => {
-                setUniDropdownOpen((open) => !open);
-                setSemDropdownOpen(false);
-              }}
-              tabIndex={0}
-            >
-              <span style={{ 
-                overflow: 'hidden', 
-                textOverflow: 'ellipsis',
-                '@media (max-width: 768px)': {
-                  fontSize: '0.9rem'
-                }
-              }}>{selectedUniversity || 'Select University'}</span>
-              <span style={{ 
-                fontSize: '1.1em', 
-                color: '#888', 
-                marginLeft: '8px', 
-                flexShrink: 0,
-                '@media (max-width: 768px)': {
-                  fontSize: '1em'
-                }
-              }}>
-                ▼
-              </span>
-            </button>
-            <div
-              className="dropdown-menu scrollable-dropdown"
-              style={dropdownMenuStyle(uniDropdownOpen)}
-            >
-              {universities.map((uni) => (
-                <div
-                  key={uni}
-                  style={dropdownItemStyle(selectedUniversity === uni)}
-                  onClick={() => {
-                    setSelectedUniversity(uni);
-                    setUniDropdownOpen(false);
-                  }}
-                  tabIndex={0}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter') {
-                      setSelectedUniversity(uni);
-                      setUniDropdownOpen(false);
-                    }
-                  }}
-                >
-                  {uni}
-                </div>
-              ))}
-            </div>
-          </div>
+          <select
+            value={selectedUniversity}
+            onChange={(e) => setSelectedUniversity(e.target.value)}
+            style={{
+              padding: '10px 20px',
+              fontSize: '1rem',
+              borderRadius: '999px',
+              border: '1px solid #ddd',
+              background: '#fff',
+              cursor: 'pointer',
+              minWidth: '180px',
+              width: '100%',
+              outline: 'none',
+              color: selectedUniversity ? '#222' : '#888',
+              fontWeight: 500,
+              '@media (max-width: 768px)': {
+                padding: '12px 15px',
+                fontSize: '0.9rem'
+              }
+            }}
+          >
+            <option value="">Select University</option>
+            {universities.map((uni) => (
+              <option key={uni} value={uni}>{uni}</option>
+            ))}
+          </select>
 
           {/* Semester Dropdown */}
-          <div className="custom-dropdown" style={{ 
-            position: 'relative', 
-            flex: '1 1 auto', 
-            minWidth: '180px',
-            width: '100%',
-            zIndex: 999999,
-            '@media (max-width: 768px)': {
-              minWidth: '100%'
-            }
-          }}>
-            <button
-              type="button"
-              className="search-select"
-              style={{
-                ...capsuleStyle(semDropdownOpen),
-                width: '100%',
-                transition: 'all 0.3s ease-in-out',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                '@media (max-width: 768px)': {
-                  padding: '12px 15px',
-                  fontSize: '0.9rem'
-                }
-              }}
-              onClick={() => {
-                setSemDropdownOpen((open) => !open);
-                setUniDropdownOpen(false);
-              }}
-              tabIndex={0}
-            >
-              <span style={{ 
-                overflow: 'hidden', 
-                textOverflow: 'ellipsis',
-                '@media (max-width: 768px)': {
-                  fontSize: '0.9rem'
-                }
-              }}>{selectedSemester ? stripMonths(selectedSemester) : 'Select Semester'}</span>
-              <span style={{ 
-                fontSize: '1.1em', 
-                color: '#888', 
-                marginLeft: '8px', 
-                flexShrink: 0,
-                '@media (max-width: 768px)': {
-                  fontSize: '1em'
-                }
-              }}>
-                ▼
-              </span>
-            </button>
-            <div
-              className="dropdown-menu scrollable-dropdown"
-              style={dropdownMenuStyle(semDropdownOpen)}
-            >
-              {semesters.map((sem) => (
-                <div
-                  key={sem}
-                  style={dropdownItemStyle(selectedSemester === sem)}
-                  onClick={() => {
-                    setSelectedSemester(sem);
-                    setSemDropdownOpen(false);
-                  }}
-                  tabIndex={0}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter') {
-                      setSelectedSemester(sem);
-                      setSemDropdownOpen(false);
-                    }
-                  }}
-                >
-                  {sem}
-                </div>
-              ))}
-            </div>
-          </div>
+          <select
+            value={selectedSemester}
+            onChange={(e) => setSelectedSemester(e.target.value)}
+            style={{
+              padding: '10px 20px',
+              fontSize: '1rem',
+              borderRadius: '999px',
+              border: '1px solid #ddd',
+              background: '#fff',
+              cursor: 'pointer',
+              minWidth: '180px',
+              width: '100%',
+              outline: 'none',
+              color: selectedSemester ? '#222' : '#888',
+              fontWeight: 500,
+              '@media (max-width: 768px)': {
+                padding: '12px 15px',
+                fontSize: '0.9rem'
+              }
+            }}
+          >
+            <option value="">Select Semester</option>
+            {semesters.map((sem) => (
+              <option key={sem} value={sem}>{stripMonths(sem)}</option>
+            ))}
+          </select>
 
           {/* Search Button */}
           <button
