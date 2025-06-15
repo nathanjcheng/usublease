@@ -14,6 +14,12 @@ import profileIcon from './assets/images/profile.png';
 import searchPng from './assets/images/search.png';
 import icon from './icon.png';
 import settingsIcon from './assets/images/settings.png';
+import universityLogos from './data/universityLogos';
+
+// Grid positioning variables
+const GRID_PADDING_TOP = 100; // Adjust this value to move the grid up or down
+const GRID_VERTICAL_OFFSET = -110; // Changed from -50 to -150 to move grid higher up
+const USE_GRAYSCALE = false; // Set to true for grayscale, false for colored logos
 
 // Example listings data
 const exampleListings = [
@@ -195,11 +201,11 @@ function SearchSection() {
 
   return (
     <section className="search-section" style={{ 
-      marginTop: '100px',
+      marginTop: '0',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      minHeight: 'calc(100vh - 400px)',
+      minHeight: 'calc(70vh - 100px)',
       width: '100vw',
       marginLeft: 'calc(-50vw + 50%)',
       marginRight: 'calc(-50vw + 50%)',
@@ -218,10 +224,112 @@ function SearchSection() {
         transformOrigin: 'top left'
       },
       '@media (max-width: 768px)': {
-        marginTop: '60px',
-        minHeight: 'calc(100vh - 300px)'
+        marginTop: '0',
+        minHeight: 'calc(60vh - 80px)'
       }
     }}>
+      {/* Moving University Logos Grid */}
+      <div className="moving-logos" style={{
+        position: 'absolute',
+        top: `${GRID_VERTICAL_OFFSET}px`,
+        left: '0',
+        transform: 'none',
+        width: '200%',
+        maxWidth: 'none',
+        height: '100%',
+        display: 'grid',
+        gridTemplateRows: 'repeat(3, 1fr)',
+        gridAutoFlow: 'column',
+        gridAutoColumns: '150px',
+        gap: '20px 15px',
+        animation: 'moveLogos 60s linear infinite',
+        opacity: 0.15,
+        pointerEvents: 'none',
+        zIndex: 0,
+        paddingTop: `${GRID_PADDING_TOP}px`,
+        '@media (max-width: 768px)': {
+          width: '200%',
+          padding: '0 15px'
+        }
+      }}>
+        {/* First set of logos */}
+        {[...Array(30)].map((_, index) => {
+          const logo = universityLogos[index % universityLogos.length];
+          return (
+            <div key={`first-${index}`} style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '12px',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '16px',
+              aspectRatio: '1',
+              background: logo.image ? 'transparent' : 'linear-gradient(145deg, #d0d0d0, #e0e0e0)',
+              boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
+              height: '100%'
+            }}>
+              {logo.image ? (
+                <img 
+                  src={logo.image} 
+                  alt={logo.name}
+                  style={{
+                    width: '85%',
+                    height: '85%',
+                    objectFit: 'contain',
+                    filter: USE_GRAYSCALE ? 'grayscale(100%)' : 'none',
+                    transition: 'all 0.3s ease',
+                    opacity: 0.8
+                  }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.parentElement.style.background = 'linear-gradient(145deg, #d0d0d0, #e0e0e0)';
+                    console.warn(`Failed to load logo for ${logo.name}`);
+                  }}
+                />
+              ) : null}
+            </div>
+          );
+        })}
+        {/* Duplicate set of logos for seamless loop */}
+        {[...Array(30)].map((_, index) => {
+          const logo = universityLogos[index % universityLogos.length];
+          return (
+            <div key={`second-${index}`} style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '12px',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '16px',
+              aspectRatio: '1',
+              background: logo.image ? 'transparent' : 'linear-gradient(145deg, #d0d0d0, #e0e0e0)',
+              boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
+              height: '100%'
+            }}>
+              {logo.image ? (
+                <img 
+                  src={logo.image} 
+                  alt={logo.name}
+                  style={{
+                    width: '85%',
+                    height: '85%',
+                    objectFit: 'contain',
+                    filter: USE_GRAYSCALE ? 'grayscale(100%)' : 'none',
+                    transition: 'all 0.3s ease',
+                    opacity: 0.8
+                  }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.parentElement.style.background = 'linear-gradient(145deg, #d0d0d0, #e0e0e0)';
+                    console.warn(`Failed to load logo for ${logo.name}`);
+                  }}
+                />
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+
       <div className="search-container" style={{ 
         textAlign: 'center',
         width: '100%',
@@ -229,8 +337,10 @@ function SearchSection() {
         padding: '0 20px',
         position: 'relative',
         zIndex: 1,
+        marginTop: '100px',
         '@media (max-width: 768px)': {
-          padding: '0 15px'
+          padding: '0 15px',
+          marginTop: '60px'
         }
       }}>
         <h1 className="floating-title" style={{ 
@@ -937,6 +1047,14 @@ function App() {
             }
             .floating-title {
               animation: float 8s ease-in-out infinite;
+            }
+            @keyframes moveLogos {
+              0% {
+                transform: translateX(0);
+              }
+              100% {
+                transform: translateX(-50%);
+              }
             }
           `}
         </style>

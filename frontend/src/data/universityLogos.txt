@@ -1,0 +1,22 @@
+# University Logo References
+# Format: University Name | Logo URL | Description
+
+# Florida Universities
+University of South Florida | https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/University_of_South_Florida_seal.svg/1200px-University_of_South_Florida_seal.svg.png | Official USF seal
+University of Central Florida | https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/University_of_Central_Florida_seal.svg/1200px-University_of_Central_Florida_seal.svg.png | Official UCF seal
+University of Florida | https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/University_of_Florida_seal.svg/1200px-University_of_Florida_seal.svg.png | Official UF seal
+Florida State University | https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/Florida_State_University_seal.svg/1200px-Florida_State_University_seal.svg.png | Official FSU seal
+University of Miami | https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/University_of_Miami_seal.svg/1200px-University_of_Miami_seal.svg.png | Official UM seal
+
+# Additional Universities (to be added)
+# University of North Florida | URL | Description
+# Florida International University | URL | Description
+# Florida Atlantic University | URL | Description
+# University of West Florida | URL | Description
+# Florida Gulf Coast University | URL | Description
+
+# Notes:
+# - All logos should be high quality and official university seals or logos
+# - Preferred format: PNG or SVG
+# - Recommended size: At least 500x500 pixels
+# - All logos should be properly licensed for use 
