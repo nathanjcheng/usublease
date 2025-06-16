@@ -18,7 +18,7 @@ import universityLogos from './data/universityLogos';
 
 // Grid positioning variables
 const GRID_PADDING_TOP = 100; // Adjust this value to move the grid up or down
-const GRID_VERTICAL_OFFSET = -110; // Changed from -50 to -150 to move grid higher up
+const GRID_VERTICAL_OFFSET = -120; // Changed from -110 to -150 to move grid higher up
 const USE_GRAYSCALE = false; // Set to true for grayscale, false for colored logos
 
 // Example listings data
@@ -266,7 +266,11 @@ function SearchSection() {
               aspectRatio: '1',
               background: logo.image ? 'transparent' : 'linear-gradient(145deg, #d0d0d0, #e0e0e0)',
               boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
-              height: '100%'
+              height: '100%',
+              transition: 'transform 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.1)'
+              }
             }}>
               {logo.image ? (
                 <img 
@@ -279,6 +283,12 @@ function SearchSection() {
                     filter: USE_GRAYSCALE ? 'grayscale(100%)' : 'none',
                     transition: 'all 0.3s ease',
                     opacity: 0.8
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.parentElement.style.transform = 'scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.parentElement.style.transform = 'scale(1)';
                   }}
                   onError={(e) => {
                     e.target.style.display = 'none';
@@ -304,7 +314,11 @@ function SearchSection() {
               aspectRatio: '1',
               background: logo.image ? 'transparent' : 'linear-gradient(145deg, #d0d0d0, #e0e0e0)',
               boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
-              height: '100%'
+              height: '100%',
+              transition: 'transform 0.3s ease',
+              '&:hover': {
+                transform: 'scale(1.1)'
+              }
             }}>
               {logo.image ? (
                 <img 
@@ -317,6 +331,12 @@ function SearchSection() {
                     filter: USE_GRAYSCALE ? 'grayscale(100%)' : 'none',
                     transition: 'all 0.3s ease',
                     opacity: 0.8
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.parentElement.style.transform = 'scale(1.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.parentElement.style.transform = 'scale(1)';
                   }}
                   onError={(e) => {
                     e.target.style.display = 'none';
@@ -934,10 +954,14 @@ function App() {
                                       width: '100%',
                                       height: '100%',
                                       objectFit: 'cover',
-                                      transition: 'transform 0.3s ease'
+                                      transition: 'transform 0.3s ease',
+                                      transform: 'scale(1)',
+                                      '&:hover': {
+                                        transform: 'scale(1.1)'
+                                      }
                                     }}
                                     onMouseEnter={(e) => {
-                                      e.currentTarget.style.transform = 'scale(1.05)';
+                                      e.currentTarget.style.transform = 'scale(1.1)';
                                     }}
                                     onMouseLeave={(e) => {
                                       e.currentTarget.style.transform = 'scale(1)';
