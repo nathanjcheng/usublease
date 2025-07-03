@@ -13,5 +13,3 @@ backend/app/schemas/__pycache__/
 backend/config/firebase-service-account.json
 frontend/.env
 backend/.env
-
-backend/.env

@@ -9,6 +9,7 @@ import Map from './pages/Map';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Upload from './pages/Upload';
+import Listing from './pages/Listing';
 import mailIcon from './assets/images/mail.png';
 import profileIcon from './assets/images/profile.png';
 import searchPng from './assets/images/search.png';
@@ -846,9 +847,7 @@ function App() {
           </div>
         </header>
 
-        {/* ---------------------------------------------------------------- */}
-        {/*  Routes                                                        */}
-        {/* ---------------------------------------------------------------- */}
+
         <Routes>
           <Route path="/messages" element={<Messages />} />
           <Route path="/profile" element={<Profile />} />
@@ -857,6 +856,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/upload" element={<Upload />} />
+          <Route path="/listing" element={<Listing />} />
+          <Route path="/listing/:id" element={<Listing />} />
 
           {/* Home – protected */}
           <Route
@@ -866,9 +867,6 @@ function App() {
                 <>
                   <SearchSection />
 
-                  {/* ------------------------------------------------------ */}
-                  {/*  Featured Listings                                    */}
-                  {/* ------------------------------------------------------ */}
                   <section className="featured-section" style={{
                     padding: '40px 0',
                     background: 'linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%)',
