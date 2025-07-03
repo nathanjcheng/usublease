@@ -144,7 +144,7 @@ function Upload() {
         <div
           style={{
             width: `${(step/totalSteps)*100}%`,
-            background: '#793094',
+            background: '#008000',
             height: '100%',
             borderRadius: '4px',
             transition: 'width 0.3s ease'
@@ -344,18 +344,39 @@ function Upload() {
 
       {/* Description Step */}
       {step === 5 && (
-        <div>
-          <h2>Description</h2>
-          <div className="form-group">
-            <label>Title:</label>
-            <input type="text" value={formData.title} onChange={handleChange('title')} maxLength={80} />
+        <div style={{display:'flex',flexDirection:'column',gap:'2rem',alignItems:'flex-start',width:'100%'}}>
+          {/* Description Container */}
+          <div style={{background:'#fff',borderRadius:'8px',padding:'1.5rem',boxShadow:'0 1px 3px rgba(0,0,0,0.1)',width:'100%'}}>
+            <h3 style={{margin:'0 0 0.5rem 0'}}>Description</h3>
+            <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+              <label style={{display:'flex',flexDirection:'column',fontWeight:'500'}}>
+                Title:
+                <input
+                  type="text"
+                  className="input-13"
+                  value={formData.title}
+                  onChange={handleChange('title')}
+                  maxLength={80}
+                  style={{width:'100%'}}
+                />
+              </label>
+              <label style={{display:'flex',flexDirection:'column',fontWeight:'500'}}>
+                Description:
+                <textarea
+                  className="input-13"
+                  value={formData.description}
+                  onChange={handleChange('description')}
+                  maxLength={300}
+                  rows={6}
+                  style={{width:'100%',minHeight:'140px',resize:'vertical'}}
+                />
+              </label>
+            </div>
           </div>
-          <div className="form-group">
-            <label>Description:</label>
-            <textarea value={formData.description} onChange={handleChange('description')} maxLength={300} rows={4} />
+          <div style={{alignSelf:'center'}}>
+            <button className="button-13" onClick={handleBack}>Back</button>{' '}
+            <button className="button-13 save" onClick={handleNext}>Review</button>
           </div>
-          <button className="button-13" onClick={handleBack}>Back</button>{' '}
-          <button className="button-13 save" onClick={handleNext}>Review</button>
         </div>
       )}
 
