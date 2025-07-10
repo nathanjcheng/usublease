@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signOut, onAuthStateChanged, updateProfile } from 'firebase/auth';
-import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import { getCurrentUser, signOut } from '@aws-amplify/auth';
+import { userAPI } from '../services/api';
 import EditIcon from '@mui/icons-material/Edit';
 
 function Profile() {
@@ -86,89 +85,49 @@ function Profile() {
     window.addEventListener('online', handleOnlineStatus);
     window.addEventListener('offline', handleOnlineStatus);
 
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      console.log('Auth state changed:', firebaseUser ? 'User logged in' : 'No user');
-      
-      if (firebaseUser) {
-        try {
-          // Force token refresh to ensure we have a valid token
-          await firebaseUser.getIdToken(true);
-          console.log('Auth token refreshed successfully');
-          
-          console.log('Attempting to fetch user data for:', firebaseUser.uid);
-          // Get additional user data from Firestore
-          const userDocRef = doc(db, 'users', firebaseUser.uid);
-          let retryCount = 0;
-          const maxRetries = 3;
-          
-          const fetchUserData = async () => {
-            try {
-              const userDoc = await getDoc(userDocRef);
-              if (userDoc.exists()) {
-                const userData = userDoc.data();
-                console.log('User data fetched successfully:', userData);
-                setUser({ ...firebaseUser, ...userData });
-              } else {
-                console.log('No user document found, using basic auth data');
-                setUser(firebaseUser);
-              }
-            } catch (err) {
-              console.error('Error fetching user data:', err);
-              
-              // Handle specific Firestore errors
-              if (err.code === 'permission-denied') {
-                console.error('Permission denied - check Firestore security rules');
-                setError('Permission denied. Please check your access rights or contact support.');
-              } else if (err.code === 'unavailable') {
-                console.error('Firestore service unavailable');
-                setError('Database service is temporarily unavailable. Please try again later.');
-              } else if (err.code === 'unauthenticated') {
-                console.error('User not authenticated for Firestore access');
-                setError('Authentication error. Please sign out and sign back in.');
-              } else if (!navigator.onLine) {
-                console.error('User is offline');
-                setError('You are currently offline. Please check your internet connection.');
-                setIsOffline(true);
-              } else {
-                console.error('Unknown Firestore error:', err);
-                if (retryCount < maxRetries) {
-                  retryCount++;
-                  console.log(`Retrying user data fetch (attempt ${retryCount}/${maxRetries})...`);
-                  setTimeout(fetchUserData, 1000 * retryCount);
-                  return; // Don't set user or show error yet, just retry
-                } else {
-                  setError('Failed to load user data after multiple attempts. Please try refreshing the page.');
-                }
-              }
-              
-              // Always set basic user info from auth even if Firestore fails
-              setUser(firebaseUser);
-            }
-          };
-          
-          await fetchUserData();
-        } catch (err) {
-          console.error('Error fetching user data:', err);
-          if (!navigator.onLine) {
-            setError('You are currently offline. Please check your internet connection.');
-            setIsOffline(true);
-          } else if (err.code === 'permission-denied') {
-            setError('You do not have permission to access this data. Please try signing out and back in.');
-          } else {
-            setError('Failed to load user data. Please try again later.');
-          }
-          // Still set the basic user info from auth
-          setUser(firebaseUser);
+    const loadUserData = async () => {
+      try {
+        // Get current authenticated user from Cognito
+        const cognitoUser = await getCurrentUser();
+        console.log('Cognito user:', cognitoUser);
+        
+        // Get additional user data from API
+        const userData = await userAPI.getProfile();
+        console.log('User data from API:', userData);
+        
+        // Combine Cognito user data with profile data
+        const combinedUser = {
+          ...cognitoUser,
+          ...userData,
+          id: cognitoUser.username,
+          email: cognitoUser.attributes.email,
+          name: cognitoUser.attributes.name || userData.name || cognitoUser.attributes.given_name
+        };
+        
+        setUser(combinedUser);
+      } catch (error) {
+        console.error('Error loading user data:', error);
+        
+        if (error.code === 'NotAuthorizedException') {
+          console.log('User not authenticated, redirecting to login');
+          navigate('/login');
+          return;
         }
-      } else {
-        console.log('No authenticated user, redirecting to login');
-        navigate('/login');
+        
+        if (!navigator.onLine) {
+          setError('You are currently offline. Please check your internet connection.');
+          setIsOffline(true);
+        } else {
+          setError('Failed to load user data. Please try again later.');
+        }
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    };
+
+    loadUserData();
 
     return () => {
-      unsubscribe();
       window.removeEventListener('online', handleOnlineStatus);
       window.removeEventListener('offline', handleOnlineStatus);
     };
@@ -177,7 +136,7 @@ function Profile() {
   // Sync form fields when user data changes
   useEffect(() => {
     if (user) {
-      setDisplayNameInput(user.displayName || '');
+      setDisplayNameInput(user.name || '');
       setSelectedUniversity(user.university || '');
       setEmailInput(user.email || '');
       setPhoneInput(formatPhoneNumber(user.phone || ''));
@@ -196,23 +155,27 @@ function Profile() {
     }
   }, [user]);
 
-  // Helper to persist user changes to Firestore
+  // Helper to persist user changes to API
   const saveUserData = async (updates) => {
-    if (!user) return;
     try {
-      const userDocRef = doc(db, 'users', user.uid);
-      await setDoc(userDocRef, updates, { merge: true });
-      setUser((prev) => ({ ...prev, ...updates }));
-    } catch (err) {
-      console.error('Failed to save user data:', err);
+      await userAPI.updateProfile(updates);
+      
+      // Update local user state
+      setUser(prev => ({ ...prev, ...updates }));
+      
+      return true;
+    } catch (error) {
+      console.error('Error saving user data:', error);
       setError('Failed to save changes. Please try again.');
-      throw err;
+      return false;
     }
   };
 
   const handleSignOut = async () => {
     try {
-      await signOut(auth);
+      await signOut();
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       navigate('/login');
     } catch (error) {
       console.error('Error signing out:', error);
@@ -220,269 +183,234 @@ function Profile() {
     }
   };
 
-  // Save university selection to Firestore
   const handleSaveUniversity = async () => {
-    if (!selectedUniversity || !user) return;
-    try {
-      const userDocRef = doc(db, 'users', user.uid);
-      await updateDoc(userDocRef, { university: selectedUniversity });
-      // Update local state
-      setUser((prev) => ({ ...prev, university: selectedUniversity }));
-    } catch (err) {
-      // If the document doesn't exist, create it with setDoc (merge)
-      if (err.code === 'not-found' || /No document to update/i.test(err.message || '')) {
-        try {
-          const userDocRef = doc(db, 'users', user.uid);
-          await setDoc(userDocRef, { university: selectedUniversity }, { merge: true });
-          setUser((prev) => ({ ...prev, university: selectedUniversity }));
-          return;
-        } catch (setErr) {
-          console.error('Failed to create user document:', setErr);
-          setError('Unable to save university. Please try again later.');
-          return;
-        }
-      }
-      console.error('Failed to update university:', err);
-      setError('Failed to update university. Please try again.');
+    const success = await saveUserData({ university: selectedUniversity });
+    if (success) {
+      setEditingHeader(false);
+    }
+  };
+
+  const handleSaveContact = async () => {
+    const updates = {
+      name: displayNameInput,
+      email: emailInput,
+      phone: getRawPhoneNumber(phoneInput),
+      preferredLocation: locationInput
+    };
+    
+    const success = await saveUserData(updates);
+    if (success) {
+      setEditingContact(false);
+    }
+  };
+
+  const handleSavePreferences = async () => {
+    const budgetRange = budgetMin || budgetMax ? `${budgetMin}-${budgetMax}` : null;
+    const updates = { budgetRange };
+    
+    const success = await saveUserData(updates);
+    if (success) {
+      setEditingPreferences(false);
     }
   };
 
   if (loading) {
     return (
       <div className="page-container">
-        <div className="loading-spinner">Loading...</div>
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <p>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="page-container">
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <p>Please log in to view your profile.</p>
+          <button onClick={() => navigate('/login')} className="button-13">
+            Go to Login
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="page-container">
-      <h1>Profile</h1>
+      <div className="profile-header">
+        <h1>Profile</h1>
+        <button onClick={handleSignOut} className="sign-out-button">
+          Sign Out
+        </button>
+      </div>
+
       {error && (
-        <div className="error-message" style={{ color: 'red', margin: '10px 0' }}>
+        <div className="error-message" style={{ color: 'red', marginBottom: '20px', padding: '10px', backgroundColor: '#ffe6e6', borderRadius: '4px' }}>
           {error}
         </div>
       )}
+
       {isOffline && (
-        <div className="warning-message" style={{ color: 'orange', margin: '10px 0' }}>
-          You are currently offline. Some features may be limited.
+        <div className="offline-message" style={{ color: 'orange', marginBottom: '20px', padding: '10px', backgroundColor: '#fff3cd', borderRadius: '4px' }}>
+          You are currently offline. Some features may not work properly.
         </div>
       )}
-      <div
-        className="profile-container"
-        style={{ maxWidth: '600px', margin: '0 auto' }}
-      >
-        <div
-          className="profile-header"
-          style={{ position:'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
-        >
+
+      <div className="profile-content">
+        {/* Header Section */}
+        <div className="profile-section">
+          <div className="section-header">
+            <h3>Basic Information</h3>
+            <button 
+              onClick={() => setEditingHeader(!editingHeader)}
+              className="edit-button"
+            >
+              <EditIcon />
+            </button>
+          </div>
+          
           {editingHeader ? (
-            <>
-              <input
-                type="text"
-                value={displayNameInput}
-                onChange={(e) => setDisplayNameInput(e.target.value)}
-                style={{ padding: '5px', borderRadius: '5px', fontSize: '1.25rem', fontWeight: 'bold', textAlign: 'center', marginBottom: '0.5rem' }}
-              />
-              <div className="profile-avatar" style={{ margin: '0 0 1rem' }}>👤</div>
-              <select
-                value={selectedUniversity}
-                onChange={(e) => setSelectedUniversity(e.target.value)}
-                style={{ padding: '5px', borderRadius: '5px', marginTop: '0.25rem' }}
-              >
-                <option value="">Select your university</option>
-                {universities.map((uni) => (
-                  <option key={uni} value={uni}>
-                    {uni}
-                  </option>
-                ))}
-              </select>
-              <div style={{ marginTop: '10px', display:'flex', gap:'10px' }}>
-                <button
-                  onClick={async () => {
-                    try {
-                      await updateProfile(auth.currentUser, { displayName: displayNameInput });
-                    } catch (e) {
-                      console.warn('Failed to update auth profile name:', e);
-                    }
-                    await saveUserData({ displayName: displayNameInput, university: selectedUniversity });
-                    setEditingHeader(false);
-                  }}
-                  className="button-13 save"
+            <div className="edit-form">
+              <div className="form-group">
+                <label>University:</label>
+                <select 
+                  value={selectedUniversity} 
+                  onChange={(e) => setSelectedUniversity(e.target.value)}
+                  className="input-13"
                 >
-                  Save
-                </button>
-                <button
-                  onClick={() => setEditingHeader(false)}
-                  className="button-13"
-                >
-                  Cancel
-                </button>
+                  <option value="">Select University</option>
+                  {universities.map((uni) => (
+                    <option key={uni} value={uni}>{uni}</option>
+                  ))}
+                </select>
               </div>
-            </>
+              <div className="form-actions">
+                <button onClick={handleSaveUniversity} className="button-13 save">Save</button>
+                <button onClick={() => setEditingHeader(false)} className="button-13">Cancel</button>
+              </div>
+            </div>
           ) : (
-            <>
-              <h2 style={{ margin: '0 0 0.5rem' }}>{user?.displayName || 'User'}</h2>
-              <div className="profile-avatar" style={{ margin: '0 0 1rem' }}>👤</div>
-              <p style={{ marginBottom: '0.5rem' }}>{user?.university || 'University not set'}</p>
-              <EditIcon
-                fontSize="small"
-                onClick={() => {
-                  setEditingHeader(true);
-                  setDisplayNameInput(user?.displayName || '');
-                  setSelectedUniversity(user?.university || '');
-                }}
-                style={{ position: 'absolute', top: 6, right: 6, cursor: 'pointer', color: '#555' }}
-              />
-            </>
+            <div className="info-display">
+              <p><strong>University:</strong> {user.university || 'Not set'}</p>
+            </div>
           )}
         </div>
-        <div
-          className="profile-details"
-          style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left', gap: '1.5rem' }}
-        >
-          <div
-            className="info-container"
-            style={{ backgroundColor: 'white', borderRadius: '0.5rem', padding: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', width: '100%' }}
-          >
-            <h3 style={{ marginBottom: '1rem' }}>Contact Information</h3>
-            {editingContact ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap:'8px' }}>
-                <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
-                  <span style={{ minWidth:'100px' }}>Email:</span>
-                  <input
-                    type="email"
-                    value={emailInput}
-                    onChange={(e) => setEmailInput(e.target.value)}
-                    style={{ padding: '5px', borderRadius: '5px', flex:'1' }}
-                  />
-                </div>
-                <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
-                  <span style={{ minWidth:'100px' }}>Phone:</span>
-                  <input
-                    type="tel"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    value={phoneInput}
-                    onChange={(e) => setPhoneInput(formatPhoneNumber(e.target.value))}
-                    style={{ padding: '5px', borderRadius: '5px', flex:'1' }}
-                  />
-                </div>
-                <div style={{ marginTop: '10px', display:'flex', gap:'10px' }}>
-                  <button
-                    onClick={async () => {
-                      await saveUserData({ email: emailInput, phone: getRawPhoneNumber(phoneInput) });
-                      setEditingContact(false);
-                    }}
-                    className="button-13 save"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={() => setEditingContact(false)}
-                    className="button-13"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div style={{ position: 'relative', paddingRight:'20px' }}>
-                <div style={{ display:'flex', alignItems:'center', gap:'6px' }}>
-                  <span style={{ minWidth:'100px' }}>Email:</span>
-                  <span>{user?.email}</span>
-                </div>
-                <div style={{ display:'flex', alignItems:'center', gap:'6px', marginTop:'4px' }}>
-                  <span style={{ minWidth:'100px' }}>Phone:</span>
-                  <span>{user?.phone ? formatPhoneNumber(user.phone) : 'Not set'}</span>
-                </div>
-                <EditIcon fontSize="small"
-                  onClick={() => setEditingContact(true)}
-                  style={{ position: 'absolute', top: 0, right: 0, cursor: 'pointer', color: '#555' }}
+
+        {/* Contact Information Section */}
+        <div className="profile-section">
+          <div className="section-header">
+            <h3>Contact Information</h3>
+            <button 
+              onClick={() => setEditingContact(!editingContact)}
+              className="edit-button"
+            >
+              <EditIcon />
+            </button>
+          </div>
+          
+          {editingContact ? (
+            <div className="edit-form">
+              <div className="form-group">
+                <label>Name:</label>
+                <input 
+                  type="text" 
+                  value={displayNameInput} 
+                  onChange={(e) => setDisplayNameInput(e.target.value)}
+                  className="input-13"
                 />
               </div>
-            )}
+              <div className="form-group">
+                <label>Email:</label>
+                <input 
+                  type="email" 
+                  value={emailInput} 
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  className="input-13"
+                />
+              </div>
+              <div className="form-group">
+                <label>Phone:</label>
+                <input 
+                  type="tel" 
+                  value={phoneInput} 
+                  onChange={(e) => setPhoneInput(formatPhoneNumber(e.target.value))}
+                  className="input-13"
+                  placeholder="(555) 123-4567"
+                />
+              </div>
+              <div className="form-group">
+                <label>Preferred Location:</label>
+                <input 
+                  type="text" 
+                  value={locationInput} 
+                  onChange={(e) => setLocationInput(e.target.value)}
+                  className="input-13"
+                  placeholder="City, State"
+                />
+              </div>
+              <div className="form-actions">
+                <button onClick={handleSaveContact} className="button-13 save">Save</button>
+                <button onClick={() => setEditingContact(false)} className="button-13">Cancel</button>
+              </div>
+            </div>
+          ) : (
+            <div className="info-display">
+              <p><strong>Name:</strong> {user.name || 'Not set'}</p>
+              <p><strong>Email:</strong> {user.email || 'Not set'}</p>
+              <p><strong>Phone:</strong> {user.phone ? formatPhoneNumber(user.phone) : 'Not set'}</p>
+              <p><strong>Preferred Location:</strong> {user.preferredLocation || 'Not set'}</p>
+            </div>
+          )}
+        </div>
+
+        {/* Preferences Section */}
+        <div className="profile-section">
+          <div className="section-header">
+            <h3>Preferences</h3>
+            <button 
+              onClick={() => setEditingPreferences(!editingPreferences)}
+              className="edit-button"
+            >
+              <EditIcon />
+            </button>
           </div>
-          <div
-            className="preferences-container"
-            style={{ backgroundColor: 'white', borderRadius: '0.5rem', padding: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', width: '100%' }}
-          >
-            <h3 style={{ marginBottom: '1rem' }}>Preferences</h3>
-            {editingPreferences ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap:'8px' }}>
-                <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
-                  <span style={{ minWidth:'150px' }}>Preferred Location:</span>
-                  <input
-                    type="text"
-                    value={locationInput}
-                    onChange={(e) => setLocationInput(e.target.value)}
-                    style={{ padding: '5px', borderRadius: '5px', flex:'1' }}
-                  />
-                </div>
-                <div style={{ display:'flex', alignItems:'center', gap:'8px' }}>
-                  <span style={{ minWidth:'150px' }}>Budget Range:</span>
-                  <span>$</span>
-                  <input
-                    type="number"
-                    value={budgetMin}
+          
+          {editingPreferences ? (
+            <div className="edit-form">
+              <div className="form-group">
+                <label>Budget Range:</label>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <input 
+                    type="number" 
+                    value={budgetMin} 
                     onChange={(e) => setBudgetMin(e.target.value)}
-                    style={{ padding: '5px', borderRadius: '5px', width:'80px' }}
+                    className="input-13"
+                    placeholder="Min"
+                    style={{ width: '100px' }}
                   />
                   <span>-</span>
-                  <span>$</span>
-                  <input
-                    type="number"
-                    value={budgetMax}
+                  <input 
+                    type="number" 
+                    value={budgetMax} 
                     onChange={(e) => setBudgetMax(e.target.value)}
-                    style={{ padding: '5px', borderRadius: '5px', width:'80px' }}
+                    className="input-13"
+                    placeholder="Max"
+                    style={{ width: '100px' }}
                   />
                 </div>
-                <div style={{ marginTop: '10px', display:'flex', gap:'10px' }}>
-                  <button
-                    onClick={async () => {
-                      const updates = {
-                        preferredLocation: locationInput,
-                        budgetRange: `${budgetMin}-${budgetMax}`
-                      };
-                      await saveUserData(updates);
-                      setEditingPreferences(false);
-                    }}
-                    className="button-13 save"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={() => setEditingPreferences(false)}
-                    className="button-13"
-                  >
-                    Cancel
-                  </button>
-                </div>
               </div>
-            ) : (
-              <div style={{ position: 'relative', paddingRight:'20px' }}>
-                <div style={{ display:'flex', alignItems:'center', gap:'6px' }}>
-                  <span style={{ minWidth:'150px' }}>Preferred Location:</span>
-                  <span>{user?.preferredLocation || 'Not set'}</span>
-                </div>
-                <div style={{ display:'flex', alignItems:'center', gap:'6px', marginTop:'4px' }}>
-                  <span style={{ minWidth:'150px' }}>Budget Range:</span>
-                  <span>{formatBudget(user?.budgetRange)}</span>
-                </div>
-                <EditIcon fontSize="small"
-                  onClick={() => setEditingPreferences(true)}
-                  style={{ position: 'absolute', top: 0, right: 0, cursor: 'pointer', color: '#555' }}
-                />
+              <div className="form-actions">
+                <button onClick={handleSavePreferences} className="button-13 save">Save</button>
+                <button onClick={() => setEditingPreferences(false)} className="button-13">Cancel</button>
               </div>
-            )}
-          </div>
-          <button
-            onClick={handleSignOut}
-            className="button-17"
-            style={{ marginTop: '20px', alignSelf:'center' }}
-          >
-            Sign Out
-          </button>
+            </div>
+          ) : (
+            <div className="info-display">
+              <p><strong>Budget Range:</strong> {formatBudget(user.budgetRange)}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

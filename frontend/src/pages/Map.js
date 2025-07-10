@@ -1,78 +1,96 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { listingsAPI } from '../services/api';
 import './Map.css';
 
-// Example listings data
-const exampleListings = [
-  {
-    id: 1,
-    title: "Cozy Studio near USF",
-    price: 850,
-    semester: "Fall 2025",
-    address: "1234 University Dr, Tampa, FL 33612",
-    description: "Modern studio apartment just 5 minutes from USF campus. Fully furnished with all utilities included.",
-    amenities: ["Furnished", "Utilities Included", "Parking", "Wifi"],
-    coordinates: { lat: 28.0587, lng: -82.4139 },
-    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=Studio"
-  },
-  {
-    id: 2,
-    title: "2BR Apartment - USF Area",
-    price: 1200,
-    semester: "Spring 2026",
-    address: "5678 Bruce B Downs Blvd, Tampa, FL 33612",
-    description: "Spacious 2 bedroom apartment with modern appliances and great amenities.",
-    amenities: ["Washer/Dryer", "Pool", "Gym", "Pet Friendly"],
-    coordinates: { lat: 28.0627, lng: -82.4159 },
-    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=2BR"
-  },
-  {
-    id: 3,
-    title: "Luxury 1BR - USF Village",
-    price: 950,
-    semester: "Fall 2025",
-    address: "9012 Fowler Ave, Tampa, FL 33612",
-    description: "Luxury 1 bedroom apartment in the heart of USF Village. Walking distance to campus.",
-    amenities: ["Furnished", "Pool", "Gym", "24/7 Security"],
-    coordinates: { lat: 28.0607, lng: -82.4119 },
-    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=1BR"
-  },
-  {
-    id: 4,
-    title: "3BR House - USF North",
-    price: 1500,
-    semester: "Fall 2025",
-    address: "3456 42nd St, Tampa, FL 33613",
-    description: "Spacious 3 bedroom house with backyard, perfect for students. Close to USF campus.",
-    amenities: ["Backyard", "Garage", "Washer/Dryer", "Pet Friendly"],
-    coordinates: { lat: 28.0647, lng: -82.4179 },
-    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=3BR"
-  },
-  {
-    id: 5,
-    title: "Studio Loft - USF East",
-    price: 800,
-    semester: "Spring 2026",
-    address: "7890 56th St, Tampa, FL 33617",
-    description: "Modern studio loft with high ceilings and great natural light. Walking distance to campus.",
-    amenities: ["Furnished", "High Ceilings", "Parking", "Wifi"],
-    coordinates: { lat: 28.0567, lng: -82.4099 },
-    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=Loft"
-  },
-  {
-    id: 6,
-    title: "4BR House - USF South",
-    price: 1800,
-    semester: "Fall 2025",
-    address: "2345 30th St, Tampa, FL 33612",
-    description: "Large 4 bedroom house perfect for a group of students. Close to USF and shopping.",
-    amenities: ["Backyard", "Garage", "Washer/Dryer", "Pet Friendly"],
-    coordinates: { lat: 28.0547, lng: -82.4159 },
-    image: "https://placehold.co/400x300/e2e8f0/1a202c?text=4BR"
-  }
-];
-
 function Map() {
+  const [listings, setListings] = useState([]);
   const [selectedListing, setSelectedListing] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [filters, setFilters] = useState({
+    university: '',
+    semester: '',
+    minPrice: '',
+    maxPrice: '',
+    beds: ''
+  });
+
+  // Load listings on component mount
+  useEffect(() => {
+    loadListings();
+  }, [filters]);
+
+  const loadListings = async () => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      const data = await listingsAPI.getListings(filters);
+      setListings(data.listings || []);
+    } catch (error) {
+      console.error('Error loading listings:', error);
+      setError('Failed to load listings. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFilterChange = (filterName, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterName]: value
+    }));
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      university: '',
+      semester: '',
+      minPrice: '',
+      maxPrice: '',
+      beds: ''
+    });
+  };
+
+  // Fallback data for development/testing
+  const fallbackListings = [
+    {
+      id: 1,
+      title: "Cozy Studio near USF",
+      price: 850,
+      semester: "Fall 2025",
+      address: "1234 University Dr, Tampa, FL 33612",
+      description: "Modern studio apartment just 5 minutes from USF campus. Fully furnished with all utilities included.",
+      amenities: ["Furnished", "Utilities Included", "Parking", "Wifi"],
+      coordinates: { lat: 28.0587, lng: -82.4139 },
+      image: "https://placehold.co/400x300/e2e8f0/1a202c?text=Studio"
+    },
+    {
+      id: 2,
+      title: "2BR Apartment - USF Area",
+      price: 1200,
+      semester: "Spring 2026",
+      address: "5678 Bruce B Downs Blvd, Tampa, FL 33612",
+      description: "Spacious 2 bedroom apartment with modern appliances and great amenities.",
+      amenities: ["Washer/Dryer", "Pool", "Gym", "Pet Friendly"],
+      coordinates: { lat: 28.0627, lng: -82.4159 },
+      image: "https://placehold.co/400x300/e2e8f0/1a202c?text=2BR"
+    },
+    {
+      id: 3,
+      title: "Luxury 1BR - USF Village",
+      price: 950,
+      semester: "Fall 2025",
+      address: "9012 Fowler Ave, Tampa, FL 33612",
+      description: "Luxury 1 bedroom apartment in the heart of USF Village. Walking distance to campus.",
+      amenities: ["Furnished", "Pool", "Gym", "24/7 Security"],
+      coordinates: { lat: 28.0607, lng: -82.4119 },
+      image: "https://placehold.co/400x300/e2e8f0/1a202c?text=1BR"
+    }
+  ];
+
+  // Use fallback data if no listings loaded
+  const displayListings = listings.length > 0 ? listings : fallbackListings;
 
   return (
     <div className="map-page">
@@ -88,9 +106,77 @@ function Map() {
         />
       </div>
       <div className="listings-container">
-        <h2>Available Listings</h2>
+        <div className="listings-header">
+          <h2>Available Listings</h2>
+          {loading && <span style={{fontSize: '12px', color: '#666'}}>Loading...</span>}
+        </div>
+        
+        {error && <div className="error-message" style={{color: 'red', padding: '10px'}}>{error}</div>}
+        
+        {/* Filters */}
+        <div className="filters-section" style={{marginBottom: '20px', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '8px'}}>
+          <h4 style={{margin: '0 0 10px 0'}}>Filters</h4>
+          <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center'}}>
+            <select 
+              value={filters.university} 
+              onChange={(e) => handleFilterChange('university', e.target.value)}
+              style={{padding: '5px', borderRadius: '4px'}}
+            >
+              <option value="">All Universities</option>
+              <option value="University of South Florida">USF</option>
+              <option value="University of Central Florida">UCF</option>
+              <option value="University of Florida">UF</option>
+            </select>
+            
+            <select 
+              value={filters.semester} 
+              onChange={(e) => handleFilterChange('semester', e.target.value)}
+              style={{padding: '5px', borderRadius: '4px'}}
+            >
+              <option value="">All Semesters</option>
+              <option value="Fall 2025">Fall 2025</option>
+              <option value="Spring 2026">Spring 2026</option>
+              <option value="Summer 2025">Summer 2025</option>
+            </select>
+            
+            <input 
+              type="number" 
+              placeholder="Min Price"
+              value={filters.minPrice}
+              onChange={(e) => handleFilterChange('minPrice', e.target.value)}
+              style={{padding: '5px', borderRadius: '4px', width: '100px'}}
+            />
+            
+            <input 
+              type="number" 
+              placeholder="Max Price"
+              value={filters.maxPrice}
+              onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
+              style={{padding: '5px', borderRadius: '4px', width: '100px'}}
+            />
+            
+            <select 
+              value={filters.beds} 
+              onChange={(e) => handleFilterChange('beds', e.target.value)}
+              style={{padding: '5px', borderRadius: '4px'}}
+            >
+              <option value="">Any Beds</option>
+              <option value="1">1 Bed</option>
+              <option value="2">2 Beds</option>
+              <option value="3">3+ Beds</option>
+            </select>
+            
+            <button 
+              onClick={clearFilters}
+              style={{padding: '5px 10px', borderRadius: '4px', backgroundColor: '#ddd', border: 'none', cursor: 'pointer'}}
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+        
         <div className="listings-grid">
-          {exampleListings.map((listing) => (
+          {displayListings.map((listing) => (
             <div
               key={listing.id}
               className={`listing-card ${selectedListing?.id === listing.id ? 'selected' : ''}`}
@@ -114,6 +200,15 @@ function Map() {
             </div>
           ))}
         </div>
+        
+        {displayListings.length === 0 && !loading && (
+          <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
+            <p>No listings found matching your criteria.</p>
+            <button onClick={clearFilters} style={{padding: '10px 20px', borderRadius: '4px', backgroundColor: '#793094', color: 'white', border: 'none', cursor: 'pointer'}}>
+              Clear Filters
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

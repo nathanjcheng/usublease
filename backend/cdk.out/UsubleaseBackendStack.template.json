@@ -1,0 +1,5637 @@
+{
+ "Resources": {
+  "UsubleaseUserPool0C4F4108": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_email",
+       "Priority": 1
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": false
+    },
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "Policies": {
+     "PasswordPolicy": {
+      "MinimumLength": 8,
+      "RequireLowercase": true,
+      "RequireNumbers": true,
+      "RequireSymbols": false,
+      "RequireUppercase": true
+     }
+    },
+    "Schema": [
+     {
+      "Mutable": true,
+      "Name": "email",
+      "Required": true
+     },
+     {
+      "Mutable": true,
+      "Name": "given_name",
+      "Required": false
+     },
+     {
+      "Mutable": true,
+      "Name": "family_name",
+      "Required": false
+     }
+    ],
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UserPoolName": "usublease-users",
+    "UsernameAttributes": [
+     "email"
+    ],
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseUserPool/Resource"
+   }
+  },
+  "UsersTable9725E9C8": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "TableName": "usublease-users"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsersTable/Resource"
+   }
+  },
+  "ListingsTableCCEBB5D2": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "university",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "createdAt",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "university-index",
+      "KeySchema": [
+       {
+        "AttributeName": "university",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "createdAt",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     },
+     {
+      "IndexName": "user-index",
+      "KeySchema": [
+       {
+        "AttributeName": "userId",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "createdAt",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "TableName": "usublease-listings"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/ListingsTable/Resource"
+   }
+  },
+  "MessagesTable05B58A27": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "conversationId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "timestamp",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "conversationId",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "timestamp",
+      "KeyType": "RANGE"
+     }
+    ],
+    "TableName": "usublease-messages"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/MessagesTable/Resource"
+   }
+  },
+  "ConversationsTableCD91EB96": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "id",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "userId",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "updatedAt",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "GlobalSecondaryIndexes": [
+     {
+      "IndexName": "user-index",
+      "KeySchema": [
+       {
+        "AttributeName": "userId",
+        "KeyType": "HASH"
+       },
+       {
+        "AttributeName": "updatedAt",
+        "KeyType": "RANGE"
+       }
+      ],
+      "Projection": {
+       "ProjectionType": "ALL"
+      }
+     }
+    ],
+    "KeySchema": [
+     {
+      "AttributeName": "id",
+      "KeyType": "HASH"
+     }
+    ],
+    "TableName": "usublease-conversations"
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/ConversationsTable/Resource"
+   }
+  },
+  "StorageBucket19DB2FF8": {
+   "Type": "AWS::S3::Bucket",
+   "Properties": {
+    "BucketEncryption": {
+     "ServerSideEncryptionConfiguration": [
+      {
+       "ServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+       }
+      }
+     ]
+    },
+    "BucketName": "usublease-storage",
+    "CorsConfiguration": {
+     "CorsRules": [
+      {
+       "AllowedHeaders": [
+        "*"
+       ],
+       "AllowedMethods": [
+        "GET",
+        "PUT",
+        "POST",
+        "DELETE"
+       ],
+       "AllowedOrigins": [
+        "http://localhost:3000",
+        "https://yourdomain.com"
+       ],
+       "ExposedHeaders": [
+        "ETag"
+       ]
+      }
+     ]
+    },
+    "PublicAccessBlockConfiguration": {
+     "BlockPublicAcls": true,
+     "BlockPublicPolicy": true,
+     "IgnorePublicAcls": true,
+     "RestrictPublicBuckets": true
+    },
+    "Tags": [
+     {
+      "Key": "aws-cdk:auto-delete-objects",
+      "Value": "true"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/StorageBucket/Resource"
+   }
+  },
+  "StorageBucketPolicy41A048DB": {
+   "Type": "AWS::S3::BucketPolicy",
+   "Properties": {
+    "Bucket": {
+     "Ref": "StorageBucket19DB2FF8"
+    },
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:List*",
+        "s3:PutBucketPolicy"
+       ],
+       "Effect": "Allow",
+       "Principal": {
+        "AWS": {
+         "Fn::GetAtt": [
+          "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+          "Arn"
+         ]
+        }
+       },
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "StorageBucket19DB2FF8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "StorageBucket19DB2FF8",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/StorageBucket/Policy/Resource"
+   }
+  },
+  "StorageBucketAutoDeleteObjectsCustomResource105C81BD": {
+   "Type": "Custom::S3AutoDeleteObjects",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+      "Arn"
+     ]
+    },
+    "BucketName": {
+     "Ref": "StorageBucket19DB2FF8"
+    }
+   },
+   "DependsOn": [
+    "StorageBucketPolicy41A048DB"
+   ],
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/StorageBucket/AutoDeleteObjectsCustomResource/Default"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Version": "2012-10-17",
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ]
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Sub": "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role"
+   }
+  },
+  "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "b7f33614a69548d6bafe224d751a7ef238cde19097415e553fe8b63a4c8fd8a6.zip"
+    },
+    "Timeout": 900,
+    "MemorySize": 128,
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Description": {
+     "Fn::Join": [
+      "",
+      [
+       "Lambda function for auto-deleting objects in ",
+       {
+        "Ref": "StorageBucket19DB2FF8"
+       },
+       " S3 bucket."
+      ]
+     ]
+    }
+   },
+   "DependsOn": [
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+    "aws:asset:path": "asset.b7f33614a69548d6bafe224d751a7ef238cde19097415e553fe8b63a4c8fd8a6",
+    "aws:asset:property": "Code"
+   }
+  },
+  "LambdaExecutionRoleD5C26073": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/LambdaExecutionRole/Resource"
+   }
+  },
+  "LambdaExecutionRoleDefaultPolicy6D69732F": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:DescribeTable",
+        "dynamodb:GetItem",
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator",
+        "dynamodb:PutItem",
+        "dynamodb:Query",
+        "dynamodb:Scan",
+        "dynamodb:UpdateItem"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "ConversationsTableCD91EB96",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "ListingsTableCCEBB5D2",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "MessagesTable05B58A27",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::GetAtt": [
+          "UsersTable9725E9C8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ConversationsTableCD91EB96",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "ListingsTableCCEBB5D2",
+             "Arn"
+            ]
+           },
+           "/index/*"
+          ]
+         ]
+        },
+        {
+         "Ref": "AWS::NoValue"
+        }
+       ]
+      },
+      {
+       "Action": [
+        "s3:Abort*",
+        "s3:DeleteObject*",
+        "s3:GetBucket*",
+        "s3:GetObject*",
+        "s3:List*",
+        "s3:PutObject",
+        "s3:PutObjectLegalHold",
+        "s3:PutObjectRetention",
+        "s3:PutObjectTagging",
+        "s3:PutObjectVersionTagging"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "StorageBucket19DB2FF8",
+          "Arn"
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::GetAtt": [
+             "StorageBucket19DB2FF8",
+             "Arn"
+            ]
+           },
+           "/*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "cognito-idp:AdminCreateUser",
+        "cognito-idp:AdminGetUser",
+        "cognito-idp:AdminUpdateUserAttributes",
+        "cognito-idp:ConfirmSignUp",
+        "cognito-idp:ForgotPassword",
+        "cognito-idp:InitiateAuth"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "UsubleaseUserPool0C4F4108",
+         "Arn"
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "Roles": [
+     {
+      "Ref": "LambdaExecutionRoleD5C26073"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/LambdaExecutionRole/DefaultPolicy/Resource"
+   }
+  },
+  "UsubleaseApi90799AF8": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "USublease Backend API",
+    "Name": "usublease-api"
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Resource"
+   }
+  },
+  "UsubleaseApiDeployment32BC612B97e0b422134d138057e23bc489b3b26f": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "USublease Backend API",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "DependsOn": [
+    "CognitoAuthorizerF3215DBC",
+    "UsubleaseApiauthconfirmOPTIONS70411949",
+    "UsubleaseApiauthconfirmPOST08DA0201",
+    "UsubleaseApiauthconfirm99EE0CB7",
+    "UsubleaseApiauthforgotpasswordOPTIONS85AF1582",
+    "UsubleaseApiauthforgotpasswordPOSTCEC25509",
+    "UsubleaseApiauthforgotpasswordB9109262",
+    "UsubleaseApiauthOPTIONSA13046A0",
+    "UsubleaseApiauthE4A1AADC",
+    "UsubleaseApiauthsigninOPTIONSA64DFB7F",
+    "UsubleaseApiauthsigninPOST92C7B870",
+    "UsubleaseApiauthsignin980DF756",
+    "UsubleaseApiauthsignupOPTIONSF6BA28CC",
+    "UsubleaseApiauthsignupPOST015EF42D",
+    "UsubleaseApiauthsignup5A73F9FB",
+    "UsubleaseApilistingsidDELETE3DBADD65",
+    "UsubleaseApilistingsidGET559AEDC6",
+    "UsubleaseApilistingsidOPTIONSBA2189A2",
+    "UsubleaseApilistingsidPUTD92F1F0A",
+    "UsubleaseApilistingsidEA53DD51",
+    "UsubleaseApilistingsGETA2250D0B",
+    "UsubleaseApilistingsmylistingsGET46D83116",
+    "UsubleaseApilistingsmylistingsOPTIONS873233C8",
+    "UsubleaseApilistingsmylistingsCBD416B8",
+    "UsubleaseApilistingsOPTIONSE6FFA9B3",
+    "UsubleaseApilistingsPOST831E5AB9",
+    "UsubleaseApilistings613719A7",
+    "UsubleaseApimessagesconversationsidGETA2463A63",
+    "UsubleaseApimessagesconversationsidOPTIONS49FBF08E",
+    "UsubleaseApimessagesconversationsidPOSTE88D2154",
+    "UsubleaseApimessagesconversationsid2BF65ED1",
+    "UsubleaseApimessagesconversationsGET258A50B9",
+    "UsubleaseApimessagesconversationsOPTIONS4BC4B22C",
+    "UsubleaseApimessagesconversationsPOST6A69B11E",
+    "UsubleaseApimessagesconversations70B71FD9",
+    "UsubleaseApimessagesOPTIONS540F22B2",
+    "UsubleaseApimessages68B273E4",
+    "UsubleaseApiOPTIONS93AD2A7E",
+    "UsubleaseApisearchgeocodeGET0A33F67C",
+    "UsubleaseApisearchgeocodeOPTIONS6D903EA1",
+    "UsubleaseApisearchgeocode7722988E",
+    "UsubleaseApisearchlistingsOPTIONS7BC48288",
+    "UsubleaseApisearchlistingsPOST4C2E5876",
+    "UsubleaseApisearchlistings4ECD80F7",
+    "UsubleaseApisearchOPTIONS5CC3DEB9",
+    "UsubleaseApisearch088DF506",
+    "UsubleaseApiuploadOPTIONS17E2F3DB",
+    "UsubleaseApiuploadpresignedurlOPTIONSD67F3CCF",
+    "UsubleaseApiuploadpresignedurlPOST98569FB4",
+    "UsubleaseApiuploadpresignedurl6778E693",
+    "UsubleaseApiuploadF58FE63F",
+    "UsubleaseApiuserOPTIONS406FE1F7",
+    "UsubleaseApiuserpreferencesGETF7FFF4AC",
+    "UsubleaseApiuserpreferencesOPTIONSD703B437",
+    "UsubleaseApiuserpreferencesPUTD9E8E9A3",
+    "UsubleaseApiuserpreferences01D80585",
+    "UsubleaseApiuserprofileGET127C4838",
+    "UsubleaseApiuserprofileOPTIONS7218F24F",
+    "UsubleaseApiuserprofilePUT46A1B8D0",
+    "UsubleaseApiuserprofile1EBBB921",
+    "UsubleaseApiuser7BCD60DC"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Deployment/Resource"
+   }
+  },
+  "UsubleaseApiDeploymentStageprodD7F71445": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "DeploymentId": {
+     "Ref": "UsubleaseApiDeployment32BC612B97e0b422134d138057e23bc489b3b26f"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    },
+    "StageName": "prod"
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/DeploymentStage.prod/Resource"
+   }
+  },
+  "UsubleaseApiOPTIONS93AD2A7E": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "UsubleaseApi90799AF8",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApiauthE4A1AADC": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "UsubleaseApi90799AF8",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "auth",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/Resource"
+   }
+  },
+  "UsubleaseApiauthOPTIONSA13046A0": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApiauthE4A1AADC"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApiauthsignup5A73F9FB": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApiauthE4A1AADC"
+    },
+    "PathPart": "signup",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/signup/Resource"
+   }
+  },
+  "UsubleaseApiauthsignupOPTIONSF6BA28CC": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApiauthsignup5A73F9FB"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/signup/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApiauthsignupPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthsignup27E91C7A": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "authsignupF307F9D9",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/POST/auth/signup"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/signup/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.signup"
+   }
+  },
+  "UsubleaseApiauthsignupPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthsignup2841943F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "authsignupF307F9D9",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/POST/auth/signup"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/signup/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.signup"
+   }
+  },
+  "UsubleaseApiauthsignupPOST015EF42D": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "authsignupF307F9D9",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApiauthsignup5A73F9FB"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/signup/POST/Resource"
+   }
+  },
+  "UsubleaseApiauthsignin980DF756": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApiauthE4A1AADC"
+    },
+    "PathPart": "signin",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/signin/Resource"
+   }
+  },
+  "UsubleaseApiauthsigninOPTIONSA64DFB7F": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApiauthsignin980DF756"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/signin/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApiauthsigninPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthsignin475F1DD1": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "authsigninA0D5D623",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/POST/auth/signin"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/signin/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.signin"
+   }
+  },
+  "UsubleaseApiauthsigninPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthsigninC07248E4": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "authsigninA0D5D623",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/POST/auth/signin"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/signin/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.signin"
+   }
+  },
+  "UsubleaseApiauthsigninPOST92C7B870": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "authsigninA0D5D623",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApiauthsignin980DF756"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/signin/POST/Resource"
+   }
+  },
+  "UsubleaseApiauthconfirm99EE0CB7": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApiauthE4A1AADC"
+    },
+    "PathPart": "confirm",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/confirm/Resource"
+   }
+  },
+  "UsubleaseApiauthconfirmOPTIONS70411949": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApiauthconfirm99EE0CB7"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/confirm/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApiauthconfirmPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthconfirmF8D7BC89": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "authconfirmD13616E4",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/POST/auth/confirm"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/confirm/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.confirm"
+   }
+  },
+  "UsubleaseApiauthconfirmPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthconfirm61B8D599": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "authconfirmD13616E4",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/POST/auth/confirm"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/confirm/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.confirm"
+   }
+  },
+  "UsubleaseApiauthconfirmPOST08DA0201": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "authconfirmD13616E4",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApiauthconfirm99EE0CB7"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/confirm/POST/Resource"
+   }
+  },
+  "UsubleaseApiauthforgotpasswordB9109262": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApiauthE4A1AADC"
+    },
+    "PathPart": "forgot-password",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/forgot-password/Resource"
+   }
+  },
+  "UsubleaseApiauthforgotpasswordOPTIONS85AF1582": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApiauthforgotpasswordB9109262"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/forgot-password/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApiauthforgotpasswordPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthforgotpasswordB427DBE7": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "authforgotpassword7AD65913",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/POST/auth/forgot-password"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/forgot-password/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.forgot-password"
+   }
+  },
+  "UsubleaseApiauthforgotpasswordPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthforgotpassword922EAB3F": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "authforgotpassword7AD65913",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/POST/auth/forgot-password"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/forgot-password/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.forgot-password"
+   }
+  },
+  "UsubleaseApiauthforgotpasswordPOSTCEC25509": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "authforgotpassword7AD65913",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApiauthforgotpasswordB9109262"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/auth/forgot-password/POST/Resource"
+   }
+  },
+  "UsubleaseApiuser7BCD60DC": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "UsubleaseApi90799AF8",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "user",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/Resource"
+   }
+  },
+  "UsubleaseApiuserOPTIONS406FE1F7": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApiuser7BCD60DC"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApiuserprofile1EBBB921": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApiuser7BCD60DC"
+    },
+    "PathPart": "profile",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/profile/Resource"
+   }
+  },
+  "UsubleaseApiuserprofileOPTIONS7218F24F": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApiuserprofile1EBBB921"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/profile/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApiuserprofileGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETuserprofile5ADFE4B3": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "usergetprofileF5D00CE7",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/GET/user/profile"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/profile/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..user.profile"
+   }
+  },
+  "UsubleaseApiuserprofileGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETuserprofile04029705": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "usergetprofileF5D00CE7",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/GET/user/profile"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/profile/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..user.profile"
+   }
+  },
+  "UsubleaseApiuserprofileGET127C4838": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "usergetprofileF5D00CE7",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApiuserprofile1EBBB921"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/profile/GET/Resource"
+   }
+  },
+  "UsubleaseApiuserprofilePUTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPUTuserprofile46A0FCAD": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "userupdateprofileA1DD59E7",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/PUT/user/profile"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/profile/PUT/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..user.profile"
+   }
+  },
+  "UsubleaseApiuserprofilePUTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPUTuserprofile02C6BA01": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "userupdateprofileA1DD59E7",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/PUT/user/profile"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/profile/PUT/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..user.profile"
+   }
+  },
+  "UsubleaseApiuserprofilePUT46A1B8D0": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "PUT",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "userupdateprofileA1DD59E7",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApiuserprofile1EBBB921"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/profile/PUT/Resource"
+   }
+  },
+  "UsubleaseApiuserpreferences01D80585": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApiuser7BCD60DC"
+    },
+    "PathPart": "preferences",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/Resource"
+   }
+  },
+  "UsubleaseApiuserpreferencesOPTIONSD703B437": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApiuserpreferences01D80585"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApiuserpreferencesGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETuserpreferences19DBDC63": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "usergetpreferences20B596A1",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/GET/user/preferences"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..user.preferences"
+   }
+  },
+  "UsubleaseApiuserpreferencesGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETuserpreferencesD195BB08": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "usergetpreferences20B596A1",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/GET/user/preferences"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..user.preferences"
+   }
+  },
+  "UsubleaseApiuserpreferencesGETF7FFF4AC": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "usergetpreferences20B596A1",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApiuserpreferences01D80585"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/GET/Resource"
+   }
+  },
+  "UsubleaseApiuserpreferencesPUTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPUTuserpreferences20FDBB5A": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "userupdatepreferencesCDDFEFB3",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/PUT/user/preferences"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/PUT/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..user.preferences"
+   }
+  },
+  "UsubleaseApiuserpreferencesPUTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPUTuserpreferences77FA87DB": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "userupdatepreferencesCDDFEFB3",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/PUT/user/preferences"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/PUT/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..user.preferences"
+   }
+  },
+  "UsubleaseApiuserpreferencesPUTD9E8E9A3": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "PUT",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "userupdatepreferencesCDDFEFB3",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApiuserpreferences01D80585"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/PUT/Resource"
+   }
+  },
+  "UsubleaseApilistings613719A7": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "UsubleaseApi90799AF8",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "listings",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/Resource"
+   }
+  },
+  "UsubleaseApilistingsOPTIONSE6FFA9B3": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApilistings613719A7"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApilistingsGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETlistings58ABC00D": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingsgetall5DF3583E",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/GET/listings"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings"
+   }
+  },
+  "UsubleaseApilistingsGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETlistingsB1937424": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingsgetall5DF3583E",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/GET/listings"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings"
+   }
+  },
+  "UsubleaseApilistingsGETA2250D0B": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "listingsgetall5DF3583E",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApilistings613719A7"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/GET/Resource"
+   }
+  },
+  "UsubleaseApilistingsPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTlistingsF063DC51": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingscreate7A30A9EA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/POST/listings"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..listings"
+   }
+  },
+  "UsubleaseApilistingsPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTlistingsEA3D1CA4": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingscreate7A30A9EA",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/POST/listings"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..listings"
+   }
+  },
+  "UsubleaseApilistingsPOST831E5AB9": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "listingscreate7A30A9EA",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApilistings613719A7"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/POST/Resource"
+   }
+  },
+  "UsubleaseApilistingsidEA53DD51": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApilistings613719A7"
+    },
+    "PathPart": "{id}",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/Resource"
+   }
+  },
+  "UsubleaseApilistingsidOPTIONSBA2189A2": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApilistingsidEA53DD51"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApilistingsidGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETlistingsid73D9C1EB": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingsgetbyid47B46E19",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/GET/listings/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings.{id}"
+   }
+  },
+  "UsubleaseApilistingsidGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETlistingsidFBFEC907": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingsgetbyid47B46E19",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/GET/listings/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings.{id}"
+   }
+  },
+  "UsubleaseApilistingsidGET559AEDC6": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "listingsgetbyid47B46E19",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApilistingsidEA53DD51"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/GET/Resource"
+   }
+  },
+  "UsubleaseApilistingsidPUTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPUTlistingsid0D313CC9": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingsupdateF434148B",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/PUT/listings/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/PUT/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..listings.{id}"
+   }
+  },
+  "UsubleaseApilistingsidPUTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPUTlistingsid91EED4E7": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingsupdateF434148B",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/PUT/listings/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/PUT/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..listings.{id}"
+   }
+  },
+  "UsubleaseApilistingsidPUTD92F1F0A": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "PUT",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "listingsupdateF434148B",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApilistingsidEA53DD51"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/PUT/Resource"
+   }
+  },
+  "UsubleaseApilistingsidDELETEApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FDELETElistingsidFD9E4884": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingsdeleteC14D8EF4",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/DELETE/listings/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/DELETE/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.DELETE..listings.{id}"
+   }
+  },
+  "UsubleaseApilistingsidDELETEApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FDELETElistingsid7F6D8206": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingsdeleteC14D8EF4",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/DELETE/listings/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/DELETE/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.DELETE..listings.{id}"
+   }
+  },
+  "UsubleaseApilistingsidDELETE3DBADD65": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "DELETE",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "listingsdeleteC14D8EF4",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApilistingsidEA53DD51"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/DELETE/Resource"
+   }
+  },
+  "UsubleaseApilistingsmylistingsCBD416B8": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApilistings613719A7"
+    },
+    "PathPart": "my-listings",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/my-listings/Resource"
+   }
+  },
+  "UsubleaseApilistingsmylistingsOPTIONS873233C8": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApilistingsmylistingsCBD416B8"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/my-listings/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApilistingsmylistingsGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETlistingsmylistings7D93ADD7": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingsgetall5DF3583E",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/GET/listings/my-listings"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/my-listings/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings.my-listings"
+   }
+  },
+  "UsubleaseApilistingsmylistingsGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETlistingsmylistingsFC9B8B94": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "listingsgetall5DF3583E",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/GET/listings/my-listings"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/my-listings/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings.my-listings"
+   }
+  },
+  "UsubleaseApilistingsmylistingsGET46D83116": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "listingsgetall5DF3583E",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApilistingsmylistingsCBD416B8"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/listings/my-listings/GET/Resource"
+   }
+  },
+  "UsubleaseApimessages68B273E4": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "UsubleaseApi90799AF8",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "messages",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/Resource"
+   }
+  },
+  "UsubleaseApimessagesOPTIONS540F22B2": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApimessages68B273E4"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApimessagesconversations70B71FD9": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApimessages68B273E4"
+    },
+    "PathPart": "conversations",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/Resource"
+   }
+  },
+  "UsubleaseApimessagesconversationsOPTIONS4BC4B22C": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApimessagesconversations70B71FD9"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApimessagesconversationsGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETmessagesconversationsFF34878E": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "messagesgetconversations595D136D",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/GET/messages/conversations"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..messages.conversations"
+   }
+  },
+  "UsubleaseApimessagesconversationsGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETmessagesconversations506DCF50": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "messagesgetconversations595D136D",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/GET/messages/conversations"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..messages.conversations"
+   }
+  },
+  "UsubleaseApimessagesconversationsGET258A50B9": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "messagesgetconversations595D136D",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApimessagesconversations70B71FD9"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/GET/Resource"
+   }
+  },
+  "UsubleaseApimessagesconversationsPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTmessagesconversationsE17C3FDD": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "messagessendmessage213A2961",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/POST/messages/conversations"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..messages.conversations"
+   }
+  },
+  "UsubleaseApimessagesconversationsPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTmessagesconversationsEC65484A": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "messagessendmessage213A2961",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/POST/messages/conversations"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..messages.conversations"
+   }
+  },
+  "UsubleaseApimessagesconversationsPOST6A69B11E": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "messagessendmessage213A2961",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApimessagesconversations70B71FD9"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/POST/Resource"
+   }
+  },
+  "UsubleaseApimessagesconversationsid2BF65ED1": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApimessagesconversations70B71FD9"
+    },
+    "PathPart": "{id}",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/Resource"
+   }
+  },
+  "UsubleaseApimessagesconversationsidOPTIONS49FBF08E": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApimessagesconversationsid2BF65ED1"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApimessagesconversationsidGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETmessagesconversationsid557D3305": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "messagesgetmessages9046B544",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/GET/messages/conversations/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..messages.conversations.{id}"
+   }
+  },
+  "UsubleaseApimessagesconversationsidGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETmessagesconversationsid5FBFB722": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "messagesgetmessages9046B544",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/GET/messages/conversations/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..messages.conversations.{id}"
+   }
+  },
+  "UsubleaseApimessagesconversationsidGETA2463A63": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "messagesgetmessages9046B544",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApimessagesconversationsid2BF65ED1"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/GET/Resource"
+   }
+  },
+  "UsubleaseApimessagesconversationsidPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTmessagesconversationsidABA56791": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "messagessendmessage213A2961",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/POST/messages/conversations/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..messages.conversations.{id}"
+   }
+  },
+  "UsubleaseApimessagesconversationsidPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTmessagesconversationsid38BA8311": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "messagessendmessage213A2961",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/POST/messages/conversations/*"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..messages.conversations.{id}"
+   }
+  },
+  "UsubleaseApimessagesconversationsidPOSTE88D2154": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "messagessendmessage213A2961",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApimessagesconversationsid2BF65ED1"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/POST/Resource"
+   }
+  },
+  "UsubleaseApiuploadF58FE63F": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "UsubleaseApi90799AF8",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "upload",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/upload/Resource"
+   }
+  },
+  "UsubleaseApiuploadOPTIONS17E2F3DB": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApiuploadF58FE63F"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/upload/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApiuploadpresignedurl6778E693": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApiuploadF58FE63F"
+    },
+    "PathPart": "presigned-url",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/upload/presigned-url/Resource"
+   }
+  },
+  "UsubleaseApiuploadpresignedurlOPTIONSD67F3CCF": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApiuploadpresignedurl6778E693"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/upload/presigned-url/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApiuploadpresignedurlPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTuploadpresignedurlF0BA64EF": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "uploadgetpresignedurl2B03F39A",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/POST/upload/presigned-url"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/upload/presigned-url/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..upload.presigned-url"
+   }
+  },
+  "UsubleaseApiuploadpresignedurlPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTuploadpresignedurl0D1B8FEC": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "uploadgetpresignedurl2B03F39A",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/POST/upload/presigned-url"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/upload/presigned-url/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..upload.presigned-url"
+   }
+  },
+  "UsubleaseApiuploadpresignedurlPOST98569FB4": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "COGNITO_USER_POOLS",
+    "AuthorizerId": {
+     "Ref": "CognitoAuthorizerF3215DBC"
+    },
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "uploadgetpresignedurl2B03F39A",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApiuploadpresignedurl6778E693"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/upload/presigned-url/POST/Resource"
+   }
+  },
+  "UsubleaseApisearch088DF506": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "UsubleaseApi90799AF8",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "search",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/Resource"
+   }
+  },
+  "UsubleaseApisearchOPTIONS5CC3DEB9": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApisearch088DF506"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApisearchlistings4ECD80F7": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApisearch088DF506"
+    },
+    "PathPart": "listings",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/listings/Resource"
+   }
+  },
+  "UsubleaseApisearchlistingsOPTIONS7BC48288": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApisearchlistings4ECD80F7"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/listings/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApisearchlistingsPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTsearchlistings5673F5A4": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "searchlistingsF237FD30",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/POST/search/listings"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/listings/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..search.listings"
+   }
+  },
+  "UsubleaseApisearchlistingsPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTsearchlistingsFE1C19DE": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "searchlistingsF237FD30",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/POST/search/listings"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/listings/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..search.listings"
+   }
+  },
+  "UsubleaseApisearchlistingsPOST4C2E5876": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "POST",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "searchlistingsF237FD30",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApisearchlistings4ECD80F7"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/listings/POST/Resource"
+   }
+  },
+  "UsubleaseApisearchgeocode7722988E": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "UsubleaseApisearch088DF506"
+    },
+    "PathPart": "geocode",
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/geocode/Resource"
+   }
+  },
+  "UsubleaseApisearchgeocodeOPTIONS6D903EA1": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,Authorization'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "UsubleaseApisearchgeocode7722988E"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/geocode/OPTIONS/Resource"
+   }
+  },
+  "UsubleaseApisearchgeocodeGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETsearchgeocode512D5E6D": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "searchgeocode6B708FD3",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/",
+       {
+        "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+       },
+       "/GET/search/geocode"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/geocode/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..search.geocode"
+   }
+  },
+  "UsubleaseApisearchgeocodeGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETsearchgeocode7CEE5C86": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "searchgeocode6B708FD3",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:aws:execute-api:us-east-1:205498862119:",
+       {
+        "Ref": "UsubleaseApi90799AF8"
+       },
+       "/test-invoke-stage/GET/search/geocode"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/geocode/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..search.geocode"
+   }
+  },
+  "UsubleaseApisearchgeocodeGET0A33F67C": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "POST",
+     "Type": "AWS_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/",
+        {
+         "Fn::GetAtt": [
+          "searchgeocode6B708FD3",
+          "Arn"
+         ]
+        },
+        "/invocations"
+       ]
+      ]
+     }
+    },
+    "ResourceId": {
+     "Ref": "UsubleaseApisearchgeocode7722988E"
+    },
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/UsubleaseApi/Default/search/geocode/GET/Resource"
+   }
+  },
+  "CognitoAuthorizerF3215DBC": {
+   "Type": "AWS::ApiGateway::Authorizer",
+   "Properties": {
+    "IdentitySource": "method.request.header.Authorization",
+    "Name": "UsubleaseBackendStackCognitoAuthorizer1F41C2F8",
+    "ProviderARNs": [
+     {
+      "Fn::GetAtt": [
+       "UsubleaseUserPool0C4F4108",
+       "Arn"
+      ]
+     }
+    ],
+    "RestApiId": {
+     "Ref": "UsubleaseApi90799AF8"
+    },
+    "Type": "COGNITO_USER_POOLS"
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/CognitoAuthorizer/Resource"
+   }
+  },
+  "authsignupF307F9D9": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "6b87c1a30ad7ce8ee6b9c069cd3333285024135da6488548c3eb0199d3d4c87d.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "auth-signup",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/auth-signup/Resource",
+    "aws:asset:path": "asset.6b87c1a30ad7ce8ee6b9c069cd3333285024135da6488548c3eb0199d3d4c87d",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "authsignupLogRetention5C7B55E5": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "authsignupF307F9D9"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/auth-signup/LogRetention/Resource"
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource"
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:DeleteRetentionPolicy",
+        "logs:PutRetentionPolicy"
+       ],
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+    "Roles": [
+     {
+      "Ref": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Handler": "index.handler",
+    "Runtime": "nodejs18.x",
+    "Timeout": 900,
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "5bc602ecde93c947efe5899ae355f999986a1acbe610b1c0b9c468d738857555.zip"
+    },
+    "Role": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB",
+    "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource",
+    "aws:asset:path": "asset.5bc602ecde93c947efe5899ae355f999986a1acbe610b1c0b9c468d738857555",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "authsigninA0D5D623": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "062ab522dc3463faea59d2b377ebc7b533dfe65215a9a330e1d5447c273ed87b.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "auth-signin",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/auth-signin/Resource",
+    "aws:asset:path": "asset.062ab522dc3463faea59d2b377ebc7b533dfe65215a9a330e1d5447c273ed87b",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "authsigninLogRetention12B71646": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "authsigninA0D5D623"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/auth-signin/LogRetention/Resource"
+   }
+  },
+  "authconfirmD13616E4": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "f8ad01c1461a3921aa451651fea9f748b1a56469957118b535882c4734df2093.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "auth-confirm",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/auth-confirm/Resource",
+    "aws:asset:path": "asset.f8ad01c1461a3921aa451651fea9f748b1a56469957118b535882c4734df2093",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "authconfirmLogRetention8345A6A0": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "authconfirmD13616E4"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/auth-confirm/LogRetention/Resource"
+   }
+  },
+  "authforgotpassword7AD65913": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "78468ad009aa9413e26aabcb8f1a120462e87451e199816fcb3c0507c0acd86c.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "auth-forgot-password",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/auth-forgot-password/Resource",
+    "aws:asset:path": "asset.78468ad009aa9413e26aabcb8f1a120462e87451e199816fcb3c0507c0acd86c",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "authforgotpasswordLogRetentionA91D5986": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "authforgotpassword7AD65913"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/auth-forgot-password/LogRetention/Resource"
+   }
+  },
+  "usergetprofileF5D00CE7": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "5f811b87ceeabf539274129ebe68f143dbe80e7156839952c48e4f73155a586c.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "user-get-profile",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/user-get-profile/Resource",
+    "aws:asset:path": "asset.5f811b87ceeabf539274129ebe68f143dbe80e7156839952c48e4f73155a586c",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "usergetprofileLogRetentionF8FAC05E": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "usergetprofileF5D00CE7"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/user-get-profile/LogRetention/Resource"
+   }
+  },
+  "userupdateprofileA1DD59E7": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "0df52ac9840bfac1befee4586e298d17738e90e1301781118b97fff1af611473.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "user-update-profile",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/user-update-profile/Resource",
+    "aws:asset:path": "asset.0df52ac9840bfac1befee4586e298d17738e90e1301781118b97fff1af611473",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "userupdateprofileLogRetentionAA002E74": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "userupdateprofileA1DD59E7"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/user-update-profile/LogRetention/Resource"
+   }
+  },
+  "usergetpreferences20B596A1": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "989c98a746bbd47a5dcd23f12bafa1ce00068a4dc812fbaf541840929f1c363c.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "user-get-preferences",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/user-get-preferences/Resource",
+    "aws:asset:path": "asset.989c98a746bbd47a5dcd23f12bafa1ce00068a4dc812fbaf541840929f1c363c",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "usergetpreferencesLogRetention7138873C": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "usergetpreferences20B596A1"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/user-get-preferences/LogRetention/Resource"
+   }
+  },
+  "userupdatepreferencesCDDFEFB3": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "f0f9610f33c8c097b498df61d364d6146fcefd3f1656a1256fd400fff82e4ad3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "user-update-preferences",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/user-update-preferences/Resource",
+    "aws:asset:path": "asset.f0f9610f33c8c097b498df61d364d6146fcefd3f1656a1256fd400fff82e4ad3",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "userupdatepreferencesLogRetention99AE15DE": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "userupdatepreferencesCDDFEFB3"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/user-update-preferences/LogRetention/Resource"
+   }
+  },
+  "listingsgetall5DF3583E": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "f0e73210eca033220a609ef20f9f9d577a23a4b19cd573293a65c1ca90b92d2e.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "listings-get-all",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/listings-get-all/Resource",
+    "aws:asset:path": "asset.f0e73210eca033220a609ef20f9f9d577a23a4b19cd573293a65c1ca90b92d2e",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "listingsgetallLogRetentionAE8F0CA6": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "listingsgetall5DF3583E"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/listings-get-all/LogRetention/Resource"
+   }
+  },
+  "listingscreate7A30A9EA": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "a1ec235266ffa371c79ae65e3d9a8bab38d29ade35515a1a2d4abe02f7cf881f.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "listings-create",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/listings-create/Resource",
+    "aws:asset:path": "asset.a1ec235266ffa371c79ae65e3d9a8bab38d29ade35515a1a2d4abe02f7cf881f",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "listingscreateLogRetention87C1F0B2": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "listingscreate7A30A9EA"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/listings-create/LogRetention/Resource"
+   }
+  },
+  "listingsgetbyid47B46E19": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "c7326296a6cb29c37070bed50a706afffbe39116005c69eec13ec54b56c199e0.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "listings-get-by-id",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/listings-get-by-id/Resource",
+    "aws:asset:path": "asset.c7326296a6cb29c37070bed50a706afffbe39116005c69eec13ec54b56c199e0",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "listingsgetbyidLogRetentionE4647AF4": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "listingsgetbyid47B46E19"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/listings-get-by-id/LogRetention/Resource"
+   }
+  },
+  "listingsupdateF434148B": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "7f5bac96f597f4c50bb58767a258f84e863820e19739cd9e84cc1b2e2840347f.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "listings-update",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/listings-update/Resource",
+    "aws:asset:path": "asset.7f5bac96f597f4c50bb58767a258f84e863820e19739cd9e84cc1b2e2840347f",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "listingsupdateLogRetention0371EB16": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "listingsupdateF434148B"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/listings-update/LogRetention/Resource"
+   }
+  },
+  "listingsdeleteC14D8EF4": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "85a4a5a9c547b19f12ba493073fb5903c4d5e22af34ac6030c0821024aa8ab09.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "listings-delete",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/listings-delete/Resource",
+    "aws:asset:path": "asset.85a4a5a9c547b19f12ba493073fb5903c4d5e22af34ac6030c0821024aa8ab09",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "listingsdeleteLogRetention3DB120E2": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "listingsdeleteC14D8EF4"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/listings-delete/LogRetention/Resource"
+   }
+  },
+  "messagesgetconversations595D136D": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "7bfc3e08aa50784e740d20d02b366df14aeac6230815dd3b46e0f073596ce4a3.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "messages-get-conversations",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/messages-get-conversations/Resource",
+    "aws:asset:path": "asset.7bfc3e08aa50784e740d20d02b366df14aeac6230815dd3b46e0f073596ce4a3",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "messagesgetconversationsLogRetentionB032FD80": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "messagesgetconversations595D136D"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/messages-get-conversations/LogRetention/Resource"
+   }
+  },
+  "messagesgetmessages9046B544": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "e7f039490d992426c518ef9a5c54c3b62622761ce473855e3a532ca8cb1be02f.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "messages-get-messages",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/messages-get-messages/Resource",
+    "aws:asset:path": "asset.e7f039490d992426c518ef9a5c54c3b62622761ce473855e3a532ca8cb1be02f",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "messagesgetmessagesLogRetention66424221": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "messagesgetmessages9046B544"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/messages-get-messages/LogRetention/Resource"
+   }
+  },
+  "messagessendmessage213A2961": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "3532b3564f8aa8becc6a39cd48653c544dae0b669df6900c61c1e3992147b243.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "messages-send-message",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/messages-send-message/Resource",
+    "aws:asset:path": "asset.3532b3564f8aa8becc6a39cd48653c544dae0b669df6900c61c1e3992147b243",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "messagessendmessageLogRetention53D9A996": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "messagessendmessage213A2961"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/messages-send-message/LogRetention/Resource"
+   }
+  },
+  "uploadgetpresignedurl2B03F39A": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "0245293a649d6e3f5951f7cc65bf55d8fa4d3e196022107f7271cbce87b175de.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "upload-get-presigned-url",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/upload-get-presigned-url/Resource",
+    "aws:asset:path": "asset.0245293a649d6e3f5951f7cc65bf55d8fa4d3e196022107f7271cbce87b175de",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "uploadgetpresignedurlLogRetentionB7441F92": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "uploadgetpresignedurl2B03F39A"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/upload-get-presigned-url/LogRetention/Resource"
+   }
+  },
+  "searchlistingsF237FD30": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "73a5a06356b2017cb0dfbf9c7678f94c2205136afd20a4b3d9d5f3485174439e.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "search-listings",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/search-listings/Resource",
+    "aws:asset:path": "asset.73a5a06356b2017cb0dfbf9c7678f94c2205136afd20a4b3d9d5f3485174439e",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "searchlistingsLogRetentionB045FF5B": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "searchlistingsF237FD30"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/search-listings/LogRetention/Resource"
+   }
+  },
+  "searchgeocode6B708FD3": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
+     "S3Key": "17c43d8d88aaa9e5a91aec03d6db801a4295d3d67ba7a66973341acb0ea1be1f.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "USERS_TABLE": {
+       "Ref": "UsersTable9725E9C8"
+      },
+      "LISTINGS_TABLE": {
+       "Ref": "ListingsTableCCEBB5D2"
+      },
+      "MESSAGES_TABLE": {
+       "Ref": "MessagesTable05B58A27"
+      },
+      "CONVERSATIONS_TABLE": {
+       "Ref": "ConversationsTableCD91EB96"
+      },
+      "STORAGE_BUCKET": {
+       "Ref": "StorageBucket19DB2FF8"
+      },
+      "USER_POOL_ID": {
+       "Ref": "UsubleaseUserPool0C4F4108"
+      },
+      "APP_CLIENT_ID": "60a6ict450vs8so0hqjenjcoid"
+     }
+    },
+    "FunctionName": "search-geocode",
+    "Handler": "index.handler",
+    "MemorySize": 256,
+    "Role": {
+     "Fn::GetAtt": [
+      "LambdaExecutionRoleD5C26073",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs18.x",
+    "Timeout": 30
+   },
+   "DependsOn": [
+    "LambdaExecutionRoleDefaultPolicy6D69732F",
+    "LambdaExecutionRoleD5C26073"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/search-geocode/Resource",
+    "aws:asset:path": "asset.17c43d8d88aaa9e5a91aec03d6db801a4295d3d67ba7a66973341acb0ea1be1f",
+    "aws:asset:is-bundled": false,
+    "aws:asset:property": "Code"
+   }
+  },
+  "searchgeocodeLogRetentionEE1578B2": {
+   "Type": "Custom::LogRetention",
+   "Properties": {
+    "ServiceToken": {
+     "Fn::GetAtt": [
+      "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A",
+      "Arn"
+     ]
+    },
+    "LogGroupName": {
+     "Fn::Join": [
+      "",
+      [
+       "/aws/lambda/",
+       {
+        "Ref": "searchgeocode6B708FD3"
+       }
+      ]
+     ]
+    },
+    "RetentionInDays": 7
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/search-geocode/LogRetention/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/22S3U7DMAyFn4X7LIzBC2wgrkBMA66nLDFdtiSu4mRTqfru5KdVQeLKn+0T58TKit8tl3x5I660kOq8MPrA+/cg5Jml0r6X2DgdkPefBH6LaNjjl5t4YKpzwqJKZz7EwUBuFhgY3fN+E+UZQi6OVMMWjZbdXB7zmmwEpdNaWN7vsE4scT5UaWCi1Y0IcBVdkgKFdauLesQnaA12Flwx8CtLr2vK3ApJj9FLyBezVwhHVLk50tQdJ49clzKtgdYxab3+Bp9lczYwI+xBCd5n2+CtJtLo2HN0MmRI5YnzxvaCCALxdQ7MYEP8BZsdhGS7SGYHkQLa/839aW09XrRKxsrM/GLtmqx/i6GNYWAOFfAT3V5WD3yVPsKJtF74mC60wHc1/gBsLojyJQIAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "UsubleaseBackendStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "UsubleaseApiEndpoint81E269B5": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "UsubleaseApi90799AF8"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "UserPoolId": {
+   "Description": "Cognito User Pool ID",
+   "Value": {
+    "Ref": "UsubleaseUserPool0C4F4108"
+   }
+  },
+  "AppClientId": {
+   "Description": "Cognito App Client ID",
+   "Value": "60a6ict450vs8so0hqjenjcoid"
+  },
+  "ApiEndpoint": {
+   "Description": "API Gateway Endpoint",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "UsubleaseApi90799AF8"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "UsubleaseApiDeploymentStageprodD7F71445"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "StorageBucketName": {
+   "Description": "S3 Storage Bucket Name",
+   "Value": {
+    "Ref": "StorageBucket19DB2FF8"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

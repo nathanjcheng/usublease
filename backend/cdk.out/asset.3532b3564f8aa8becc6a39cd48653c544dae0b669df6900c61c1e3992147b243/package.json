@@ -1,0 +1,16 @@
+{
+  "name": "messages-send-message",
+  "version": "1.0.0",
+  "description": "Lambda function for sending a message",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.1000.0",
+    "uuid": "^8.3.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["lambda", "aws", "dynamodb", "messages"],
+  "author": "USublease Team",
+  "license": "ISC"
+} 

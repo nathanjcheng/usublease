@@ -1,0 +1,9 @@
+{
+  "name": "listings-get-all",
+  "version": "1.0.0",
+  "description": "Lambda function to get all listings",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.1000.0"
+  }
+} 

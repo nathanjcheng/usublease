@@ -1,0 +1,1081 @@
+{
+  "version": "34.0.0",
+  "artifacts": {
+    "UsubleaseBackendStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "UsubleaseBackendStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "UsubleaseBackendStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://205498862119/us-east-1",
+      "properties": {
+        "templateFile": "UsubleaseBackendStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::205498862119:role/cdk-hnb659fds-deploy-role-205498862119-us-east-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::205498862119:role/cdk-hnb659fds-cfn-exec-role-205498862119-us-east-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-205498862119-us-east-1/7529075d5ad32951dffb2813b06a8a9adc34fe6a9441e14082e9c7f455379f65.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "UsubleaseBackendStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::205498862119:role/cdk-hnb659fds-lookup-role-205498862119-us-east-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "UsubleaseBackendStack.assets"
+      ],
+      "metadata": {
+        "/UsubleaseBackendStack/UsubleaseUserPool/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseUserPool0C4F4108"
+          }
+        ],
+        "/UsubleaseBackendStack/UsersTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "UsersTable9725E9C8"
+            }
+          }
+        ],
+        "/UsubleaseBackendStack/UsersTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsersTable9725E9C8"
+          }
+        ],
+        "/UsubleaseBackendStack/ListingsTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "ListingsTableCCEBB5D2"
+            }
+          }
+        ],
+        "/UsubleaseBackendStack/ListingsTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ListingsTableCCEBB5D2"
+          }
+        ],
+        "/UsubleaseBackendStack/MessagesTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "MessagesTable05B58A27"
+            }
+          }
+        ],
+        "/UsubleaseBackendStack/MessagesTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MessagesTable05B58A27"
+          }
+        ],
+        "/UsubleaseBackendStack/ConversationsTable": [
+          {
+            "type": "aws:cdk:hasPhysicalName",
+            "data": {
+              "Ref": "ConversationsTableCD91EB96"
+            }
+          }
+        ],
+        "/UsubleaseBackendStack/ConversationsTable/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ConversationsTableCD91EB96"
+          }
+        ],
+        "/UsubleaseBackendStack/StorageBucket/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StorageBucket19DB2FF8"
+          }
+        ],
+        "/UsubleaseBackendStack/StorageBucket/Policy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StorageBucketPolicy41A048DB"
+          }
+        ],
+        "/UsubleaseBackendStack/StorageBucket/AutoDeleteObjectsCustomResource/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StorageBucketAutoDeleteObjectsCustomResource105C81BD"
+          }
+        ],
+        "/UsubleaseBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092"
+          }
+        ],
+        "/UsubleaseBackendStack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F"
+          }
+        ],
+        "/UsubleaseBackendStack/LambdaExecutionRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaExecutionRoleD5C26073"
+          }
+        ],
+        "/UsubleaseBackendStack/LambdaExecutionRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LambdaExecutionRoleDefaultPolicy6D69732F"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApi90799AF8"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Deployment/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiDeployment32BC612B97e0b422134d138057e23bc489b3b26f"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/DeploymentStage.prod/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiDeploymentStageprodD7F71445"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Endpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiEndpoint81E269B5"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiOPTIONS93AD2A7E"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthE4A1AADC"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthOPTIONSA13046A0"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/signup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthsignup5A73F9FB"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/signup/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthsignupOPTIONSF6BA28CC"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/signup/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.signup": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthsignupPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthsignup27E91C7A"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/signup/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.signup": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthsignupPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthsignup2841943F"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/signup/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthsignupPOST015EF42D"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/signin/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthsignin980DF756"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/signin/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthsigninOPTIONSA64DFB7F"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/signin/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.signin": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthsigninPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthsignin475F1DD1"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/signin/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.signin": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthsigninPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthsigninC07248E4"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/signin/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthsigninPOST92C7B870"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/confirm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthconfirm99EE0CB7"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/confirm/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthconfirmOPTIONS70411949"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/confirm/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.confirm": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthconfirmPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthconfirmF8D7BC89"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/confirm/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.confirm": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthconfirmPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthconfirm61B8D599"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/confirm/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthconfirmPOST08DA0201"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/forgot-password/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthforgotpasswordB9109262"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/forgot-password/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthforgotpasswordOPTIONS85AF1582"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/forgot-password/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.forgot-password": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthforgotpasswordPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthforgotpasswordB427DBE7"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/forgot-password/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..auth.forgot-password": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthforgotpasswordPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTauthforgotpassword922EAB3F"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/auth/forgot-password/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiauthforgotpasswordPOSTCEC25509"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuser7BCD60DC"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserOPTIONS406FE1F7"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/profile/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserprofile1EBBB921"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/profile/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserprofileOPTIONS7218F24F"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/profile/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..user.profile": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserprofileGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETuserprofile5ADFE4B3"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/profile/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..user.profile": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserprofileGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETuserprofile04029705"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/profile/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserprofileGET127C4838"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/profile/PUT/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..user.profile": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserprofilePUTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPUTuserprofile46A0FCAD"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/profile/PUT/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..user.profile": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserprofilePUTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPUTuserprofile02C6BA01"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/profile/PUT/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserprofilePUT46A1B8D0"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserpreferences01D80585"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserpreferencesOPTIONSD703B437"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..user.preferences": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserpreferencesGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETuserpreferences19DBDC63"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..user.preferences": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserpreferencesGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETuserpreferencesD195BB08"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserpreferencesGETF7FFF4AC"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/PUT/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..user.preferences": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserpreferencesPUTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPUTuserpreferences20FDBB5A"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/PUT/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..user.preferences": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserpreferencesPUTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPUTuserpreferences77FA87DB"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/user/preferences/PUT/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuserpreferencesPUTD9E8E9A3"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistings613719A7"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsOPTIONSE6FFA9B3"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETlistings58ABC00D"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETlistingsB1937424"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsGETA2250D0B"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..listings": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTlistingsF063DC51"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..listings": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTlistingsEA3D1CA4"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsPOST831E5AB9"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsidEA53DD51"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsidOPTIONSBA2189A2"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsidGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETlistingsid73D9C1EB"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsidGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETlistingsidFBFEC907"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsidGET559AEDC6"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/PUT/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..listings.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsidPUTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPUTlistingsid0D313CC9"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/PUT/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.PUT..listings.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsidPUTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPUTlistingsid91EED4E7"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/PUT/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsidPUTD92F1F0A"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/DELETE/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.DELETE..listings.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsidDELETEApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FDELETElistingsidFD9E4884"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/DELETE/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.DELETE..listings.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsidDELETEApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FDELETElistingsid7F6D8206"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/{id}/DELETE/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsidDELETE3DBADD65"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/my-listings/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsmylistingsCBD416B8"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/my-listings/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsmylistingsOPTIONS873233C8"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/my-listings/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings.my-listings": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsmylistingsGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETlistingsmylistings7D93ADD7"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/my-listings/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..listings.my-listings": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsmylistingsGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETlistingsmylistingsFC9B8B94"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/listings/my-listings/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApilistingsmylistingsGET46D83116"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessages68B273E4"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesOPTIONS540F22B2"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversations70B71FD9"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsOPTIONS4BC4B22C"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..messages.conversations": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETmessagesconversationsFF34878E"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..messages.conversations": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETmessagesconversations506DCF50"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsGET258A50B9"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..messages.conversations": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTmessagesconversationsE17C3FDD"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..messages.conversations": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTmessagesconversationsEC65484A"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsPOST6A69B11E"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsid2BF65ED1"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsidOPTIONS49FBF08E"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..messages.conversations.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsidGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETmessagesconversationsid557D3305"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..messages.conversations.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsidGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETmessagesconversationsid5FBFB722"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsidGETA2463A63"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..messages.conversations.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsidPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTmessagesconversationsidABA56791"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..messages.conversations.{id}": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsidPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTmessagesconversationsid38BA8311"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/messages/conversations/{id}/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApimessagesconversationsidPOSTE88D2154"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/upload/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuploadF58FE63F"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/upload/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuploadOPTIONS17E2F3DB"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/upload/presigned-url/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuploadpresignedurl6778E693"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/upload/presigned-url/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuploadpresignedurlOPTIONSD67F3CCF"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/upload/presigned-url/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..upload.presigned-url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuploadpresignedurlPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTuploadpresignedurlF0BA64EF"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/upload/presigned-url/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..upload.presigned-url": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuploadpresignedurlPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTuploadpresignedurl0D1B8FEC"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/upload/presigned-url/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApiuploadpresignedurlPOST98569FB4"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearch088DF506"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearchOPTIONS5CC3DEB9"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/listings/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearchlistings4ECD80F7"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/listings/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearchlistingsOPTIONS7BC48288"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/listings/POST/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.POST..search.listings": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearchlistingsPOSTApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FPOSTsearchlistings5673F5A4"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/listings/POST/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.POST..search.listings": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearchlistingsPOSTApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FPOSTsearchlistingsFE1C19DE"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/listings/POST/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearchlistingsPOST4C2E5876"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/geocode/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearchgeocode7722988E"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/geocode/OPTIONS/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearchgeocodeOPTIONS6D903EA1"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/geocode/GET/ApiPermission.UsubleaseBackendStackUsubleaseApi570AB09F.GET..search.geocode": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearchgeocodeGETApiPermissionUsubleaseBackendStackUsubleaseApi570AB09FGETsearchgeocode512D5E6D"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/geocode/GET/ApiPermission.Test.UsubleaseBackendStackUsubleaseApi570AB09F.GET..search.geocode": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearchgeocodeGETApiPermissionTestUsubleaseBackendStackUsubleaseApi570AB09FGETsearchgeocode7CEE5C86"
+          }
+        ],
+        "/UsubleaseBackendStack/UsubleaseApi/Default/search/geocode/GET/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UsubleaseApisearchgeocodeGET0A33F67C"
+          }
+        ],
+        "/UsubleaseBackendStack/CognitoAuthorizer/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CognitoAuthorizerF3215DBC"
+          }
+        ],
+        "/UsubleaseBackendStack/auth-signup/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "authsignupF307F9D9"
+          }
+        ],
+        "/UsubleaseBackendStack/auth-signup/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "authsignupLogRetention5C7B55E5"
+          }
+        ],
+        "/UsubleaseBackendStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRole9741ECFB"
+          }
+        ],
+        "/UsubleaseBackendStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/ServiceRole/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aServiceRoleDefaultPolicyADDA7DEB"
+          }
+        ],
+        "/UsubleaseBackendStack/LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8a/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "LogRetentionaae0aa3c5b4d4f87b02d85b201efdd8aFD4BFC8A"
+          }
+        ],
+        "/UsubleaseBackendStack/auth-signin/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "authsigninA0D5D623"
+          }
+        ],
+        "/UsubleaseBackendStack/auth-signin/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "authsigninLogRetention12B71646"
+          }
+        ],
+        "/UsubleaseBackendStack/auth-confirm/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "authconfirmD13616E4"
+          }
+        ],
+        "/UsubleaseBackendStack/auth-confirm/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "authconfirmLogRetention8345A6A0"
+          }
+        ],
+        "/UsubleaseBackendStack/auth-forgot-password/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "authforgotpassword7AD65913"
+          }
+        ],
+        "/UsubleaseBackendStack/auth-forgot-password/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "authforgotpasswordLogRetentionA91D5986"
+          }
+        ],
+        "/UsubleaseBackendStack/user-get-profile/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "usergetprofileF5D00CE7"
+          }
+        ],
+        "/UsubleaseBackendStack/user-get-profile/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "usergetprofileLogRetentionF8FAC05E"
+          }
+        ],
+        "/UsubleaseBackendStack/user-update-profile/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "userupdateprofileA1DD59E7"
+          }
+        ],
+        "/UsubleaseBackendStack/user-update-profile/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "userupdateprofileLogRetentionAA002E74"
+          }
+        ],
+        "/UsubleaseBackendStack/user-get-preferences/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "usergetpreferences20B596A1"
+          }
+        ],
+        "/UsubleaseBackendStack/user-get-preferences/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "usergetpreferencesLogRetention7138873C"
+          }
+        ],
+        "/UsubleaseBackendStack/user-update-preferences/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "userupdatepreferencesCDDFEFB3"
+          }
+        ],
+        "/UsubleaseBackendStack/user-update-preferences/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "userupdatepreferencesLogRetention99AE15DE"
+          }
+        ],
+        "/UsubleaseBackendStack/listings-get-all/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "listingsgetall5DF3583E"
+          }
+        ],
+        "/UsubleaseBackendStack/listings-get-all/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "listingsgetallLogRetentionAE8F0CA6"
+          }
+        ],
+        "/UsubleaseBackendStack/listings-create/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "listingscreate7A30A9EA"
+          }
+        ],
+        "/UsubleaseBackendStack/listings-create/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "listingscreateLogRetention87C1F0B2"
+          }
+        ],
+        "/UsubleaseBackendStack/listings-get-by-id/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "listingsgetbyid47B46E19"
+          }
+        ],
+        "/UsubleaseBackendStack/listings-get-by-id/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "listingsgetbyidLogRetentionE4647AF4"
+          }
+        ],
+        "/UsubleaseBackendStack/listings-update/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "listingsupdateF434148B"
+          }
+        ],
+        "/UsubleaseBackendStack/listings-update/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "listingsupdateLogRetention0371EB16"
+          }
+        ],
+        "/UsubleaseBackendStack/listings-delete/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "listingsdeleteC14D8EF4"
+          }
+        ],
+        "/UsubleaseBackendStack/listings-delete/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "listingsdeleteLogRetention3DB120E2"
+          }
+        ],
+        "/UsubleaseBackendStack/messages-get-conversations/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "messagesgetconversations595D136D"
+          }
+        ],
+        "/UsubleaseBackendStack/messages-get-conversations/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "messagesgetconversationsLogRetentionB032FD80"
+          }
+        ],
+        "/UsubleaseBackendStack/messages-get-messages/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "messagesgetmessages9046B544"
+          }
+        ],
+        "/UsubleaseBackendStack/messages-get-messages/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "messagesgetmessagesLogRetention66424221"
+          }
+        ],
+        "/UsubleaseBackendStack/messages-send-message/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "messagessendmessage213A2961"
+          }
+        ],
+        "/UsubleaseBackendStack/messages-send-message/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "messagessendmessageLogRetention53D9A996"
+          }
+        ],
+        "/UsubleaseBackendStack/upload-get-presigned-url/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "uploadgetpresignedurl2B03F39A"
+          }
+        ],
+        "/UsubleaseBackendStack/upload-get-presigned-url/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "uploadgetpresignedurlLogRetentionB7441F92"
+          }
+        ],
+        "/UsubleaseBackendStack/search-listings/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "searchlistingsF237FD30"
+          }
+        ],
+        "/UsubleaseBackendStack/search-listings/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "searchlistingsLogRetentionB045FF5B"
+          }
+        ],
+        "/UsubleaseBackendStack/search-geocode/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "searchgeocode6B708FD3"
+          }
+        ],
+        "/UsubleaseBackendStack/search-geocode/LogRetention/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "searchgeocodeLogRetentionEE1578B2"
+          }
+        ],
+        "/UsubleaseBackendStack/UserPoolId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "UserPoolId"
+          }
+        ],
+        "/UsubleaseBackendStack/AppClientId": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "AppClientId"
+          }
+        ],
+        "/UsubleaseBackendStack/ApiEndpoint": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "ApiEndpoint"
+          }
+        ],
+        "/UsubleaseBackendStack/StorageBucketName": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "StorageBucketName"
+          }
+        ],
+        "/UsubleaseBackendStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/UsubleaseBackendStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/UsubleaseBackendStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "UsubleaseBackendStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}

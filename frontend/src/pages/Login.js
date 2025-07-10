@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { signIn, fetchAuthSession } from '@aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 import './Auth.css';
 
@@ -7,39 +7,63 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const auth = getAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      // Get the ID token
-      const idToken = await user.getIdToken();
+      // Sign in with AWS Cognito using password auth
+      const user = await signIn({ 
+        username: email, 
+        password,
+        options: {
+          authFlowType: 'USER_PASSWORD_AUTH'
+        }
+      });
       
-      // Store the token in localStorage
+      // Get the session and ID token
+      const session = await fetchAuthSession();
+      const idToken = session.tokens.idToken.toString();
+      
+      // Store the token in localStorage with safe property access
       localStorage.setItem('token', idToken);
+      localStorage.setItem('user', JSON.stringify({
+        id: user?.username || email,
+        email: user?.attributes?.email || email,
+        name: user?.attributes?.name || user?.attributes?.given_name || 'User'
+      }));
       
       // Navigate to home page
       navigate('/');
     } catch (error) {
       let message = 'Login failed. Please try again.';
+      
       switch (error.code) {
-        case 'auth/user-not-found':
+        case 'UserNotFoundException':
           message = 'No account found with that email.';
           break;
-        case 'auth/wrong-password':
-        case 'auth/invalid-credential':
+        case 'NotAuthorizedException':
           message = 'Incorrect password. Please try again.';
           break;
-        case 'auth/too-many-requests':
+        case 'UserNotConfirmedException':
+          message = 'Please confirm your email address before logging in.';
+          break;
+        case 'TooManyRequestsException':
+          message = 'Too many failed attempts. Please wait and try again later.';
+          break;
+        case 'LimitExceededException':
           message = 'Too many failed attempts. Please wait and try again later.';
           break;
         default:
-          message = error.message;
+          message = error.message || 'An unexpected error occurred.';
       }
       setError(message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,6 +80,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
           <div className="form-group">
@@ -65,12 +90,22 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading}
             />
           </div>
-          <button type="submit" className="auth-button">Login</button>
+          <button 
+            type="submit" 
+            className="auth-button"
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
         </form>
         <p className="auth-switch">
           Don't have an account? <a href="/signup">Sign up</a>
+        </p>
+        <p className="auth-switch">
+          <a href="/forgot-password">Forgot your password?</a>
         </p>
       </div>
     </div>

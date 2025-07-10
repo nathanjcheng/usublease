@@ -1,0 +1,10 @@
+{
+  "name": "listings-create",
+  "version": "1.0.0",
+  "description": "Lambda function to create a new listing",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.1000.0",
+    "uuid": "^9.0.0"
+  }
+} 

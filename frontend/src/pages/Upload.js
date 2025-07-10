@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
-import { db, auth } from '../firebase';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getCurrentUser } from '@aws-amplify/auth';
+import { listingsAPI, uploadAPI, searchAPI } from '../services/api';
 import { v4 as uuidv4 } from 'uuid';
 
 // Preset data (reuse from App.js if necessary)
@@ -61,11 +60,11 @@ function Upload() {
   });
 
   const [addressSuggestions, setAddressSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   // Mapbox requests are proxied through the backend to avoid exposing the API key
   const addressTimer = useRef(null);
-
-  const storage = getStorage();
   const fileInputRef = useRef(null);
 
   const handleNext = () => setStep((s) => s + 1);
@@ -88,15 +87,36 @@ function Upload() {
   };
 
   const handlePhotoUpload = async (files) => {
-    const uploads = Array.from(files).slice(0, 15); // cap 15
-    const urls = [];
-    for (const file of uploads) {
-      const fileRef = ref(storage, `listing_images/${uuidv4()}`);
-      await uploadBytes(fileRef, file);
-      const url = await getDownloadURL(fileRef);
-      urls.push(url);
+    setLoading(true);
+    setError('');
+    
+    try {
+      const uploads = Array.from(files).slice(0, 15); // cap 15
+      const urls = [];
+      
+      for (const file of uploads) {
+        // Generate unique filename
+        const fileExtension = file.name.split('.').pop();
+        const fileName = `${uuidv4()}.${fileExtension}`;
+        
+        // Get presigned URL for upload
+        const { presignedUrl } = await uploadAPI.getUploadUrl(fileName, file.type);
+        
+        // Upload file using presigned URL
+        await uploadAPI.uploadFile(presignedUrl, file);
+        
+        // Construct the final URL
+        const fileUrl = `https://${process.env.REACT_APP_S3_BUCKET}.s3.${process.env.REACT_APP_AWS_REGION}.amazonaws.com/${fileName}`;
+        urls.push(fileUrl);
+      }
+      
+      setFormData((prev) => ({ ...prev, photos: [...prev.photos, ...urls] }));
+    } catch (error) {
+      console.error('Error uploading photos:', error);
+      setError('Failed to upload photos. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    setFormData((prev) => ({ ...prev, photos: [...prev.photos, ...urls] }));
   };
 
   const handleAddressInput = (e) => {
@@ -106,8 +126,7 @@ function Upload() {
     if(value.length<3){ setAddressSuggestions([]); return; }
     addressTimer.current = setTimeout(async () => {
       try {
-        const res = await fetch(`http://localhost:8000/api/geocode?q=${encodeURIComponent(value)}`);
-        const data = await res.json();
+        const data = await searchAPI.getAddressSuggestions(value);
         setAddressSuggestions(data.features || []);
       } catch (err) {
         console.error(err);
@@ -121,17 +140,62 @@ function Upload() {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
+    setError('');
+    
     try {
-      const user = auth.currentUser;
-      const docRef = await addDoc(collection(db, 'listings'), {
+      // Get current user
+      const user = await getCurrentUser();
+      
+      // Prepare listing data
+      const listingData = {
         ...formData,
-        createdAt: Timestamp.now(),
-        uid: user ? user.uid : null
+        userId: user.username,
+        createdAt: new Date().toISOString(),
+        status: 'active'
+      };
+      
+      // Create listing via API
+      const result = await listingsAPI.createListing(listingData);
+      alert('Listing created successfully!');
+      
+      // Reset form or redirect
+      setFormData({
+        semester: '',
+        year: 2025,
+        startDate: '',
+        endDate: '',
+        university: '',
+        address: '',
+        unitType: '',
+        beds: '',
+        baths: '',
+        bedsOffered: '',
+        bathsOffered: '',
+        sharedBath: false,
+        monthlyRent: '',
+        securityDeposit: '',
+        utilities: [],
+        furnished: false,
+        amenities: [],
+        rules: {
+          pets: false,
+          smoking: false,
+          roommateGender: 'Any'
+        },
+        squareFootage: '',
+        oneTimeFees: '',
+        photos: [],
+        title: '',
+        description: '',
+        thumbnailIndex: 0
       });
-      alert('Listing created! ID: ' + docRef.id);
+      setStep(0);
     } catch (err) {
-      console.error(err);
-      alert('Failed to create listing');
+      console.error('Error creating listing:', err);
+      setError('Failed to create listing. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -139,6 +203,7 @@ function Upload() {
   return (
     <div className="page-container" style={{ maxWidth: '700px', margin: '0 auto' }}>
       <h1>Tell us about your Sublease</h1>
+      {error && <div className="error-message" style={{color: 'red', marginBottom: '1rem'}}>{error}</div>}
       {/* Progress Bar */}
       <div style={{width:'100%',background:'#e0e0e0',height:'4px',borderRadius:'4px',margin:'10px 0'}}>
         <div
@@ -179,7 +244,7 @@ function Upload() {
             </div>
             {/* Navigation Buttons */}
             <div style={{display:'flex',justifyContent:'center',marginTop:'1.5rem'}}>
-              <button className="button-13 save" onClick={handleNext}>Next</button>
+              <button className="button-13 save" onClick={handleNext} disabled={loading}>Next</button>
             </div>
           </div>
         </div>
@@ -199,26 +264,33 @@ function Upload() {
                 ))}
               </select>
             </div>
-            <div className="form-group">
-              <label>Street Address:</label>
-              <div style={{position:'relative',flex:1}}>
-                <input type="text" className="input-13" value={formData.address} onChange={handleAddressInput} placeholder="123 Main St" style={{marginLeft:'10px',width:'100%'}} />
-                {addressSuggestions.length>0 && (
-                  <ul style={{position:'absolute',zIndex:1000,background:'#fff',listStyle:'none',margin:0,padding:'5px',border:'1px solid #d5d9d9',borderRadius:'6px',width:'100%',maxHeight:'180px',overflowY:'auto'}}>
-                    {addressSuggestions.map((f)=>(
-                      <li key={f.id} style={{padding:'5px',cursor:'pointer'}} onClick={()=>selectSuggestion(f)}>
-                        {f.place_name}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+            <div className="form-group" style={{marginBottom:'1rem'}}>
+              <label>Address:</label>
+              <input
+                type="text"
+                className="input-13"
+                value={formData.address}
+                onChange={handleAddressInput}
+                placeholder="Enter address..."
+              />
+              {addressSuggestions.length > 0 && (
+                <div style={{position:'absolute',background:'white',border:'1px solid #ccc',borderRadius:'4px',maxHeight:'200px',overflow:'auto',width:'100%',zIndex:1000}}>
+                  {addressSuggestions.map((feat, idx) => (
+                    <div
+                      key={idx}
+                      style={{padding:'10px',cursor:'pointer',borderBottom:'1px solid #eee'}}
+                      onClick={() => selectSuggestion(feat)}
+                    >
+                      {feat.place_name}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-
             {/* Navigation Buttons */}
-            <div style={{display:'flex',justifyContent:'center',marginTop:'1.5rem',gap:'10px'}}>
-              <button className="button-13" onClick={handleBack}>Back</button>
-              <button className="button-13 save" onClick={handleNext}>Next</button>
+            <div style={{display:'flex',justifyContent:'space-between',marginTop:'1.5rem'}}>
+              <button className="button-13" onClick={handleBack} disabled={loading}>Back</button>
+              <button className="button-13 save" onClick={handleNext} disabled={loading}>Next</button>
             </div>
           </div>
         </div>

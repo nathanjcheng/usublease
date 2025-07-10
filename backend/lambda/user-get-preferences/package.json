@@ -1,0 +1,15 @@
+{
+  "name": "user-get-preferences",
+  "version": "1.0.0",
+  "description": "Lambda function for getting user preferences",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.1000.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["lambda", "aws", "dynamodb", "user"],
+  "author": "USublease Team",
+  "license": "ISC"
+} 

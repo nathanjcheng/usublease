@@ -20,7 +20,8 @@ const universityLogos = Array.from({ length: 30 }, (_, index) => {
   return {
     name: `University ${index + 1}`,
     image: image,
-    description: `University Logo ${index + 1}`
+    description: `University Logo ${index + 1}`,
+    listings: Math.floor(Math.random() * 50) + 10 // Random number of listings between 10-60
   };
 });
 

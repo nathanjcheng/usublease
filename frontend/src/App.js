@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getCurrentUser, fetchAuthSession, signOut } from '@aws-amplify/auth';
+import { Hub } from '@aws-amplify/core';
 import './App.css';
 import Messages from './pages/Messages';
 import Profile from './pages/Profile';
@@ -200,521 +201,211 @@ function SearchSection() {
   };
 
   return (
-    <section className="search-section" style={{ 
-      marginTop: '0',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: 'calc(70vh - 100px)',
-      width: '100vw',
-      marginLeft: 'calc(-50vw + 50%)',
-      marginRight: 'calc(-50vw + 50%)',
-      background: 'linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%)',
-      position: 'relative',
-      overflow: 'hidden',
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '200px',
-        background: 'linear-gradient(135deg, rgba(51,51,51,0.05) 0%, rgba(85,85,85,0.05) 100%)',
-        transform: 'skewY(-3deg)',
-        transformOrigin: 'top left'
-      },
-      '@media (max-width: 768px)': {
-        marginTop: '0',
-        minHeight: 'calc(60vh - 80px)'
-      }
-    }}>
-      {/* Moving University Logos Grid */}
-      <div className="moving-logos" style={{
-        position: 'absolute',
-        top: `${GRID_VERTICAL_OFFSET}px`,
-        left: '0',
-        transform: 'none',
-        width: '200%',
-        maxWidth: 'none',
-        height: '100%',
-        display: 'grid',
-        gridTemplateRows: 'repeat(3, 1fr)',
-        gridAutoFlow: 'column',
-        gridAutoColumns: '150px',
-        gap: '20px 15px',
-        animation: 'moveLogos 60s linear infinite',
-        opacity: 0.15,
-        pointerEvents: 'none',
-        zIndex: 0,
-        paddingTop: `${GRID_PADDING_TOP}px`,
-        '@media (max-width: 768px)': {
-          width: '200%',
-          padding: '0 15px'
-        }
-      }}>
-        {/* First set of logos */}
-        {[...Array(30)].map((_, index) => {
-          const logo = universityLogos[index % universityLogos.length];
-          return (
-            <div key={`first-${index}`} style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '12px',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '16px',
-              aspectRatio: '1',
-              background: logo.image ? 'transparent' : 'linear-gradient(145deg, #d0d0d0, #e0e0e0)',
-              boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
-              height: '100%',
-              transition: 'transform 0.3s ease',
-              '&:hover': {
-                transform: 'scale(1.1)'
-              }
-            }}>
-              {logo.image ? (
-                <img 
-                  src={logo.image} 
-                  alt={logo.name}
-                  style={{
-                    width: '85%',
-                    height: '85%',
-                    objectFit: 'contain',
-                    filter: USE_GRAYSCALE ? 'grayscale(100%)' : 'none',
-                    transition: 'all 0.3s ease',
-                    opacity: 0.8
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.parentElement.style.transform = 'scale(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.parentElement.style.transform = 'scale(1)';
-                  }}
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.parentElement.style.background = 'linear-gradient(145deg, #d0d0d0, #e0e0e0)';
-                    console.warn(`Failed to load logo for ${logo.name}`);
-                  }}
-                />
-              ) : null}
-            </div>
-          );
-        })}
-        {/* Duplicate set of logos for seamless loop */}
-        {[...Array(30)].map((_, index) => {
-          const logo = universityLogos[index % universityLogos.length];
-          return (
-            <div key={`second-${index}`} style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '12px',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '16px',
-              aspectRatio: '1',
-              background: logo.image ? 'transparent' : 'linear-gradient(145deg, #d0d0d0, #e0e0e0)',
-              boxShadow: 'inset 0 0 10px rgba(0,0,0,0.1)',
-              height: '100%',
-              transition: 'transform 0.3s ease',
-              '&:hover': {
-                transform: 'scale(1.1)'
-              }
-            }}>
-              {logo.image ? (
-                <img 
-                  src={logo.image} 
-                  alt={logo.name}
-                  style={{
-                    width: '85%',
-                    height: '85%',
-                    objectFit: 'contain',
-                    filter: USE_GRAYSCALE ? 'grayscale(100%)' : 'none',
-                    transition: 'all 0.3s ease',
-                    opacity: 0.8
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.parentElement.style.transform = 'scale(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.parentElement.style.transform = 'scale(1)';
-                  }}
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.parentElement.style.background = 'linear-gradient(145deg, #d0d0d0, #e0e0e0)';
-                    console.warn(`Failed to load logo for ${logo.name}`);
-                  }}
-                />
-              ) : null}
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="search-container" style={{ 
-        textAlign: 'center',
-        width: '100%',
-        maxWidth: '1200px',
-        padding: '0 20px',
-        position: 'relative',
-        zIndex: 1,
-        marginTop: '100px',
-        '@media (max-width: 768px)': {
-          padding: '0 15px',
-          marginTop: '60px'
-        }
-      }}>
-        <h1 className="floating-title" style={{ 
-          fontSize: '4rem', 
-          marginBottom: '40px',
-          color: '#333',
-          textShadow: '2px 2px 4px rgba(0,0,0,0.1)',
-          background: 'linear-gradient(135deg, #1a1a1a, #333333)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-          fontWeight: '500',
-          letterSpacing: '-0.02em',
-          '@media (max-width: 768px)': {
-            fontSize: '2.5rem',
-            marginBottom: '30px'
-          }
-        }}>
-          University Sublease
-        </h1>
-        <div className="search-bar" style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center',
-          gap: '15px',
-          marginBottom: '50px',
-          width: '100%',
-          maxWidth: '800px',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          transition: 'all 0.3s ease-in-out',
-          padding: '20px',
-          background: 'rgba(255,255,255,0.9)',
-          borderRadius: '20px',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-          backdropFilter: 'blur(10px)',
-          '@media (max-width: 768px)': {
-            flexDirection: 'column',
-            gap: '10px',
-            marginBottom: '30px',
-            padding: '15px'
-          }
-        }}>
-          {/* University Dropdown */}
-          <select
-            value={selectedUniversity}
-            onChange={(e) => setSelectedUniversity(e.target.value)}
-            style={{
-              padding: '10px 20px',
-              fontSize: '1rem',
-              borderRadius: '999px',
-              border: '1px solid #ddd',
-              background: '#fff',
-              cursor: 'pointer',
-              minWidth: '180px',
-              width: '100%',
-              outline: 'none',
-              color: selectedUniversity ? '#222' : '#888',
-              fontWeight: 500,
-              '@media (max-width: 768px)': {
-                padding: '12px 15px',
-                fontSize: '0.9rem'
-              }
-            }}
-          >
-            <option value="">Select University</option>
-            {universities.map((uni) => (
-              <option key={uni} value={uni}>{uni}</option>
-            ))}
-          </select>
-
-          {/* Semester Dropdown */}
-          <select
-            value={selectedSemester}
-            onChange={(e) => setSelectedSemester(e.target.value)}
-            style={{
-              padding: '10px 20px',
-              fontSize: '1rem',
-              borderRadius: '999px',
-              border: '1px solid #ddd',
-              background: '#fff',
-              cursor: 'pointer',
-              minWidth: '180px',
-              width: '100%',
-              outline: 'none',
-              color: selectedSemester ? '#222' : '#888',
-              fontWeight: 500,
-              '@media (max-width: 768px)': {
-                padding: '12px 15px',
-                fontSize: '0.9rem'
-              }
-            }}
-          >
-            <option value="">Select Semester</option>
-            {semesters.map((sem) => (
-              <option key={sem} value={sem}>{stripMonths(sem)}</option>
-            ))}
-          </select>
-
-          {/* Search Button */}
-          <button
-            onClick={handleSearch}
-            className="search-button"
-            style={{
-              padding: '0',
-              fontSize: '1.2rem',
-              borderRadius: '50%',
-              border: '1px solid #ddd',
-              backgroundColor: '#f8f9fa',
-              cursor: 'pointer',
-              width: '45px',
-              height: '45px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: '0 0 auto',
-              marginLeft: 'auto',
-              '@media (max-width: 768px)': {
-                width: '40px',
-                height: '40px',
-                marginLeft: '0'
-              }
-            }}
-          >
-            <img 
-              src={searchPng} 
-              alt="Search" 
-              style={{ 
-                width: '20px', 
-                height: '20px',
-                '@media (max-width: 768px)': {
-                  width: '18px',
-                  height: '18px'
-                }
-              }} 
-            />
+    <div className="search-section">
+      <div className="search-container">
+        <h2>Find Your Perfect Sublease</h2>
+        <p>Browse thousands of student housing options near your university</p>
+        
+        <div className="search-filters">
+          <div className="filter-group">
+            <label>University</label>
+            <select 
+              value={selectedUniversity} 
+              onChange={(e) => setSelectedUniversity(e.target.value)}
+              className="search-select"
+            >
+              <option value="">All Universities</option>
+              {universities.map((uni) => (
+                <option key={uni} value={uni}>{uni}</option>
+              ))}
+            </select>
+          </div>
+          
+          <div className="filter-group">
+            <label>Semester</label>
+            <select 
+              value={selectedSemester} 
+              onChange={(e) => setSelectedSemester(e.target.value)}
+              className="search-select"
+            >
+              <option value="">All Semesters</option>
+              {semesters.map((sem) => (
+                <option key={sem} value={sem}>{stripMonths(sem)}</option>
+              ))}
+            </select>
+          </div>
+          
+          <button onClick={handleSearch} className="search-button">
+            Search Listings
           </button>
         </div>
       </div>
-    </section>
+    </div>
+  );
+}
+
+function UniversityGrid() {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  return (
+    <div className="university-grid-container">
+      <h2>Browse by University</h2>
+      <div 
+        className="university-grid"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '20px',
+          padding: '20px',
+          maxWidth: '1200px',
+          margin: '0 auto'
+        }}
+      >
+        {universityLogos.map((logo, index) => (
+          <div
+            key={index}
+            className="university-card"
+            style={{
+              background: 'white',
+              borderRadius: '10px',
+              padding: '20px',
+              textAlign: 'center',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              cursor: 'pointer',
+              transform: hoveredIndex === index ? 'translateY(-5px)' : 'translateY(0)',
+              boxShadow: hoveredIndex === index ? '0 5px 20px rgba(0,0,0,0.15)' : '0 2px 10px rgba(0,0,0,0.1)'
+            }}
+            onMouseEnter={() => setHoveredIndex(index)}
+            onMouseLeave={() => setHoveredIndex(null)}
+            onClick={() => window.location.href = `/map?university=${encodeURIComponent(logo.name)}`}
+          >
+            <img
+              src={logo.image}
+              alt={logo.name}
+              style={{
+                width: '80px',
+                height: '80px',
+                objectFit: 'contain',
+                marginBottom: '10px',
+                filter: USE_GRAYSCALE ? 'grayscale(100%)' : 'none'
+              }}
+            />
+            <h3 style={{ margin: '0', fontSize: '16px', color: '#333' }}>{logo.name}</h3>
+            <p style={{ margin: '5px 0 0 0', fontSize: '14px', color: '#666' }}>
+              {logo.listings} listings
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
 function ProtectedRoute({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const auth = getAuth();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setLoading(false);
-    });
-    return unsubscribe;
-  }, [auth]);
+    const checkAuth = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+      } catch (error) {
+        console.log('User not authenticated');
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (loading) return <div>Loading...</div>;
-  if (!user) return <Navigate to="/login" replace />;
-  return children;
+    checkAuth();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  return user ? children : <Navigate to="/login" />;
 }
 
 function Footer() {
   return (
-    <footer className="footer" style={{
-      background: 'linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%)',
-      padding: '60px 0 30px',
-      borderTop: '1px solid rgba(0,0,0,0.05)',
-      '@media (max-width: 768px)': {
-        padding: '40px 15px 20px'
-      }
-    }}>
-      <div className="footer-content" style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '40px',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '0 20px',
-        '@media (max-width: 768px)': {
-          gridTemplateColumns: '1fr',
-          gap: '30px',
-          textAlign: 'center'
-        }
-      }}>
+    <footer className="footer">
+      <div className="footer-content">
         <div className="footer-section">
-          <h3 style={{
-            fontSize: '1.2rem',
-            marginBottom: '20px',
-            color: '#333',
-            position: 'relative',
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              bottom: '-8px',
-              left: '0',
-              width: '40px',
-              height: '2px',
-              background: 'linear-gradient(90deg, #333333, #555555)',
-              '@media (max-width: 768px)': {
-                left: '50%',
-                transform: 'translateX(-50%)'
-              }
-            }
-          }}>About USublease</h3>
-          <p style={{
-            color: '#666',
-            lineHeight: '1.6',
-            fontSize: '0.95rem'
-          }}>
-            Connecting students with the perfect sublease opportunities across
-            Florida universities.
-          </p>
+          <h3>USublease</h3>
+          <p>Connecting students with affordable housing options near their universities.</p>
         </div>
-
         <div className="footer-section">
-          <h3 style={{
-            fontSize: '1.2rem',
-            marginBottom: '20px',
-            color: '#333',
-            position: 'relative',
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              bottom: '-8px',
-              left: '0',
-              width: '40px',
-              height: '2px',
-              background: 'linear-gradient(90deg, #333333, #555555)',
-              '@media (max-width: 768px)': {
-                left: '50%',
-                transform: 'translateX(-50%)'
-              }
-            }
-          }}>Quick Links</h3>
-          <ul style={{
-            listStyle: 'none',
-            padding: 0,
-            margin: 0
-          }}>
-            <li style={{ marginBottom: '10px' }}>
-              <Link to="/" style={{
-                color: '#666',
-                textDecoration: 'none',
-                transition: 'color 0.3s ease',
-                '&:hover': {
-                  color: '#333'
-                }
-              }}>Home</Link>
-            </li>
-            <li style={{ marginBottom: '10px' }}>
-              <Link to="/map" style={{
-                color: '#666',
-                textDecoration: 'none',
-                transition: 'color 0.3s ease',
-                '&:hover': {
-                  color: '#333'
-                }
-              }}>Find Listings</Link>
-            </li>
-            <li style={{ marginBottom: '10px' }}>
-              <Link to="/profile" style={{
-                color: '#666',
-                textDecoration: 'none',
-                transition: 'color 0.3s ease',
-                '&:hover': {
-                  color: '#333'
-                }
-              }}>My Profile</Link>
-            </li>
-            <li style={{ marginBottom: '10px' }}>
-              <Link to="/messages" style={{
-                color: '#666',
-                textDecoration: 'none',
-                transition: 'color 0.3s ease',
-                '&:hover': {
-                  color: '#333'
-                }
-              }}>Messages</Link>
-            </li>
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="/map">Browse Listings</a></li>
+            <li><a href="/upload">Post a Listing</a></li>
+            <li><a href="/profile">My Profile</a></li>
+            <li><a href="/messages">Messages</a></li>
           </ul>
         </div>
-
         <div className="footer-section">
-          <h3 style={{
-            fontSize: '1.2rem',
-            marginBottom: '20px',
-            color: '#333',
-            position: 'relative',
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              bottom: '-8px',
-              left: '0',
-              width: '40px',
-              height: '2px',
-              background: 'linear-gradient(90deg, #333333, #555555)',
-              '@media (max-width: 768px)': {
-                left: '50%',
-                transform: 'translateX(-50%)'
-              }
-            }
-          }}>Contact Us</h3>
-          <ul style={{
-            listStyle: 'none',
-            padding: 0,
-            margin: 0,
-            color: '#666',
-            fontSize: '0.95rem',
-            lineHeight: '1.6'
-          }}>
-            <li>Email: support@usublease.com</li>
-            <li>Phone: (555) 123-4567</li>
-            <li>Address: Tampa, FL</li>
+          <h4>Support</h4>
+          <ul>
+            <li><a href="/help">Help Center</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/terms">Terms of Service</a></li>
           </ul>
+        </div>
+        <div className="footer-section">
+          <h4>Connect</h4>
+          <div className="social-links">
+            <a href="#" aria-label="Facebook">📘</a>
+            <a href="#" aria-label="Twitter">🐦</a>
+            <a href="#" aria-label="Instagram">📷</a>
+          </div>
         </div>
       </div>
-
-      <div className="footer-bottom" style={{
-        textAlign: 'center',
-        marginTop: '40px',
-        paddingTop: '20px',
-        borderTop: '1px solid rgba(0,0,0,0.05)',
-        color: '#666',
-        fontSize: '0.9rem'
-      }}>
-        <p>&copy; {new Date().getFullYear()} USublease. All rights reserved.</p>
+      <div className="footer-bottom">
+        <p>&copy; 2024 USublease. All rights reserved.</p>
       </div>
     </footer>
   );
 }
 
-// ---------------------------------------------------------------------------
-//  Main App Component
-// ---------------------------------------------------------------------------
-
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const auth = getAuth();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setLoading(false);
-    });
-    return unsubscribe;
-  }, [auth]);
+    const checkAuth = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+      } catch (error) {
+        console.log('User not authenticated');
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Group listings by university for the "featured" section
-  const listingsByUniversity = exampleListings.reduce((acc, listing) => {
-    if (!acc[listing.university]) acc[listing.university] = [];
-    acc[listing.university].push(listing);
-    return acc;
-  }, {});
+    checkAuth();
+
+    // Listen for auth state changes
+    const listener = Hub.listen('auth', ({ payload: { event } }) => {
+      switch (event) {
+        case 'signIn':
+          checkAuth();
+          break;
+        case 'signOut':
+          setUser(null);
+          break;
+        default:
+          break;
+      }
+    });
+
+    return () => listener();
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -722,366 +413,101 @@ function App() {
 
   return (
     <Router>
-      <div className="app" style={{ backgroundColor: 'white' }}>
-        {/* ---------------------------------------------------------------- */}
-        {/*  Header                                                        */}
-        {/* ---------------------------------------------------------------- */}
-        <header className="header" style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '15px 20px',
-          background: 'linear-gradient(to right, #ffffff, #f8f9fa)',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-          position: 'sticky',
-          top: 0,
-          zIndex: 1000,
-          borderBottom: '1px solid rgba(0,0,0,0.05)',
-          '@media (max-width: 768px)': {
-            padding: '10px 15px'
-          }
-        }}>
-          <Link to="/" className="logo" style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '10px',
-            textDecoration: 'none',
-            '@media (max-width: 768px)': {
-              gap: '5px'
-            }
-          }}>
-            <img src={icon} alt="USublease Icon" style={{ 
-              width: '38px', 
-              height: '38px', 
-              objectFit: 'contain', 
-              marginRight: '10px',
-              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))',
-              '@media (max-width: 768px)': {
-                width: '32px',
-                height: '32px',
-                marginRight: '5px'
-              }
-            }} />
-          </Link>
-
-          <div className="nav-buttons" style={{
-            display: 'flex',
-            gap: '10px',
-            '@media (max-width: 768px)': {
-              gap: '5px'
-            }
-          }}>
-            <Link to="/upload" className="nav-button capsule new-listing-btn" title="New Listing" style={{
-              padding: '8px 16px',
-              borderRadius: '20px',
-              textDecoration: 'none',
-              transition: 'all 0.3s ease',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'transparent',
-              border: '1px solid #ddd',
-              cursor: 'pointer',
-              '@media (max-width: 768px)': {
-                padding: '6px 12px',
-                fontSize: '0.9rem'
-              }
-            }}>
-              <span style={{ 
-                fontWeight: 'bold',
-                color: '#333',
-                fontSize: '0.95rem'
-              }}>New Listing</span>
+      <div className="App">
+        <nav className="navbar">
+          <div className="nav-container">
+            <Link to="/" className="nav-logo">
+              <img src={icon} alt="USublease" />
+              <span>USublease</span>
             </Link>
-            <Link to="/messages" className="nav-button capsule" title="Messages" style={{
-              '@media (max-width: 768px)': {
-                padding: '8px'
-              }
-            }}>
-              <img src={mailIcon} alt="Messages" style={{ 
-                width: '24px', 
-                height: '24px', 
-                objectFit: 'contain',
-                '@media (max-width: 768px)': {
-                  width: '20px',
-                  height: '20px'
-                }
-              }} />
-            </Link>
-            <Link 
-              to={user ? "/profile" : "/login"} 
-              className="nav-button capsule" 
-              title={user ? "Profile" : "Login"}
-              style={{
-                '@media (max-width: 768px)': {
-                  padding: '8px'
-                }
-              }}
-            >
-              <img src={profileIcon} alt="Profile" style={{ 
-                width: '24px', 
-                height: '24px', 
-                objectFit: 'contain',
-                '@media (max-width: 768px)': {
-                  width: '20px',
-                  height: '20px'
-                }
-              }} />
-            </Link>
-            <Link to="/settings" className="nav-button capsule" title="Settings" style={{
-              '@media (max-width: 768px)': {
-                padding: '8px'
-              }
-            }}>
-              <img src={settingsIcon} alt="Settings" style={{ 
-                width: '24px', 
-                height: '24px', 
-                objectFit: 'contain',
-                '@media (max-width: 768px)': {
-                  width: '20px',
-                  height: '20px'
-                }
-              }} />
-            </Link>
-          </div>
-        </header>
-
-        {/* ---------------------------------------------------------------- */}
-        {/*  Routes                                                        */}
-        {/* ---------------------------------------------------------------- */}
-        <Routes>
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/map" element={<Map />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/upload" element={<Upload />} />
-
-          {/* Home – protected */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
+            
+            <div className="nav-menu">
+              <Link to="/map" className="nav-link">
+                <img src={searchPng} alt="Search" />
+                <span>Browse</span>
+              </Link>
+              
+              {user ? (
                 <>
-                  <SearchSection />
-
-                  {/* ------------------------------------------------------ */}
-                  {/*  Featured Listings                                    */}
-                  {/* ------------------------------------------------------ */}
-                  <section className="featured-section" style={{
-                    padding: '40px 0',
-                    background: 'linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%)',
-                    '@media (max-width: 768px)': {
-                      padding: '20px 15px'
-                    }
-                  }}>
-                    {Object.entries(listingsByUniversity).map(
-                      ([university, listings]) => (
-                        <div key={university} className="university-section">
-                          <h2 className="university-title" style={{
-                            fontSize: '2rem',
-                            marginBottom: '30px',
-                            color: '#333',
-                            textAlign: 'left',
-                            position: 'relative',
-                            paddingLeft: '20px',
-                            '&::after': {
-                              content: '""',
-                              position: 'absolute',
-                              bottom: '-10px',
-                              left: '20px',
-                              transform: 'none',
-                              width: '60px',
-                              height: '3px',
-                              background: 'linear-gradient(90deg, #333333, #555555)',
-                              borderRadius: '3px'
-                            },
-                            '@media (max-width: 768px)': {
-                              fontSize: '1.5rem',
-                              marginBottom: '20px',
-                              paddingLeft: '15px'
-                            }
-                          }}>{university}</h2>
-
-                          <div className="featured-tiles" style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(6, 1fr)',
-                            gap: '20px',
-                            padding: '0 20px',
-                            maxWidth: '1400px',
-                            margin: '0 auto',
-                            '@media (max-width: 1200px)': {
-                              gridTemplateColumns: 'repeat(4, 1fr)'
-                            },
-                            '@media (max-width: 992px)': {
-                              gridTemplateColumns: 'repeat(3, 1fr)'
-                            },
-                            '@media (max-width: 768px)': {
-                              gridTemplateColumns: 'repeat(2, 1fr)',
-                              gap: '15px',
-                              padding: '0'
-                            },
-                            '@media (max-width: 480px)': {
-                              gridTemplateColumns: '1fr'
-                            }
-                          }}>
-                            {listings.slice(0, 6).map((listing) => (
-                              <div key={listing.id} style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '15px',
-                                transition: 'transform 0.3s ease',
-                                '&:hover': {
-                                  transform: 'translateY(-5px)'
-                                }
-                              }}>
-                                <div style={{ 
-                                  height: '200px',
-                                  borderRadius: '16px',
-                                  overflow: 'hidden',
-                                  transition: 'all 0.3s ease',
-                                  cursor: 'pointer',
-                                  boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-                                  '@media (max-width: 768px)': {
-                                    height: '160px'
-                                  }
-                                }}>
-                                  <img 
-                                    src={listing.image} 
-                                    alt={listing.title}
-                                    style={{
-                                      width: '100%',
-                                      height: '100%',
-                                      objectFit: 'cover',
-                                      transition: 'transform 0.3s ease',
-                                      transform: 'scale(1)',
-                                      '&:hover': {
-                                        transform: 'scale(1.1)'
-                                      }
-                                    }}
-                                    onMouseEnter={(e) => {
-                                      e.currentTarget.style.transform = 'scale(1.1)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                      e.currentTarget.style.transform = 'scale(1)';
-                                    }}
-                                  />
-                                </div>
-                                <div style={{ 
-                                  padding: '20px',
-                                  background: 'white',
-                                  borderRadius: '16px',
-                                  transition: 'all 0.3s ease',
-                                  cursor: 'pointer',
-                                  boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
-                                  '@media (max-width: 768px)': {
-                                    padding: '15px'
-                                  }
-                                }}>
-                                  <h3 style={{ 
-                                    margin: '0 0 10px 0',
-                                    fontSize: '1.1rem',
-                                    fontWeight: '600',
-                                    color: '#333',
-                                    '@media (max-width: 768px)': {
-                                      fontSize: '1rem'
-                                    }
-                                  }}>{listing.title}</h3>
-                                  <p style={{ 
-                                    margin: '0 0 5px 0',
-                                    fontSize: '0.95rem',
-                                    color: '#333',
-                                    fontWeight: '500',
-                                    '@media (max-width: 768px)': {
-                                      fontSize: '0.9rem'
-                                    }
-                                  }}>{listing.price}</p>
-                                  <p style={{ 
-                                    margin: '0',
-                                    fontSize: '0.9rem',
-                                    color: '#666',
-                                    '@media (max-width: 768px)': {
-                                      fontSize: '0.85rem'
-                                    }
-                                  }}>{listing.semester}</p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )
-                    )}
-                  </section>
-
-                  <Footer />
+                  <Link to="/upload" className="nav-link">
+                    <span>Post Listing</span>
+                  </Link>
+                  <Link to="/messages" className="nav-link">
+                    <img src={mailIcon} alt="Messages" />
+                    <span>Messages</span>
+                  </Link>
+                  <Link to="/profile" className="nav-link">
+                    <img src={profileIcon} alt="Profile" />
+                    <span>Profile</span>
+                  </Link>
+                  <Link to="/settings" className="nav-link">
+                    <img src={settingsIcon} alt="Settings" />
+                    <span>Settings</span>
+                  </Link>
+                  <button 
+                    onClick={async () => {
+                      try {
+                        await signOut();
+                        setUser(null);
+                      } catch (error) {
+                        console.error('Error signing out:', error);
+                      }
+                    }}
+                    className="nav-link"
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
+                  >
+                    <span>Sign Out</span>
+                  </button>
                 </>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+              ) : (
+                <>
+                  <Link to="/login" className="nav-link">
+                    <span>Login</span>
+                  </Link>
+                  <Link to="/signup" className="nav-link">
+                    <span>Sign Up</span>
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </nav>
 
-        {/* Add progress bar styles */}
-        <style>
-          {`
-            ::-webkit-scrollbar {
-              width: 8px;
-              height: 8px;
-            }
-            ::-webkit-scrollbar-track {
-              background: #f1f1f1;
-            }
-            ::-webkit-scrollbar-thumb {
-              background: #333;
-              border-radius: 4px;
-            }
-            ::-webkit-scrollbar-thumb:hover {
-              background: #555;
-            }
-            .new-listing-btn:hover {
-              background: #f5f5f5 !important;
-              border-color: #333 !important;
-              box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
-              opacity: 0.8 !important;
-            }
-            .scrollable-dropdown::-webkit-scrollbar {
-              width: 6px;
-            }
-            .scrollable-dropdown::-webkit-scrollbar-track {
-              background: #f1f1f1;
-              border-radius: 3px;
-            }
-            .scrollable-dropdown::-webkit-scrollbar-thumb {
-              background: #888;
-              border-radius: 3px;
-            }
-            .scrollable-dropdown::-webkit-scrollbar-thumb:hover {
-              background: #555;
-            }
-            @keyframes float {
-              0% {
-                transform: translateY(0px);
-              }
-              50% {
-                transform: translateY(-5px);
-              }
-              100% {
-                transform: translateY(0px);
-              }
-            }
-            .floating-title {
-              animation: float 8s ease-in-out infinite;
-            }
-            @keyframes moveLogos {
-              0% {
-                transform: translateX(0);
-              }
-              100% {
-                transform: translateX(-50%);
-              }
-            }
-          `}
-        </style>
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={
+              <div className="home-page">
+                <SearchSection />
+                <UniversityGrid />
+              </div>
+            } />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/map" element={<Map />} />
+            <Route path="/upload" element={
+              <ProtectedRoute>
+                <Upload />
+              </ProtectedRoute>
+            } />
+            <Route path="/messages" element={
+              <ProtectedRoute>
+                <Messages />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            } />
+          </Routes>
+        </main>
+
+        <Footer />
       </div>
     </Router>
   );
