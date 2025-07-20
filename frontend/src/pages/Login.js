@@ -37,8 +37,8 @@ const Login = () => {
         name: user?.attributes?.name || user?.attributes?.given_name || 'User'
       }));
       
-      // Navigate to home page
-      navigate('/');
+      // Navigate to profile page
+      navigate('/profile');
     } catch (error) {
       let message = 'Login failed. Please try again.';
       

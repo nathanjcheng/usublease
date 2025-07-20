@@ -7,12 +7,51 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [university, setUniversity] = useState('');
+  const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [confirmationCode, setConfirmationCode] = useState('');
   const navigate = useNavigate();
+
+  // List of universities
+  const universities = [
+    'University of South Florida',
+    'University of Florida',
+    'Florida State University',
+    'University of Central Florida',
+    'Florida International University',
+    'University of Miami',
+    'Florida Atlantic University',
+    'Florida A&M University',
+    'University of North Florida',
+    'Florida Gulf Coast University',
+    'University of West Florida',
+    'Florida Polytechnic University',
+    'New College of Florida',
+    'Florida Southern College',
+    'Stetson University'
+  ];
+
+  // Helper to format phone number
+  const formatPhoneNumber = (value) => {
+    // Remove all non-digits
+    const cleaned = value.replace(/\D/g, '');
+    
+    // Format based on length
+    if (cleaned.length === 0) return '';
+    if (cleaned.length <= 3) return cleaned;
+    if (cleaned.length <= 6) return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
+    return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+  };
+
+  // Helper to get raw phone number (digits only)
+  const getRawPhoneNumber = (formatted) => {
+    return formatted.replace(/\D/g, '');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +72,21 @@ const Signup = () => {
       return;
     }
 
+    // Validate phone number
+    const rawPhone = getRawPhoneNumber(phone);
+    if (rawPhone.length !== 10) {
+      setError('Please enter a valid 10-digit phone number.');
+      setLoading(false);
+      return;
+    }
+
+    // Validate university selection
+    if (!university) {
+      setError('Please select your university.');
+      setLoading(false);
+      return;
+    }
+
     try {
       // Sign up with AWS Cognito
       const { user } = await signUp({
@@ -41,14 +95,25 @@ const Signup = () => {
         options: {
           userAttributes: {
             email: email,
-            name: name,
-            given_name: name.split(' ')[0],
-            family_name: name.split(' ').slice(1).join(' ') || ''
+            given_name: firstName,
+            family_name: lastName,
+            name: `${firstName} ${lastName}`.trim()
           }
         }
       });
 
       console.log('User signed up successfully:', user);
+      
+      // Store additional user data in localStorage for later use
+      const userData = {
+        firstName,
+        lastName,
+        university,
+        phone: getRawPhoneNumber(phone),
+        email
+      };
+      localStorage.setItem('signupData', JSON.stringify(userData));
+      
       setShowConfirmation(true);
     } catch (error) {
       let message = 'Sign up failed. Please try again.';
@@ -99,11 +164,33 @@ const Signup = () => {
       localStorage.setItem('user', JSON.stringify({
         id: user?.username || email,
         email: user?.attributes?.email || email,
-        name: user?.attributes?.name || user?.attributes?.given_name || name
+        name: user?.attributes?.name || user?.attributes?.given_name || `${firstName} ${lastName}`.trim()
       }));
       
-      // Navigate to home page
-      navigate('/');
+      // Save additional user data to API
+      try {
+        const signupData = localStorage.getItem('signupData');
+        if (signupData) {
+          const userData = JSON.parse(signupData);
+          // Import the API service
+          const { userAPI } = await import('../services/api');
+          await userAPI.updateProfile({
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            university: userData.university,
+            phone: userData.phone,
+            name: `${userData.firstName} ${userData.lastName}`.trim()
+          });
+          // Clear the signup data
+          localStorage.removeItem('signupData');
+        }
+      } catch (apiError) {
+        console.log('Failed to save additional user data to API:', apiError);
+        // Don't fail the signup if API call fails
+      }
+      
+      // Navigate to profile page
+      navigate('/profile');
     } catch (error) {
       let message = 'Confirmation failed. Please try again.';
       
@@ -174,13 +261,25 @@ const Signup = () => {
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Full Name:</label>
+            <label>First Name:</label>
             <input
               type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               required
               disabled={loading}
+              placeholder="Enter your first name"
+            />
+          </div>
+          <div className="form-group">
+            <label>Last Name:</label>
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+              disabled={loading}
+              placeholder="Enter your last name"
             />
           </div>
           <div className="form-group">
@@ -191,6 +290,33 @@ const Signup = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
+              placeholder="Enter your email"
+            />
+          </div>
+          <div className="form-group">
+            <label>University:</label>
+            <select
+              value={university}
+              onChange={(e) => setUniversity(e.target.value)}
+              required
+              disabled={loading}
+              className="auth-select"
+            >
+              <option value="">Select your university</option>
+              {universities.map((uni) => (
+                <option key={uni} value={uni}>{uni}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Phone Number:</label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(formatPhoneNumber(e.target.value))}
+              required
+              disabled={loading}
+              placeholder="(555) 123-4567"
             />
           </div>
           <div className="form-group">

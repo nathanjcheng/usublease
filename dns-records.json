@@ -1,0 +1,29 @@
+{
+    "Changes": [
+        {
+            "Action": "CREATE",
+            "ResourceRecordSet": {
+                "Name": "usublease.com",
+                "Type": "A",
+                "AliasTarget": {
+                    "HostedZoneId": "Z2FDTNDATAQYW2",
+                    "DNSName": "d2t4zss95r9hsi.cloudfront.net",
+                    "EvaluateTargetHealth": false
+                }
+            }
+        },
+        {
+            "Action": "CREATE",
+            "ResourceRecordSet": {
+                "Name": "www.usublease.com",
+                "Type": "CNAME",
+                "TTL": 300,
+                "ResourceRecords": [
+                    {
+                        "Value": "usublease.com"
+                    }
+                ]
+            }
+        }
+    ]
+} 
