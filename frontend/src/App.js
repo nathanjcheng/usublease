@@ -22,6 +22,48 @@ const GRID_PADDING_TOP = 100; // Adjust this value to move the grid up or down
 const GRID_VERTICAL_OFFSET = -120; // Changed from -110 to -150 to move grid higher up
 const USE_GRAYSCALE = false; // Set to true for grayscale, false for colored logos
 
+// Scrolling background component
+function ScrollingBackground() {
+  return (
+    <div className="scrolling-background">
+      <div className="scrolling-row">
+        {universityLogos.map((logo, index) => (
+          <div key={`scroll-${index}`} className="scrolling-logo">
+            <img
+              src={logo.image}
+              alt={logo.name}
+              style={{
+                width: '60px',
+                height: '60px',
+                objectFit: 'contain',
+                filter: USE_GRAYSCALE ? 'grayscale(100%)' : 'none',
+                opacity: 0.3
+              }}
+            />
+          </div>
+        ))}
+      </div>
+      <div className="scrolling-row" aria-hidden="true">
+        {universityLogos.map((logo, index) => (
+          <div key={`scroll-duplicate-${index}`} className="scrolling-logo">
+            <img
+              src={logo.image}
+              alt={logo.name}
+              style={{
+                width: '60px',
+                height: '60px',
+                objectFit: 'contain',
+                filter: USE_GRAYSCALE ? 'grayscale(100%)' : 'none',
+                opacity: 0.3
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // Example listings data
 const exampleListings = [
   // USF Listings
@@ -202,6 +244,7 @@ function SearchSection() {
 
   return (
     <div className="search-section">
+      <ScrollingBackground />
       <div className="search-container">
         <h2>Find Your Perfect Sublease</h2>
         <p>Browse thousands of student housing options near your university</p>
