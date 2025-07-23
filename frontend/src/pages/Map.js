@@ -7,62 +7,37 @@ function Map() {
   const [selectedListing, setSelectedListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [filters, setFilters] = useState({
-    university: '',
-    semester: '',
-    minPrice: '',
-    maxPrice: '',
-    beds: ''
-  });
+  // Remove filters state
 
   // Load listings on component mount
   useEffect(() => {
     loadListings();
-  }, [filters]);
+  }, []); // Remove filters dependency
 
   const loadListings = async () => {
     setLoading(true);
     setError('');
     try {
-      const data = await listingsAPI.getListings(filters);
-      let listings = data.listings || [];
-      // If no filters, sort by most recent
-      if (
-        !filters.university &&
-        !filters.semester &&
-        !filters.minPrice &&
-        !filters.maxPrice &&
-        !filters.beds
-      ) {
-        listings = listings.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-      }
+      console.log('Fetching all listings from all universities...');
+      const data = await listingsAPI.getListings();
+      console.log('Listings response:', data);
+      
+      let listings = data.listings || data || [];
+      console.log('Processed listings:', listings);
+      
+      // Always sort by most recent
+      listings = listings.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       setListings(listings);
     } catch (error) {
       console.error('Error loading listings:', error);
-      setError('Failed to load listings. Please try again.');
+      setError(`Failed to load listings: ${error.message || 'Network error'}`);
+      setListings([]); // Clear any existing listings on error
     } finally {
       setLoading(false);
     }
   };
 
-  const handleFilterChange = (filterName, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterName]: value
-    }));
-  };
-
-  const clearFilters = () => {
-    setFilters({
-      university: '',
-      semester: '',
-      minPrice: '',
-      maxPrice: '',
-      beds: ''
-    });
-  };
-
-  // Use only listings from backend
+  // Remove handleFilterChange and clearFilters functions
 
   return (
     <div className="map-page">
@@ -85,67 +60,7 @@ function Map() {
         
         {error && <div className="error-message" style={{color: 'red', padding: '10px'}}>{error}</div>}
         
-        {/* Filters */}
-        <div className="filters-section" style={{marginBottom: '20px', padding: '15px', backgroundColor: '#f5f5f5', borderRadius: '8px'}}>
-          <h4 style={{margin: '0 0 10px 0'}}>Filters</h4>
-          <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center'}}>
-            <select 
-              value={filters.university} 
-              onChange={(e) => handleFilterChange('university', e.target.value)}
-              style={{padding: '5px', borderRadius: '4px'}}
-            >
-              <option value="">All Universities</option>
-              <option value="University of South Florida">USF</option>
-              <option value="University of Central Florida">UCF</option>
-              <option value="University of Florida">UF</option>
-            </select>
-            
-            <select 
-              value={filters.semester} 
-              onChange={(e) => handleFilterChange('semester', e.target.value)}
-              style={{padding: '5px', borderRadius: '4px'}}
-            >
-              <option value="">All Semesters</option>
-              <option value="Fall 2025">Fall 2025</option>
-              <option value="Spring 2026">Spring 2026</option>
-              <option value="Summer 2025">Summer 2025</option>
-            </select>
-            
-            <input 
-              type="number" 
-              placeholder="Min Price"
-              value={filters.minPrice}
-              onChange={(e) => handleFilterChange('minPrice', e.target.value)}
-              style={{padding: '5px', borderRadius: '4px', width: '100px'}}
-            />
-            
-            <input 
-              type="number" 
-              placeholder="Max Price"
-              value={filters.maxPrice}
-              onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
-              style={{padding: '5px', borderRadius: '4px', width: '100px'}}
-            />
-            
-            <select 
-              value={filters.beds} 
-              onChange={(e) => handleFilterChange('beds', e.target.value)}
-              style={{padding: '5px', borderRadius: '4px'}}
-            >
-              <option value="">Any Beds</option>
-              <option value="1">1 Bed</option>
-              <option value="2">2 Beds</option>
-              <option value="3">3+ Beds</option>
-            </select>
-            
-            <button 
-              onClick={clearFilters}
-              style={{padding: '5px 10px', borderRadius: '4px', backgroundColor: '#ddd', border: 'none', cursor: 'pointer'}}
-            >
-              Clear
-            </button>
-          </div>
-        </div>
+        {/* Remove filters section */}
         
         <div className="listings-grid">
           {listings.map((listing) => (
@@ -178,10 +93,7 @@ function Map() {
         
         {listings.length === 0 && !loading && (
           <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
-            <p>No listings found matching your criteria.</p>
-            <button onClick={clearFilters} style={{padding: '10px 20px', borderRadius: '4px', backgroundColor: '#793094', color: 'white', border: 'none', cursor: 'pointer'}}>
-              Clear Filters
-            </button>
+            <p>No listings found.</p>
           </div>
         )}
       </div>

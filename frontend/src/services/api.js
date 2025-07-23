@@ -2,7 +2,7 @@ import { generateClient } from '@aws-amplify/api';
 import { fetchAuthSession } from '@aws-amplify/auth';
 
 // API base URL
-const API_BASE_URL = process.env.REACT_APP_API_ENDPOINT || 'https://your-api-gateway-url.amazonaws.com/prod';
+const API_BASE_URL = process.env.REACT_APP_API_ENDPOINT || 'https://1wcbrg6ta8.execute-api.us-east-1.amazonaws.com/prod';
 
 // Helper function to get auth token
 const getAuthToken = async () => {
@@ -31,6 +31,34 @@ const authenticatedFetch = async (endpoint, options = {}) => {
   });
 
   if (!response.ok) {
+    throw new Error(`API call failed: ${response.status} ${response.statusText}`);
+  }
+
+  return response.json();
+};
+
+// Helper function to make public API calls (no authentication required)
+const publicFetch = async (endpoint, options = {}) => {
+  const defaultHeaders = {
+    'Content-Type': 'application/json',
+    ...options.headers
+  };
+
+  const fullUrl = `${API_BASE_URL}${endpoint}`;
+  console.log('Making API call to:', fullUrl);
+  console.log('API_BASE_URL:', API_BASE_URL);
+
+  const response = await fetch(fullUrl, {
+    ...options,
+    headers: defaultHeaders
+  });
+
+  console.log('API response status:', response.status);
+  console.log('API response headers:', response.headers);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('API error response body:', errorText);
     throw new Error(`API call failed: ${response.status} ${response.statusText}`);
   }
 
@@ -68,18 +96,31 @@ export const userAPI = {
 
 // Listings API calls
 export const listingsAPI = {
-  // Get all listings with filters
+  // Get all listings (completely public - no auth required)
   getListings: async (filters = {}) => {
+    try {
+      // Temporarily use the original endpoint to test
+      const endpoint = '/listings';
+      console.log('Calling listings API with endpoint:', endpoint);
+      return await publicFetch(endpoint);
+    } catch (error) {
+      console.error('Error in getListings API call:', error);
+      throw error;
+    }
+  },
+
+  // Get all listings with filters (authenticated version for other features)
+  getListingsAuth: async (filters = {}) => {
     const queryParams = new URLSearchParams(filters).toString();
     return authenticatedFetch(`/listings?${queryParams}`);
   },
 
-  // Get single listing by ID
+  // Get single listing by ID (public)
   getListing: async (id) => {
-    return authenticatedFetch(`/listings/${id}`);
+    return publicFetch(`/public/listings/${id}`);
   },
 
-  // Create new listing
+  // Create new listing (requires auth)
   createListing: async (listingData) => {
     return authenticatedFetch('/listings', {
       method: 'POST',
@@ -87,7 +128,7 @@ export const listingsAPI = {
     });
   },
 
-  // Update listing
+  // Update listing (requires auth)
   updateListing: async (id, listingData) => {
     return authenticatedFetch(`/listings/${id}`, {
       method: 'PUT',
@@ -95,14 +136,14 @@ export const listingsAPI = {
     });
   },
 
-  // Delete listing
+  // Delete listing (requires auth)
   deleteListing: async (id) => {
     return authenticatedFetch(`/listings/${id}`, {
       method: 'DELETE'
     });
   },
 
-  // Get user's listings
+  // Get user's listings (requires auth)
   getUserListings: async () => {
     return authenticatedFetch('/listings/my-listings');
   }
