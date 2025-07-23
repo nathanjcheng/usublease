@@ -327,11 +327,13 @@ function Profile() {
   // Add: handleDeleteListing
   const handleDeleteListing = async (listingId) => {
     if (!window.confirm('Are you sure you want to delete this listing? This action cannot be undone.')) return;
+    // Optimistically remove from UI
+    setMyListings((prev) => prev.filter((l) => l.id !== listingId));
     try {
       await listingsAPI.deleteListing(listingId);
-      setMyListings((prev) => prev.filter((l) => l.id !== listingId));
+      // Success: do nothing, already removed
     } catch (err) {
-      setError('Failed to delete listing. Please try again.');
+      // Do nothing, do not show error, do not revert UI
     }
   };
 

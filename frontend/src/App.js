@@ -271,6 +271,15 @@ function Footer() {
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [version, setVersion] = useState('');
+
+  useEffect(() => {
+    // Fetch version from public/version.txt
+    fetch('/version.txt')
+      .then((res) => res.text())
+      .then((text) => setVersion(text.trim()))
+      .catch(() => setVersion(''));
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -405,6 +414,22 @@ function App() {
         </main>
 
         <Footer />
+        {/* Version number in bottom right */}
+        {version && (
+          <div style={{
+            position: 'fixed',
+            right: 10,
+            bottom: 10,
+            background: 'rgba(0,0,0,0.7)',
+            color: 'white',
+            padding: '4px 12px',
+            borderRadius: '8px',
+            fontSize: '0.9em',
+            zIndex: 9999
+          }}>
+            v{version}
+          </div>
+        )}
       </div>
     </Router>
   );

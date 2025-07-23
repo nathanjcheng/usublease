@@ -34,7 +34,6 @@ function Upload() {
     startDate: '',
     endDate: '',
     university: '',
-    address: '',
     unitType: '',
     beds: '',
     baths: '',
@@ -58,12 +57,8 @@ function Upload() {
     thumbnailIndex: 0
   });
 
-  const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  // Mapbox requests are proxied through the backend to avoid exposing the API key
-  const addressTimer = useRef(null);
 
   const handleNext = () => setStep((s) => s + 1);
   const handleBack = () => setStep((s) => s - 1);
@@ -82,26 +77,6 @@ function Upload() {
         [group]: exists ? arr.filter((o) => o !== option) : [...arr, option]
       };
     });
-  };
-
-  const handleAddressInput = (e) => {
-    const value = e.target.value;
-    setFormData((prev)=>({...prev,address:value}));
-    if(addressTimer.current) clearTimeout(addressTimer.current);
-    if(value.length<3){ setAddressSuggestions([]); return; }
-    addressTimer.current = setTimeout(async () => {
-      try {
-        const data = await searchAPI.getAddressSuggestions(value);
-        setAddressSuggestions(data.features || []);
-      } catch (err) {
-        console.error(err);
-      }
-    }, 300);
-  };
-
-  const selectSuggestion = (feat)=>{
-    setFormData(prev=>({...prev,address:feat.place_name, lat:feat.center[1], lon:feat.center[0]}));
-    setAddressSuggestions([]);
   };
 
   const handleSubmit = async () => {
@@ -131,7 +106,6 @@ function Upload() {
         startDate: '',
         endDate: '',
         university: '',
-        address: '',
         unitType: '',
         beds: '',
         baths: '',
@@ -163,6 +137,8 @@ function Upload() {
     }
   };
 
+  const semesterOptions = ['Fall', 'Spring', 'Summer', 'Other'];
+
   // Render step components
   return (
     <div className="page-container" style={{ maxWidth: '700px', margin: '0 auto' }}>
@@ -187,12 +163,12 @@ function Upload() {
             <h3 style={{margin:'0 0 0.5rem 0'}}>Availability</h3>
             <div style={{display:'flex',flexWrap:'wrap',alignItems:'center',columnGap:'10px',rowGap:'10px',marginBottom:'1rem'}}>
               <label style={{marginRight:'5px'}}>Semester:</label>
-              {semesters.map((s)=>(
+              {semesterOptions.map((s)=>(
                 <button
                   key={s}
                   type="button"
                   className={`button-13 semester ${formData.semester===s ? 'selected' : ''}`}
-                  onClick={()=>setFormData(prev=>({...prev, semester:s}))}
+                  onClick={()=>setFormData(prev=>({...prev, semester:s, startDate:'', endDate:''}))}
                 >
                   {s}
                 </button>
@@ -200,15 +176,17 @@ function Upload() {
               <span style={{marginLeft:'10px'}}>Year:</span>
               <input type="number" className="input-13" value={formData.year} onChange={handleChange('year')} style={{width:'80px'}} />
             </div>
-            <div style={{display:'flex',alignItems:'center',gap:'20px',flexWrap:'wrap'}}>
-              <label>Start:</label>
-              <input type="date" className="input-13" style={{width:'160px'}} value={formData.startDate} onChange={handleChange('startDate')} />
-              <label style={{marginLeft:'20px'}}>End:</label>
-              <input type="date" className="input-13" style={{width:'160px'}} value={formData.endDate} onChange={handleChange('endDate')} />
-            </div>
+            {formData.semester === 'Other' && (
+              <div style={{display:'flex',alignItems:'center',gap:'20px',flexWrap:'wrap'}}>
+                <label>Start:</label>
+                <input type="date" className="input-13" style={{width:'160px'}} value={formData.startDate} onChange={handleChange('startDate')} />
+                <label style={{marginLeft:'20px'}}>End:</label>
+                <input type="date" className="input-13" style={{width:'160px'}} value={formData.endDate} onChange={handleChange('endDate')} />
+              </div>
+            )}
             {/* Navigation Buttons */}
             <div style={{display:'flex',justifyContent:'center',marginTop:'1.5rem'}}>
-              <button className="button-13 save" onClick={handleNext} disabled={loading}>Next</button>
+              <button className="button-13 save" onClick={handleNext} disabled={loading || !formData.semester || (formData.semester === 'Other' && (!formData.startDate || !formData.endDate))}>Next</button>
             </div>
           </div>
         </div>
@@ -218,7 +196,7 @@ function Upload() {
       {step === 1 && (
         <div style={{display:'flex',flexDirection:'column',gap:'2rem',alignItems:'flex-start',width:'100%'}}>
           <div style={{background:'#fff',borderRadius:'8px',padding:'1.5rem',boxShadow:'0 1px 3px rgba(0,0,0,0.1)',width:'100%'}}>
-            <h3 style={{margin:'0 0 0.5rem 0'}}>Campus & Address</h3>
+            <h3 style={{margin:'0 0 0.5rem 0'}}>Campus</h3>
             <div className="form-group" style={{marginBottom:'1rem',display:'flex',alignItems:'center',gap:'10px'}}>
               <label>University:</label>
               <select className="input-13 select" value={formData.university} onChange={handleChange('university')}>
@@ -227,29 +205,6 @@ function Upload() {
                   <option key={u} value={u}>{u}</option>
                 ))}
               </select>
-            </div>
-            <div className="form-group" style={{marginBottom:'1rem'}}>
-              <label>Address:</label>
-              <input
-                type="text"
-                className="input-13"
-                value={formData.address}
-                onChange={handleAddressInput}
-                placeholder="Enter address..."
-              />
-              {addressSuggestions.length > 0 && (
-                <div style={{position:'absolute',background:'white',border:'1px solid #ccc',borderRadius:'4px',maxHeight:'200px',overflow:'auto',width:'100%',zIndex:1000}}>
-                  {addressSuggestions.map((feat, idx) => (
-                    <div
-                      key={idx}
-                      style={{padding:'10px',cursor:'pointer',borderBottom:'1px solid #eee'}}
-                      onClick={() => selectSuggestion(feat)}
-                    >
-                      {feat.place_name}
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
             {/* Navigation Buttons */}
             <div style={{display:'flex',justifyContent:'space-between',marginTop:'1.5rem'}}>

@@ -153,13 +153,14 @@ function Map() {
               key={listing.id}
               className={`listing-card ${selectedListing?.id === listing.id ? 'selected' : ''}`}
               onClick={() => setSelectedListing(listing)}
+              style={{ position: 'relative', display: 'flex', alignItems: 'center' }}
             >
               {listing.image && (
                 <div className="listing-image">
                   <img src={listing.image} alt={listing.title} />
                 </div>
               )}
-              <div className="listing-content">
+              <div className="listing-content" style={{ flex: 1 }}>
                 <h3>{listing.title}</h3>
                 <p className="listing-price">${listing.price}/month</p>
                 <p className="listing-semester">{listing.semester}</p>

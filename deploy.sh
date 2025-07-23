@@ -16,7 +16,7 @@ cd frontend
 npm install
 npm run build
 # Deploy to S3 (update the bucket name below!)
-aws s3 sync build/ s3://usublease-storage --delete
+aws s3 sync build/ s3://usublease-website --delete
 cd ..
 
 echo -e "${GREEN}✅ Both backend and frontend deployed!${NC}"
