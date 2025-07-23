@@ -146,11 +146,12 @@ function UniversityGrid() {
         className="university-grid"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '20px',
-          padding: '20px',
-          maxWidth: '1200px',
-          margin: '0 auto'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+          gap: '32px',
+          padding: '32px',
+          maxWidth: '1400px',
+          margin: '0 auto',
+          alignItems: 'stretch',
         }}
       >
         {universityLogos.map((logo, index) => (
@@ -159,14 +160,18 @@ function UniversityGrid() {
             className="university-card"
             style={{
               background: 'white',
-              borderRadius: '10px',
-              padding: '20px',
+              borderRadius: '16px',
+              padding: '32px 16px 24px 16px',
               textAlign: 'center',
               boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
               transition: 'transform 0.2s ease, box-shadow 0.2s ease',
               cursor: 'pointer',
-              transform: hoveredIndex === index ? 'translateY(-5px)' : 'translateY(0)',
-              boxShadow: hoveredIndex === index ? '0 5px 20px rgba(0,0,0,0.15)' : '0 2px 10px rgba(0,0,0,0.1)'
+              transform: hoveredIndex === index ? 'translateY(-8px) scale(1.04)' : 'translateY(0) scale(1)',
+              boxShadow: hoveredIndex === index ? '0 8px 32px rgba(0,0,0,0.18)' : '0 2px 10px rgba(0,0,0,0.1)',
+              minHeight: '220px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
             }}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
@@ -176,15 +181,15 @@ function UniversityGrid() {
               src={logo.image}
               alt={logo.name}
               style={{
-                width: '80px',
-                height: '80px',
+                width: '110px',
+                height: '110px',
                 objectFit: 'contain',
-                marginBottom: '10px',
-                filter: USE_GRAYSCALE ? 'grayscale(100%)' : 'none'
+                marginBottom: '18px',
+                filter: USE_GRAYSCALE ? 'grayscale(100%)' : 'none',
               }}
             />
-            <h3 style={{ margin: '0', fontSize: '16px', color: '#333' }}>{logo.name}</h3>
-            <p style={{ margin: '5px 0 0 0', fontSize: '14px', color: '#666' }}>
+            <h3 style={{ margin: '0', fontSize: '18px', color: '#333' }}>{logo.name}</h3>
+            <p style={{ margin: '8px 0 0 0', fontSize: '15px', color: '#666' }}>
               {logo.listings} listings
             </p>
           </div>

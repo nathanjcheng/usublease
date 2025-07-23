@@ -9,8 +9,8 @@ router = APIRouter()
 
 @router.get("/", response_model=List[ListingInDB])
 async def get_listings():
-    """Get all active listings"""
-    listings_ref = db.collection("listings").where("is_active", "==", True)
+    """Get all active listings, sorted by most recent"""
+    listings_ref = db.collection("listings").where("is_active", "==", True).order_by("created_at", direction="DESCENDING")
     docs = listings_ref.stream()
     return [ListingInDB(id=doc.id, **doc.to_dict()) for doc in docs]
 
@@ -22,7 +22,9 @@ async def create_listing(
     """Create a new listing"""
     listing_data = listing.model_dump()
     listing_data["owner_id"] = current_user["uid"]
-    listing_data["created_at"] = datetime.utcnow()
+    # Ensure created_at is set
+    if "created_at" not in listing_data or not listing_data["created_at"]:
+        listing_data["created_at"] = datetime.utcnow()
     listing_data["updated_at"] = datetime.utcnow()
     listing_data["is_active"] = True
     

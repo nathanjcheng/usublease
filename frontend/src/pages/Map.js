@@ -23,10 +23,20 @@ function Map() {
   const loadListings = async () => {
     setLoading(true);
     setError('');
-    
     try {
       const data = await listingsAPI.getListings(filters);
-      setListings(data.listings || []);
+      let listings = data.listings || [];
+      // If no filters, sort by most recent
+      if (
+        !filters.university &&
+        !filters.semester &&
+        !filters.minPrice &&
+        !filters.maxPrice &&
+        !filters.beds
+      ) {
+        listings = listings.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      }
+      setListings(listings);
     } catch (error) {
       console.error('Error loading listings:', error);
       setError('Failed to load listings. Please try again.');

@@ -11,6 +11,16 @@ const EditIcon = () => (
   </svg>
 );
 
+// Simple delete icon component
+const DeleteIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b71c1c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block' }}>
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h2a2 0 0 1 2 2v2" />
+    <line x1="10" y1="11" x2="10" y2="17" />
+    <line x1="14" y1="11" x2="14" y2="17" />
+  </svg>
+);
+
 function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -314,6 +324,17 @@ function Profile() {
     }
   };
 
+  // Add: handleDeleteListing
+  const handleDeleteListing = async (listingId) => {
+    if (!window.confirm('Are you sure you want to delete this listing? This action cannot be undone.')) return;
+    try {
+      await listingsAPI.deleteListing(listingId);
+      setMyListings((prev) => prev.filter((l) => l.id !== listingId));
+    } catch (err) {
+      setError('Failed to delete listing. Please try again.');
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       await signOut();
@@ -423,10 +444,10 @@ function Profile() {
       )}
 
       <div className="profile-content">
-        {/* Header Section */}
+        {/* Combined Profile Information Section */}
         <div className="profile-section">
           <div className="section-header">
-            <h3>Basic Information</h3>
+            <h3>Profile Information</h3>
             <button 
               onClick={() => setEditingHeader(!editingHeader)}
               className="edit-button"
@@ -434,7 +455,6 @@ function Profile() {
               <EditIcon />
             </button>
           </div>
-          
           {editingHeader ? (
             <div className="edit-form">
               <div className="form-group">
@@ -450,32 +470,6 @@ function Profile() {
                   ))}
                 </select>
               </div>
-              <div className="form-actions">
-                <button onClick={handleSaveUniversity} className="button-13 save">Save</button>
-                <button onClick={() => setEditingHeader(false)} className="button-13">Cancel</button>
-              </div>
-            </div>
-          ) : (
-            <div className="info-display">
-              <p><strong>University:</strong> {user.university || 'Not set'}</p>
-            </div>
-          )}
-        </div>
-
-        {/* Contact Information Section */}
-        <div className="profile-section">
-          <div className="section-header">
-            <h3>Contact Information</h3>
-            <button 
-              onClick={() => setEditingContact(!editingContact)}
-              className="edit-button"
-            >
-              <EditIcon />
-            </button>
-          </div>
-          
-          {editingContact ? (
-            <div className="edit-form">
               <div className="form-group">
                 <label>First Name:</label>
                 <input 
@@ -521,27 +515,27 @@ function Profile() {
                   placeholder="(555) 123-4567"
                 />
               </div>
-              {/* <div className="form-group">
-                <label>Preferred Location:</label>
-                <input 
-                  type="text" 
-                  value={locationInput} 
-                  onChange={(e) => setLocationInput(e.target.value)}
-                  className="input-13"
-                  placeholder="City, State"
-                />
-              </div> */}
               <div className="form-actions">
-                <button onClick={handleSaveContact} className="button-13 save">Save</button>
-                <button onClick={() => setEditingContact(false)} className="button-13">Cancel</button>
+                <button onClick={async () => {
+                  // Save both university and contact info
+                  const updates = {
+                    university: selectedUniversity,
+                    name: displayNameInput,
+                    email: emailInput,
+                    phone: getRawPhoneNumber(phoneInput),
+                  };
+                  const success = await saveUserData(updates);
+                  if (success) setEditingHeader(false);
+                }} className="button-13 save">Save</button>
+                <button onClick={() => setEditingHeader(false)} className="button-13">Cancel</button>
               </div>
             </div>
           ) : (
             <div className="info-display">
+              <p><strong>University:</strong> {user.university || 'Not set'}</p>
               <p><strong>Name:</strong> {user.name || 'Not set'}</p>
               <p><strong>Email:</strong> {user.email || 'Not set'}</p>
               <p><strong>Phone:</strong> {user.phone ? formatPhoneNumber(user.phone) : 'Not set'}</p>
-              {/* <p><strong>Preferred Location:</strong> {user.preferredLocation || 'Not set'}</p> */}
             </div>
           )}
         </div>
@@ -557,17 +551,38 @@ function Profile() {
           )}
           <div className="listings-grid">
             {myListings.map((listing) => (
-              <div key={listing.id} className="listing-card">
+              <div key={listing.id} className="listing-card" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 {listing.image && (
                   <div className="listing-image">
                     <img src={listing.image} alt={listing.title} />
                   </div>
                 )}
-                <div className="listing-content">
+                <div className="listing-content" style={{ flex: 1 }}>
                   <h4>{listing.title}</h4>
                   <p className="listing-price">${listing.price}/month</p>
                   <p className="listing-description">{listing.description}</p>
                 </div>
+                <button
+                  className="delete-listing-icon"
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    marginLeft: 8,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    transition: 'background 0.2s',
+                  }}
+                  title="Delete Listing"
+                  onClick={() => handleDeleteListing(listing.id)}
+                  onMouseOver={e => e.currentTarget.firstChild.style.stroke = '#ff1744'}
+                  onMouseOut={e => e.currentTarget.firstChild.style.stroke = '#b71c1c'}
+                >
+                  <DeleteIcon />
+                </button>
               </div>
             ))}
           </div>

@@ -195,13 +195,13 @@ body {
 
 .scrolling-row {
   display: flex;
-  animation: scroll-left 30s linear infinite;
+  animation: scroll-left 60s linear infinite;
   white-space: nowrap;
   padding: 20px 0;
 }
 
 .scrolling-row:nth-child(2) {
-  animation: scroll-right 25s linear infinite;
+  animation: scroll-right 50s linear infinite;
   margin-top: 40px;
 }
 
