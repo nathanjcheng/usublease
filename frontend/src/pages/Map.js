@@ -52,45 +52,7 @@ function Map() {
     });
   };
 
-  // Fallback data for development/testing
-  const fallbackListings = [
-    {
-      id: 1,
-      title: "Cozy Studio near USF",
-      price: 850,
-      semester: "Fall 2025",
-      address: "1234 University Dr, Tampa, FL 33612",
-      description: "Modern studio apartment just 5 minutes from USF campus. Fully furnished with all utilities included.",
-      amenities: ["Furnished", "Utilities Included", "Parking", "Wifi"],
-      coordinates: { lat: 28.0587, lng: -82.4139 },
-      image: "https://placehold.co/400x300/e2e8f0/1a202c?text=Studio"
-    },
-    {
-      id: 2,
-      title: "2BR Apartment - USF Area",
-      price: 1200,
-      semester: "Spring 2026",
-      address: "5678 Bruce B Downs Blvd, Tampa, FL 33612",
-      description: "Spacious 2 bedroom apartment with modern appliances and great amenities.",
-      amenities: ["Washer/Dryer", "Pool", "Gym", "Pet Friendly"],
-      coordinates: { lat: 28.0627, lng: -82.4159 },
-      image: "https://placehold.co/400x300/e2e8f0/1a202c?text=2BR"
-    },
-    {
-      id: 3,
-      title: "Luxury 1BR - USF Village",
-      price: 950,
-      semester: "Fall 2025",
-      address: "9012 Fowler Ave, Tampa, FL 33612",
-      description: "Luxury 1 bedroom apartment in the heart of USF Village. Walking distance to campus.",
-      amenities: ["Furnished", "Pool", "Gym", "24/7 Security"],
-      coordinates: { lat: 28.0607, lng: -82.4119 },
-      image: "https://placehold.co/400x300/e2e8f0/1a202c?text=1BR"
-    }
-  ];
-
-  // Use fallback data if no listings loaded
-  const displayListings = listings.length > 0 ? listings : fallbackListings;
+  // Use only listings from backend
 
   return (
     <div className="map-page">
@@ -176,15 +138,17 @@ function Map() {
         </div>
         
         <div className="listings-grid">
-          {displayListings.map((listing) => (
+          {listings.map((listing) => (
             <div
               key={listing.id}
               className={`listing-card ${selectedListing?.id === listing.id ? 'selected' : ''}`}
               onClick={() => setSelectedListing(listing)}
             >
-              <div className="listing-image">
-                <img src={listing.image} alt={listing.title} />
-              </div>
+              {listing.image && (
+                <div className="listing-image">
+                  <img src={listing.image} alt={listing.title} />
+                </div>
+              )}
               <div className="listing-content">
                 <h3>{listing.title}</h3>
                 <p className="listing-price">${listing.price}/month</p>
@@ -192,7 +156,7 @@ function Map() {
                 <p className="listing-address">{listing.address}</p>
                 <p className="listing-description">{listing.description}</p>
                 <div className="listing-amenities">
-                  {listing.amenities.map((amenity, index) => (
+                  {listing.amenities && listing.amenities.map((amenity, index) => (
                     <span key={index} className="amenity-tag">{amenity}</span>
                   ))}
                 </div>
@@ -201,7 +165,7 @@ function Map() {
           ))}
         </div>
         
-        {displayListings.length === 0 && !loading && (
+        {listings.length === 0 && !loading && (
           <div style={{textAlign: 'center', padding: '40px', color: '#666'}}>
             <p>No listings found matching your criteria.</p>
             <button onClick={clearFilters} style={{padding: '10px 20px', borderRadius: '4px', backgroundColor: '#793094', color: 'white', border: 'none', cursor: 'pointer'}}>

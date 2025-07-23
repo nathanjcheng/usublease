@@ -53,7 +53,6 @@ function Upload() {
     },
     squareFootage: '',
     oneTimeFees: '',
-    photos: [],
     title: '',
     description: '',
     thumbnailIndex: 0
@@ -65,7 +64,6 @@ function Upload() {
 
   // Mapbox requests are proxied through the backend to avoid exposing the API key
   const addressTimer = useRef(null);
-  const fileInputRef = useRef(null);
 
   const handleNext = () => setStep((s) => s + 1);
   const handleBack = () => setStep((s) => s - 1);
@@ -84,39 +82,6 @@ function Upload() {
         [group]: exists ? arr.filter((o) => o !== option) : [...arr, option]
       };
     });
-  };
-
-  const handlePhotoUpload = async (files) => {
-    setLoading(true);
-    setError('');
-    
-    try {
-      const uploads = Array.from(files).slice(0, 15); // cap 15
-      const urls = [];
-      
-      for (const file of uploads) {
-        // Generate unique filename
-        const fileExtension = file.name.split('.').pop();
-        const fileName = `${uuidv4()}.${fileExtension}`;
-        
-        // Get presigned URL for upload
-        const { presignedUrl } = await uploadAPI.getUploadUrl(fileName, file.type);
-        
-        // Upload file using presigned URL
-        await uploadAPI.uploadFile(presignedUrl, file);
-        
-        // Construct the final URL
-        const fileUrl = `https://${process.env.REACT_APP_S3_BUCKET}.s3.${process.env.REACT_APP_AWS_REGION}.amazonaws.com/${fileName}`;
-        urls.push(fileUrl);
-      }
-      
-      setFormData((prev) => ({ ...prev, photos: [...prev.photos, ...urls] }));
-    } catch (error) {
-      console.error('Error uploading photos:', error);
-      setError('Failed to upload photos. Please try again.');
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleAddressInput = (e) => {
@@ -185,7 +150,6 @@ function Upload() {
         },
         squareFootage: '',
         oneTimeFees: '',
-        photos: [],
         title: '',
         description: '',
         thumbnailIndex: 0
@@ -376,46 +340,8 @@ function Upload() {
         </div>
       )}
 
-      {/* Photos Step */}
-      {step === 4 && (
-        <div style={{display:'flex',flexDirection:'column',gap:'2rem',alignItems:'flex-start',width:'100%'}}>
-          {/* Photos Container */}
-          <div style={{background:'#fff',borderRadius:'8px',padding:'1.5rem',boxShadow:'0 1px 3px rgba(0,0,0,0.1)',width:'100%'}}>
-            <h3 style={{margin:'0 0 0.5rem 0'}}>Photos</h3>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              style={{display:'none'}}
-              ref={fileInputRef}
-              onChange={(e)=>{
-                handlePhotoUpload(e.target.files);
-                e.target.value=null; // reset so same file can be reselected if needed
-              }}
-            />
-            <button type="button" className="button-13 save" onClick={()=>fileInputRef.current && fileInputRef.current.click()}>
-              Add Photos
-            </button>
-            <p style={{marginTop:'10px'}}>{formData.photos.length} photo(s) selected</p>
-
-            {formData.photos.length > 0 && (
-              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(120px,1fr))',gap:'10px',marginTop:'10px'}}>
-                {formData.photos.map((url,i)=>(
-                  <img key={i} src={url} alt={`photo-${i}`} style={{width:'100%',height:'100px',objectFit:'cover',borderRadius:'6px'}} />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div style={{alignSelf:'center'}}>
-            <button className="button-13" onClick={handleBack}>Back</button>{' '}
-            <button className="button-13 save" onClick={handleNext}>Next</button>
-          </div>
-        </div>
-      )}
-
       {/* Description Step */}
-      {step === 5 && (
+      {step === 4 && (
         <div>
           <h2>Description</h2>
           <div className="form-group">
@@ -432,7 +358,7 @@ function Upload() {
       )}
 
       {/* Review Step */}
-      {step === 6 && (
+      {step === 5 && (
         <div>
           <h2>Review Your Listing</h2>
           <div style={{background:'#fff',padding:'1rem',borderRadius:'8px',boxShadow:'0 1px 3px rgba(0,0,0,0.1)',maxHeight:'400px',overflowY:'auto'}}>

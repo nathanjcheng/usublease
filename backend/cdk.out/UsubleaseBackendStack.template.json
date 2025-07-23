@@ -4426,7 +4426,7 @@
    "Properties": {
     "Code": {
      "S3Bucket": "cdk-hnb659fds-assets-205498862119-us-east-1",
-     "S3Key": "0df52ac9840bfac1befee4586e298d17738e90e1301781118b97fff1af611473.zip"
+     "S3Key": "d981e81c57f83998df046d55c584454231bbf439bd76c32315cffc508d2461aa.zip"
     },
     "Environment": {
      "Variables": {
@@ -4469,7 +4469,7 @@
    ],
    "Metadata": {
     "aws:cdk:path": "UsubleaseBackendStack/user-update-profile/Resource",
-    "aws:asset:path": "asset.0df52ac9840bfac1befee4586e298d17738e90e1301781118b97fff1af611473",
+    "aws:asset:path": "asset.d981e81c57f83998df046d55c584454231bbf439bd76c32315cffc508d2461aa",
     "aws:asset:is-bundled": false,
     "aws:asset:property": "Code"
    }

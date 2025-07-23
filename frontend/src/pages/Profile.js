@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, signOut, fetchAuthSession } from '@aws-amplify/auth';
 import { userAPI } from '../services/api';
+import { listingsAPI } from '../services/api';
 import '../App.css';
 // Simple edit icon component
 const EditIcon = () => (
@@ -29,6 +30,10 @@ function Profile() {
   const [locationInput, setLocationInput] = useState('');
   const [budgetMin, setBudgetMin] = useState('');
   const [budgetMax, setBudgetMax] = useState('');
+
+  const [myListings, setMyListings] = useState([]);
+  const [listingsLoading, setListingsLoading] = useState(false);
+  const [listingsError, setListingsError] = useState(null);
 
   // Preset list of universities – this can be replaced or loaded dynamically later
   const universities = [
@@ -250,6 +255,21 @@ function Profile() {
 
     loadUserData();
 
+    // Fetch user's listings
+    const fetchListings = async () => {
+      setListingsLoading(true);
+      setListingsError(null);
+      try {
+        const data = await listingsAPI.getUserListings();
+        setMyListings(data.listings || data || []);
+      } catch (err) {
+        setListingsError('Failed to load your listings.');
+      } finally {
+        setListingsLoading(false);
+      }
+    };
+    fetchListings();
+
     return () => {
       window.removeEventListener('online', handleOnlineStatus);
       window.removeEventListener('offline', handleOnlineStatus);
@@ -263,7 +283,7 @@ function Profile() {
       setSelectedUniversity(user.university || '');
       setEmailInput(user.email || '');
       setPhoneInput(formatPhoneNumber(user.phone || ''));
-      setLocationInput(user.preferredLocation || '');
+      // setLocationInput(user.preferredLocation || ''); // Removed
 
       if (user.budgetRange) {
         if (typeof user.budgetRange === 'string') {
@@ -318,7 +338,7 @@ function Profile() {
       name: displayNameInput,
       email: emailInput,
       phone: getRawPhoneNumber(phoneInput),
-      preferredLocation: locationInput
+      // preferredLocation: locationInput // Removed
     };
     
     const success = await saveUserData(updates);
@@ -501,7 +521,7 @@ function Profile() {
                   placeholder="(555) 123-4567"
                 />
               </div>
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label>Preferred Location:</label>
                 <input 
                   type="text" 
@@ -510,7 +530,7 @@ function Profile() {
                   className="input-13"
                   placeholder="City, State"
                 />
-              </div>
+              </div> */}
               <div className="form-actions">
                 <button onClick={handleSaveContact} className="button-13 save">Save</button>
                 <button onClick={() => setEditingContact(false)} className="button-13">Cancel</button>
@@ -521,57 +541,36 @@ function Profile() {
               <p><strong>Name:</strong> {user.name || 'Not set'}</p>
               <p><strong>Email:</strong> {user.email || 'Not set'}</p>
               <p><strong>Phone:</strong> {user.phone ? formatPhoneNumber(user.phone) : 'Not set'}</p>
-              <p><strong>Preferred Location:</strong> {user.preferredLocation || 'Not set'}</p>
+              {/* <p><strong>Preferred Location:</strong> {user.preferredLocation || 'Not set'}</p> */}
             </div>
           )}
         </div>
-
-        {/* Preferences Section */}
+        {/* My Listings Section */}
         <div className="profile-section">
           <div className="section-header">
-            <h3>Preferences</h3>
-            <button 
-              onClick={() => setEditingPreferences(!editingPreferences)}
-              className="edit-button"
-            >
-              <EditIcon />
-            </button>
+            <h3>My Listings</h3>
           </div>
-          
-          {editingPreferences ? (
-            <div className="edit-form">
-              <div className="form-group">
-                <label>Budget Range:</label>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <input 
-                    type="number" 
-                    value={budgetMin} 
-                    onChange={(e) => setBudgetMin(e.target.value)}
-                    className="input-13"
-                    placeholder="Min"
-                    style={{ width: '100px' }}
-                  />
-                  <span>-</span>
-                  <input 
-                    type="number" 
-                    value={budgetMax} 
-                    onChange={(e) => setBudgetMax(e.target.value)}
-                    className="input-13"
-                    placeholder="Max"
-                    style={{ width: '100px' }}
-                  />
+          {listingsLoading && <p>Loading your listings...</p>}
+          {listingsError && <p style={{color:'red'}}>{listingsError}</p>}
+          {myListings.length === 0 && !listingsLoading && !listingsError && (
+            <p>You have not posted any listings yet.</p>
+          )}
+          <div className="listings-grid">
+            {myListings.map((listing) => (
+              <div key={listing.id} className="listing-card">
+                {listing.image && (
+                  <div className="listing-image">
+                    <img src={listing.image} alt={listing.title} />
+                  </div>
+                )}
+                <div className="listing-content">
+                  <h4>{listing.title}</h4>
+                  <p className="listing-price">${listing.price}/month</p>
+                  <p className="listing-description">{listing.description}</p>
                 </div>
               </div>
-              <div className="form-actions">
-                <button onClick={handleSavePreferences} className="button-13 save">Save</button>
-                <button onClick={() => setEditingPreferences(false)} className="button-13">Cancel</button>
-              </div>
-            </div>
-          ) : (
-            <div className="info-display">
-              <p><strong>Budget Range:</strong> {formatBudget(user.budgetRange)}</p>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
       </div>
     </div>
